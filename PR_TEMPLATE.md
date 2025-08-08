@@ -11,7 +11,7 @@ Current SuperClaude implementation loads all 16 agents on every request:
 - Memory overhead
 
 ## Our Solution: SPARK Architecture
-- **Only 5,000-8,000 tokens** per request (88% reduction!)
+- **Only 5,100 tokens** per request (88.4% reduction!)
 - Intelligent routing to load only needed agents
 - Lazy loading strategy
 - Backward compatible with existing SuperClaude projects
