@@ -1,51 +1,62 @@
-# ⚡ SPARK: The Next Evolution of SuperClaude
+# ⚡ SPARK: Universal AI Agent System for Claude Code
 
 > **Subagent Performance Architecture with Reduced toKens**
 > 
-> *Created by one human (Jason) collaborating with AI assistants (1호 & 2호)*
+> *A complete AI agent system with 88.4% token efficiency and universal compatibility*
 
 [![GitHub stars](https://img.shields.io/github/stars/Jaesun23/spark-claude?style=for-the-badge)](https://github.com/Jaesun23/spark-claude/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-88%25-brightgreen?style=for-the-badge)](benchmarks/)
-[![Collaboration](https://img.shields.io/badge/CREATED%20BY-1%20Human%20%2B%202%20AIs-purple?style=for-the-badge)](https://github.com/Jaesun23/spark-claude#-the-team-behind-spark)
+[![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-88.4%25-brightgreen?style=for-the-badge)](benchmarks/)
+[![Claude Code](https://img.shields.io/badge/CLAUDE%20CODE-COMPATIBLE-blue?style=for-the-badge)](https://claude.ai/code)
 
-## 🚀 The Problem with SuperClaude
+## 🎯 What is SPARK?
 
-SuperClaude is amazing, but...
-- **44,000 tokens** loaded on EVERY task 😱
-- Massive context consumption
-- Slower response times
-- Higher API costs
+SPARK is a **universal AI agent system** for [Claude Code](https://claude.ai/code) that provides:
 
-## ⚡ Enter SPARK: 88% More Efficient
+- 🧠 **16 Specialized Agents**: Implementation, analysis, testing, design, debugging, and more
+- 🚀 **88.4% Token Efficiency**: 5,100 vs 44,000 tokens (compared to traditional approaches)  
+- 🔄 **Smart Hooks System**: Automatic persona routing and quality validation
+- 🛡️ **Universal Quality Gates**: Works with Python, JavaScript, TypeScript, Go, and more
+- ⚡ **Slash Commands**: Simple `/spark`, `/spark-analyze`, `/spark-test` commands
+- 🌍 **Language Agnostic**: No project dependencies, works everywhere
 
-We've reimagined SuperClaude's architecture:
-- **Only 5,100 tokens** for the same functionality ✨
-- **88% reduction** in token usage
-- **5x faster** initial response
-- **Same power**, fraction of the cost
+## 🚀 Quick Start
 
-## 📊 The Numbers Don't Lie
+### 1. **Copy to Your User Settings**
+```bash
+# Copy the complete SPARK system to your home directory
+cp -r .claude/ ~/.claude/
 
-```
-SuperClaude: ████████████████████████████████████████ 44,000 tokens
-SPARK:       █████ 5,100 tokens
-             
-             88% REDUCTION! 🎉
+# Or just copy what you need to your project
+cp -r .claude/ /path/to/your/project/
 ```
 
-## 🏗️ How We Did It
+### 2. **Use SPARK Commands**
+```bash
+# In any Claude Code session:
+/spark "implement JWT authentication with refresh tokens"
+/spark-analyze "find performance bottlenecks in the API layer"
+/spark-test "create comprehensive tests with 95% coverage"
+/spark-design "build responsive dashboard with accessibility"
+/spark-clean "optimize project structure and remove dead code"
+/spark-fix "debug the intermittent connection timeout issues"
+```
 
-### 1. **Modular Subagent Architecture**
-Instead of loading ALL agents at once, SPARK uses intelligent routing to load ONLY what's needed.
+### 3. **Watch the Magic**
+- SPARK automatically activates appropriate personas (Backend, Frontend, Security, etc.)
+- Quality gates ensure code meets standards (syntax, linting, types, security, docs)
+- Failed quality checks trigger automatic fixes and retries
+- All with 88.4% fewer tokens than traditional approaches
 
-### 2. **Smart Persona Router**
-```python
-# Instead of this (SuperClaude):
-load_all_agents()  # 44,000 tokens 😭
+## 📊 Performance Comparison
 
-# We do this (SPARK):
-load_only_needed_agent(task_type)  # ~5,100 tokens 😎
+```
+Traditional Approach: ████████████████████████████████████████ 44,000 tokens
+SPARK:               █████ 5,100 tokens (88.4% reduction)
+                     
+💰 Cost Savings: $0.78 per request
+⚡ Speed Boost: 5x faster initial response  
+🎯 Same Quality: All functionality preserved
 ```
 
 ### 3. **Lazy Loading Strategy**
