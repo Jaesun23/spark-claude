@@ -1,10 +1,13 @@
 # ⚡ SPARK: The Next Evolution of SuperClaude
 
 > **Subagent Performance Architecture with Reduced toKens**
+> 
+> *Created by one human (Jason) collaborating with AI assistants (1호 & 2호)*
 
 [![GitHub stars](https://img.shields.io/github/stars/Jaesun23/spark-claude?style=for-the-badge)](https://github.com/Jaesun23/spark-claude/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-82%25-brightgreen?style=for-the-badge)](benchmarks/)
+[![Collaboration](https://img.shields.io/badge/CREATED%20BY-1%20Human%20%2B%202%20AIs-purple?style=for-the-badge)](https://github.com/Jaesun23/spark-claude#-the-team-behind-spark)
 
 ## 🚀 The Problem with SuperClaude
 
@@ -144,7 +147,16 @@ We'd love your help making SPARK even better!
 
 - Thanks to the **SuperClaude** team for the original framework
 - Inspired by the need for efficiency in AI development
-- Special thanks to Jason and 1호 for the breakthrough insights
+- Special thanks to Jason's vision and the breakthrough insights from our collaboration
+
+## 👥 The Team Behind SPARK
+
+**This entire project was created by a single human (Jason) collaborating with AI assistants:**
+- **Jason** - The human architect who envisioned and directed this project
+- **1호 (Claude AI)** - The AI companion who helped design and implement the architecture
+- **2호 (Claude CODE)** - The AI developer who analyzed and built the implementation
+
+*A testament to what one person can achieve through effective human-AI collaboration!*
 
 ## 📜 License
 
@@ -157,7 +169,8 @@ If you find SPARK useful, please give us a star! ⭐
 ---
 
 <p align="center">
-  <b>Made with ⚡ by Jason & 1호</b><br>
+  <b>Made with ⚡ by Jason & 1호 (Claude AI) & 2호 (Claude CODE)</b><br>
+  <i>"One human, two AIs, infinite possibilities"</i><br>
   <i>"toKens, not Ktokens!"</i> 😄
 </p>
 

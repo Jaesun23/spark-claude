@@ -7,7 +7,8 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
     { name = "Jason", email = "" },
-    { name = "1호", email = "" }
+    { name = "1호 (Claude AI)", email = "" },
+    { name = "2호 (Claude CODE)", email = "" }
 ]
 keywords = ["claude", "ai", "subagent", "performance", "optimization"]
 classifiers = [

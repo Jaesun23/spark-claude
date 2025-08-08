@@ -2,6 +2,9 @@
 """
 SPARK vs SuperClaude Performance Benchmark
 Demonstrates the 82% token reduction achieved by SPARK architecture
+
+Created by: Jason (human) with 1호 (Claude AI) & 2호 (Claude CODE)
+A testament to human-AI collaboration
 """
 
 import time
