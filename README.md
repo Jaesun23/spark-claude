@@ -183,11 +183,31 @@ If you find SPARK useful, please give us a star! ⭐
 
 ## 🎯 Roadmap
 
-- [ ] Further token optimization (target: 5,000 tokens)
-- [ ] Dynamic agent composition
-- [ ] Multi-language support
-- [ ] VSCode extension
-- [ ] Web-based agent builder
+### ⚡ What's Next? (The Revolution Continues)
+
+**Phase 1: Workflow Orchestration** (2 weeks)
+- Chain multiple agents for complex tasks
+- `/spark-workflow deploy` - Complete deployment pipeline
+- `/spark-workflow debug` - Intelligent debugging flow
+
+**Phase 2: Agent Factory** (1 month)
+- **Agents creating agents!** 🤯
+- `/spark-create "your-expert"` - Generate domain specialists
+- `/spark-combine` - Merge agent capabilities
+
+**Phase 3: Domain Experts** (6 weeks)
+- AI/ML Engineer Agent
+- DevOps Specialist Agent
+- Blockchain Developer Agent
+- Data Scientist Agent
+
+**Ultimate Vision: SPARK as Agent OS**
+- Self-improving agents
+- Agent marketplace
+- Cross-LLM compatibility
+- Zero-token operations (the dream!)
+
+📖 **[See Full Roadmap](ROADMAP.md)** - Our complete vision for the future
 
 ---
 
