@@ -4,13 +4,13 @@
 
 ## Execution Instructions
 
-When this command is called, use the Task tool to launch the analyzer-spark agent:
+When this command is called, I will delegate the analysis to the analyzer-spark specialist:
 
-```
-Use the Task tool with subagent_type "analyzer-spark" to perform comprehensive analysis.
-Pass the user's specific analysis request as the prompt parameter.
-The analyzer-spark agent will conduct multi-perspective analysis and provide evidence-based insights.
-```
+The analyzer-spark specialist will:
+- Conduct comprehensive multi-perspective analysis
+- Examine code from performance, security, and quality angles
+- Provide evidence-based insights with specific metrics
+- Generate actionable recommendations for improvements
 
 ## Usage Examples
 

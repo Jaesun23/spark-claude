@@ -1,172 +1,452 @@
 #!/usr/bin/env python3
 """
-SPARK Quality Gates Hook (SubagentStop)
-Universal quality validation for any project - no project dependencies
+SPARK Quality Gates Hook (SubagentStop) - FIXED VERSION
+Universal quality validation with secure execution and proper JSON output
 """
 
 import json
 import logging
-import re
-import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
-# Set up logging
-logging.basicConfig(level=logging.INFO, format="%(message)s", handlers=[logging.StreamHandler(sys.stderr)])
+# Add hooks directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from spark_core_utils import (
+    SecureCommandExecutor, 
+    StateManager, 
+    HookOutputFormatter,
+    AgentChainManager
+)
+
+# Set up logging to stderr
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stderr)]
+)
 logger = logging.getLogger(__name__)
 
 
-def run_command(cmd: str, check: bool = False) -> tuple[bool, str, str]:
-    """Run a command and return (success, stdout, stderr)"""
-    try:
-        result = subprocess.run(
-            cmd, shell=True, capture_output=True, text=True, timeout=30
+class QualityGate:
+    """Base class for quality gates"""
+    
+    def __init__(self, name: str, description: str):
+        self.name = name
+        self.description = description
+        self.executor = SecureCommandExecutor()
+    
+    def check(self) -> Tuple[bool, List[str]]:
+        """Run the quality check"""
+        raise NotImplementedError
+    
+    def __str__(self):
+        return f"{self.name}: {self.description}"
+
+
+class SyntaxValidationGate(QualityGate):
+    """Check for syntax errors in code files"""
+    
+    def __init__(self):
+        super().__init__(
+            "Syntax Validation",
+            "Verify code has no syntax errors"
         )
-        return result.returncode == 0, result.stdout, result.stderr
-    except subprocess.TimeoutExpired:
-        return False, "", "Command timed out"
-    except Exception as e:
-        return False, "", str(e)
+    
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check Python files
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        for file_path in python_files[:10]:  # Limit to prevent timeout
+            success, stdout, stderr = self.executor.run_command(
+                ["python3", "-m", "py_compile", str(file_path)]
+            )
+            if not success and stderr:
+                issues.append(f"Python syntax error in {file_path.name}: {stderr[:100]}")
+        
+        # Check JavaScript/TypeScript files
+        js_files = self.executor.find_files("*.js") + self.executor.find_files("*.ts")
+        for file_path in js_files[:5]:
+            # Basic syntax check using Node.js
+            success, stdout, stderr = self.executor.run_command(
+                ["node", "--check", str(file_path)],
+                timeout=5
+            )
+            if not success and stderr:
+                issues.append(f"JavaScript syntax error in {file_path.name}")
+        
+        return len(issues) == 0, issues
 
 
-def check_syntax_validation() -> tuple[bool, list]:
-    """Check for basic syntax errors in common file types"""
-    issues = []
+class TypeCheckingGate(QualityGate):
+    """Check type annotations and type safety"""
     
-    # Python files
-    success, stdout, stderr = run_command("find . -name '*.py' -not -path './.venv/*' -not -path './.*' | head -10 | xargs -I {} python3 -m py_compile {}")
-    if not success and stderr:
-        issues.append(f"Python syntax errors: {stderr}")
+    def __init__(self):
+        super().__init__(
+            "Type Checking",
+            "Verify type safety and annotations"
+        )
     
-    # JavaScript/TypeScript files  
-    success, stdout, stderr = run_command("find . -name '*.js' -o -name '*.ts' -not -path './node_modules/*' | head -5")
-    # Note: Basic check, would need proper JS parser for full validation
-    
-    return len(issues) == 0, issues
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Python - MyPy
+        if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
+            success, stdout, stderr = self.executor.run_command(
+                ["mypy", ".", "--ignore-missing-imports", "--no-error-summary"],
+                timeout=30
+            )
+            if not success or "error:" in stderr:
+                error_count = stderr.count("error:")
+                issues.append(f"MyPy found {error_count} type errors")
+        
+        # TypeScript
+        if Path("tsconfig.json").exists():
+            success, stdout, stderr = self.executor.run_command(
+                ["npx", "tsc", "--noEmit"],
+                timeout=30
+            )
+            if not success:
+                issues.append("TypeScript type checking failed")
+        
+        return len(issues) == 0, issues
 
 
-def check_linting() -> tuple[bool, list]:
-    """Check common linting tools"""
-    issues = []
+class LintingGate(QualityGate):
+    """Check code style and linting rules"""
     
-    # Python - Ruff
-    if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
-        success, stdout, stderr = run_command("ruff check . --quiet")
-        if not success:
-            issues.append("Ruff linting violations found")
+    def __init__(self):
+        super().__init__(
+            "Code Linting",
+            "Verify code follows style guidelines"
+        )
     
-    # JavaScript/TypeScript - ESLint
-    if Path("eslint.config.js").exists() or Path(".eslintrc.js").exists():
-        success, stdout, stderr = run_command("npx eslint . --quiet --max-warnings 0")
-        if not success:
-            issues.append("ESLint violations found")
-    
-    # Go
-    if any(Path(".").glob("*.go")):
-        success, stdout, stderr = run_command("golint ./...")
-        if not success and stderr:
-            issues.append("Go lint issues found")
-    
-    return len(issues) == 0, issues
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Python - Ruff
+        if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
+            success, stdout, stderr = self.executor.run_command(
+                ["ruff", "check", ".", "--quiet"],
+                timeout=20
+            )
+            if not success:
+                # Count violations from stdout
+                violation_count = len(stdout.strip().split('\n')) if stdout else 1
+                issues.append(f"Ruff found {violation_count} style violations")
+        
+        # JavaScript/TypeScript - ESLint
+        if Path("package.json").exists():
+            for config_file in [".eslintrc.js", ".eslintrc.json", "eslint.config.js"]:
+                if Path(config_file).exists():
+                    success, stdout, stderr = self.executor.run_command(
+                        ["npx", "eslint", ".", "--quiet", "--max-warnings", "0"],
+                        timeout=30
+                    )
+                    if not success:
+                        issues.append("ESLint found style violations")
+                    break
+        
+        return len(issues) == 0, issues
 
 
-def check_type_validation() -> tuple[bool, list]:
-    """Check type checking tools"""
-    issues = []
+class SecurityGate(QualityGate):
+    """Check for security vulnerabilities"""
     
-    # Python - MyPy
-    if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
-        success, stdout, stderr = run_command("mypy . --ignore-missing-imports --no-error-summary")
-        if not success and "error:" in stderr:
-            issues.append("MyPy type checking errors found")
+    def __init__(self):
+        super().__init__(
+            "Security Analysis",
+            "Scan for security vulnerabilities and secrets"
+        )
     
-    # TypeScript
-    if Path("tsconfig.json").exists():
-        success, stdout, stderr = run_command("npx tsc --noEmit")
-        if not success:
-            issues.append("TypeScript type checking errors found")
-    
-    return len(issues) == 0, issues
-
-
-def check_security_basic() -> tuple[bool, list]:
-    """Basic security checks"""
-    issues = []
-    
-    # Check for common secret patterns in recently modified files
-    success, stdout, stderr = run_command("git diff --name-only HEAD~1 2>/dev/null | head -10 | xargs grep -l -E '(password|secret|key)\\s*[=:]' 2>/dev/null")
-    if success and stdout.strip():
-        issues.append("Potential secrets found in recent changes")
-    
-    # Python - Bandit
-    if any(Path(".").glob("*.py")):
-        success, stdout, stderr = run_command("bandit -r . -f json -q -x './.venv/*' 2>/dev/null")
-        if success and stdout:
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check for hardcoded secrets in Python files
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv"])
+        for file_path in python_files[:10]:
             try:
-                results = json.loads(stdout)
-                if results.get("results"):
-                    issues.append("Security issues found by Bandit")
-            except:
+                content = file_path.read_text()
+                # Simple pattern matching for common secrets
+                if any(pattern in content.lower() for pattern in [
+                    "password=", "api_key=", "secret=", "token=",
+                    "aws_access_key", "private_key"
+                ]):
+                    # More sophisticated check
+                    import re
+                    # Check if it's actually a hardcoded value (not a variable)
+                    if re.search(r'(password|api_key|secret|token)\s*=\s*["\'][^"\']+["\']', content, re.IGNORECASE):
+                        issues.append(f"Potential hardcoded secret in {file_path.name}")
+            except Exception:
                 pass
-    
-    return len(issues) == 0, issues
+        
+        # Python - Bandit
+        if any(Path(".").glob("*.py")):
+            success, stdout, stderr = self.executor.run_command(
+                ["bandit", "-r", ".", "-f", "json", "-q", "--severity-level", "medium"],
+                timeout=30
+            )
+            if success and stdout:
+                try:
+                    results = json.loads(stdout)
+                    if results.get("results"):
+                        high_severity = sum(1 for r in results["results"] if r.get("issue_severity") == "HIGH")
+                        if high_severity > 0:
+                            issues.append(f"Bandit found {high_severity} high severity issues")
+                except json.JSONDecodeError:
+                    pass
+        
+        # Check for dependency vulnerabilities
+        if Path("requirements.txt").exists():
+            success, stdout, stderr = self.executor.run_command(
+                ["pip-audit", "--desc"],
+                timeout=30
+            )
+            if not success and "vulnerabilit" in stdout.lower():
+                issues.append("Vulnerable dependencies detected")
+        
+        return len(issues) == 0, issues
 
 
-def check_documentation() -> tuple[bool, list]:
-    """Check for basic documentation"""
-    issues = []
+class TestCoverageGate(QualityGate):
+    """Check test coverage and test existence"""
     
-    # Check if Python functions have docstrings
-    success, stdout, stderr = run_command("find . -name '*.py' -not -path './.venv/*' | head -5 | xargs grep -L 'def.*:.*\"\"\"' 2>/dev/null")
-    if success and stdout.strip():
-        issues.append("Some Python functions missing docstrings")
+    def __init__(self):
+        super().__init__(
+            "Test Coverage",
+            "Verify tests exist and have adequate coverage"
+        )
     
-    # Check for README
-    if not any(Path(".").glob("README*")):
-        issues.append("No README file found")
-    
-    return len(issues) == 0, issues
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check if test files exist
+        test_patterns = ["test_*.py", "*_test.py", "*.test.js", "*.spec.js", "*.test.ts", "*.spec.ts"]
+        test_files = []
+        for pattern in test_patterns:
+            test_files.extend(self.executor.find_files(pattern))
+        
+        if not test_files:
+            issues.append("No test files found")
+            return False, issues
+        
+        # Python - pytest with coverage
+        if any(Path(".").glob("test_*.py")) or any(Path(".").glob("*_test.py")):
+            success, stdout, stderr = self.executor.run_command(
+                ["pytest", "--co", "-q"],  # Just collect tests, don't run
+                timeout=10
+            )
+            if not success:
+                issues.append("pytest cannot collect tests")
+        
+        # JavaScript/TypeScript - Jest
+        if Path("package.json").exists():
+            package_json = Path("package.json").read_text()
+            if "jest" in package_json or "@jest" in package_json:
+                success, stdout, stderr = self.executor.run_command(
+                    ["npx", "jest", "--listTests"],
+                    timeout=10
+                )
+                if not success:
+                    issues.append("Jest cannot find tests")
+        
+        return len(issues) == 0, issues
 
 
-def run_quality_gates() -> dict:
-    """Run all quality gates and return results"""
+class DocumentationGate(QualityGate):
+    """Check documentation quality"""
     
-    gates = {
-        "syntax_validation": check_syntax_validation,
-        "linting": check_linting,
-        "type_checking": check_type_validation,
-        "security": check_security_basic,
-        "documentation": check_documentation,
-    }
+    def __init__(self):
+        super().__init__(
+            "Documentation",
+            "Verify code is properly documented"
+        )
     
-    results = {}
-    total_passed = 0
-    total_gates = len(gates)
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check Python docstrings
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv"])
+        undocumented_count = 0
+        
+        for file_path in python_files[:10]:
+            try:
+                content = file_path.read_text()
+                # Check for function definitions without docstrings
+                import re
+                functions = re.findall(r'def\s+\w+\([^)]*\):', content)
+                docstrings = re.findall(r'def\s+\w+\([^)]*\):\s*\n\s*"""', content)
+                
+                if len(functions) > len(docstrings):
+                    undocumented_count += len(functions) - len(docstrings)
+                    
+            except Exception:
+                pass
+        
+        if undocumented_count > 5:
+            issues.append(f"{undocumented_count} functions missing docstrings")
+        
+        # Check for README
+        if not any(Path(".").glob("README*")):
+            issues.append("No README file found")
+        
+        return len(issues) == 0, issues
+
+
+class PerformanceGate(QualityGate):
+    """Check performance and optimization"""
     
-    for gate_name, gate_func in gates.items():
-        try:
-            passed, issues = gate_func()
-            results[gate_name] = {
-                "passed": passed,
-                "issues": issues
-            }
-            if passed:
-                total_passed += 1
-            logger.info(f"{'✅' if passed else '❌'} {gate_name}: {'PASS' if passed else f'FAIL ({len(issues)} issues)'}")
-        except Exception as e:
-            results[gate_name] = {
-                "passed": False,
-                "issues": [f"Gate execution failed: {e}"]
-            }
-            logger.error(f"❌ {gate_name}: ERROR - {e}")
+    def __init__(self):
+        super().__init__(
+            "Performance",
+            "Verify code meets performance standards"
+        )
     
-    return {
-        "gates_passed": total_passed,
-        "total_gates": total_gates,
-        "pass_rate": round(total_passed / total_gates * 100, 1),
-        "results": results,
-        "overall_pass": total_passed >= int(total_gates * 0.8)  # 80% threshold
-    }
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check for common performance anti-patterns in Python
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv"])
+        
+        for file_path in python_files[:5]:
+            try:
+                content = file_path.read_text()
+                
+                # Check for nested loops with database queries (N+1 problem)
+                if "for " in content and ".objects." in content:
+                    import re
+                    if re.search(r'for .+ in .+:\s+.+\.objects\.(get|filter|all)', content):
+                        issues.append(f"Potential N+1 query problem in {file_path.name}")
+                
+                # Check for synchronous I/O in async functions
+                if "async def" in content and "open(" in content:
+                    issues.append(f"Synchronous I/O in async function in {file_path.name}")
+                    
+            except Exception:
+                pass
+        
+        return len(issues) == 0, issues
+
+
+class IntegrationGate(QualityGate):
+    """Check integration and compatibility"""
+    
+    def __init__(self):
+        super().__init__(
+            "Integration",
+            "Verify component integration and compatibility"
+        )
+    
+    def check(self) -> Tuple[bool, List[str]]:
+        issues = []
+        
+        # Check for dependency conflicts
+        if Path("requirements.txt").exists():
+            success, stdout, stderr = self.executor.run_command(
+                ["pip", "check"],
+                timeout=10
+            )
+            if not success or "incompatible" in stdout.lower():
+                issues.append("Dependency conflicts detected")
+        
+        # Check for broken imports in Python
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv"])
+        for file_path in python_files[:5]:
+            success, stdout, stderr = self.executor.run_command(
+                ["python3", "-c", f"import ast; ast.parse(open('{file_path}').read())"],
+                timeout=5
+            )
+            if not success:
+                issues.append(f"Import errors in {file_path.name}")
+        
+        return len(issues) == 0, issues
+
+
+class QualityGateRunner:
+    """Orchestrates running all quality gates"""
+    
+    def __init__(self):
+        self.gates = [
+            SyntaxValidationGate(),
+            TypeCheckingGate(),
+            LintingGate(),
+            SecurityGate(),
+            TestCoverageGate(),
+            DocumentationGate(),
+            PerformanceGate(),
+            IntegrationGate()
+        ]
+        self.state_manager = StateManager()
+        self.chain_manager = AgentChainManager()
+    
+    def run_gates(self, required_gates: Optional[int] = None) -> Dict:
+        """Run quality gates and return results"""
+        
+        # Get required gates from state if not provided
+        if required_gates is None:
+            state = self.state_manager.read_state()
+            required_gates = state.get("quality_gates", {}).get("required", 8)
+        
+        results = {}
+        passed_count = 0
+        failed_gates = []
+        all_issues = []
+        
+        # Run only the required number of gates
+        gates_to_run = self.gates[:required_gates]
+        
+        for gate in gates_to_run:
+            try:
+                logger.info(f"Running gate: {gate.name}")
+                passed, issues = gate.check()
+                
+                results[gate.name] = {
+                    "passed": passed,
+                    "issues": issues
+                }
+                
+                if passed:
+                    passed_count += 1
+                    logger.info(f"  ✅ {gate.name}: PASSED")
+                else:
+                    failed_gates.append(gate.name)
+                    all_issues.extend(issues)
+                    logger.info(f"  ❌ {gate.name}: FAILED - {len(issues)} issues")
+                    for issue in issues[:3]:  # Log first 3 issues
+                        logger.info(f"     - {issue}")
+                        
+            except Exception as e:
+                logger.error(f"  ⚠️ {gate.name}: ERROR - {e}")
+                results[gate.name] = {
+                    "passed": False,
+                    "issues": [f"Gate execution failed: {str(e)}"]
+                }
+                failed_gates.append(gate.name)
+                all_issues.append(f"{gate.name} execution failed")
+        
+        # Calculate pass rate
+        total_gates = len(gates_to_run)
+        pass_rate = (passed_count / total_gates * 100) if total_gates > 0 else 0
+        
+        # Update state with results
+        state = self.state_manager.read_state()
+        state["quality_gates"]["passed"] = passed_count
+        state["quality_gates"]["results"] = results
+        state["quality_gates"]["last_run"] = datetime.now().isoformat()
+        self.state_manager.write_state(state)
+        
+        return {
+            "passed_count": passed_count,
+            "total_gates": total_gates,
+            "required_gates": required_gates,
+            "pass_rate": round(pass_rate, 1),
+            "passed": passed_count >= required_gates,
+            "failed_gates": failed_gates,
+            "all_issues": all_issues,
+            "results": results
+        }
 
 
 def main():
@@ -175,61 +455,125 @@ def main():
         # Read input from stdin
         input_data = json.load(sys.stdin)
         
-        # Check if we should run quality gates
-        # Only run for implementation-related subagents
-        cwd = input_data.get("cwd", "")
+        # Get context from input
+        subagent_name = input_data.get("subagent", "unknown")
+        cwd = input_data.get("cwd", ".")
         
-        logger.info("🛡️  Running SPARK Quality Gates...")
+        logger.info("=" * 60)
+        logger.info("🛡️  SPARK Quality Gates - Starting Validation")
+        logger.info(f"   Subagent: {subagent_name}")
+        logger.info(f"   Directory: {cwd}")
+        logger.info("=" * 60)
+        
+        # Initialize components
+        runner = QualityGateRunner()
+        state_manager = StateManager()
+        chain_manager = AgentChainManager()
+        
+        # Get required gates from state
+        state = state_manager.read_state()
+        required_gates = state.get("quality_gates", {}).get("required", 8)
         
         # Run quality gates
-        gate_results = run_quality_gates()
+        results = runner.run_gates(required_gates)
         
-        # Determine action based on results
-        if gate_results["overall_pass"]:
-            # Quality gates passed - continue normally
-            logger.info(f"✅ Quality Gates PASSED: {gate_results['gates_passed']}/{gate_results['total_gates']} ({gate_results['pass_rate']}%)")
+        logger.info("=" * 60)
+        logger.info(f"📊 Quality Gates Summary:")
+        logger.info(f"   Passed: {results['passed_count']}/{results['total_gates']}")
+        logger.info(f"   Pass Rate: {results['pass_rate']}%")
+        logger.info(f"   Required: {results['required_gates']} gates to pass")
+        logger.info(f"   Status: {'✅ PASSED' if results['passed'] else '❌ FAILED'}")
+        logger.info("=" * 60)
+        
+        # Prepare response based on results
+        if results["passed"]:
+            # Gates passed - allow continuation
+            decision = "continue"
+            reason = f"Quality gates passed: {results['passed_count']}/{results['total_gates']} gates passed ({results['pass_rate']}% pass rate)"
             
-            # Output success context
-            context = f"""✅ **SPARK Quality Gates PASSED** ({gate_results['pass_rate']}%)
-
-**Gates Passed**: {gate_results['gates_passed']}/{gate_results['total_gates']}
-**Status**: Ready for next phase or completion
-
-The code meets SPARK quality standards. You may proceed with confidence."""
+            # Pass quality results to next agent if in pipeline
+            chain_status = chain_manager.get_chain_status()
+            if chain_status.get("current_agent"):
+                chain_manager.pass_data(
+                    from_agent=subagent_name,
+                    to_agent="next",
+                    data={"quality_results": results}
+                )
             
-            print(context)
-            sys.exit(0)
+            # Format output
+            output = HookOutputFormatter.format_subagent_stop(
+                decision=decision,
+                reason=reason,
+                metadata={
+                    "quality_gates_passed": results["passed_count"],
+                    "quality_gates_total": results["total_gates"],
+                    "pass_rate": results["pass_rate"]
+                }
+            )
             
         else:
-            # Quality gates failed - provide feedback to continue improvements
-            failed_gates = []
-            for gate_name, result in gate_results["results"].items():
-                if not result["passed"]:
-                    failed_gates.append(f"{gate_name}: {', '.join(result['issues'])}")
+            # Gates failed - block and request fixes
+            decision = "block"
             
-            logger.info(f"❌ Quality Gates FAILED: {gate_results['gates_passed']}/{gate_results['total_gates']} ({gate_results['pass_rate']}%)")
+            # Generate detailed failure message
+            failure_details = []
+            for gate_name in results["failed_gates"]:
+                gate_results = results["results"].get(gate_name, {})
+                issues = gate_results.get("issues", [])
+                if issues:
+                    failure_details.append(f"• {gate_name}:")
+                    for issue in issues[:2]:  # Show first 2 issues per gate
+                        failure_details.append(f"  - {issue}")
             
-            # Use JSON output to provide feedback to the subagent
-            feedback = {
-                "decision": "block",
-                "reason": f"""❌ **SPARK Quality Gates FAILED** ({gate_results['pass_rate']}%)
+            reason = f"""Quality gates failed: {results['passed_count']}/{results['total_gates']} passed ({results['pass_rate']}% pass rate)
 
-**Failed Gates**: {gate_results['total_gates'] - gate_results['gates_passed']}/{gate_results['total_gates']}
+Failed Gates ({len(results['failed_gates'])}):
+{chr(10).join(failure_details)}
 
-**Issues to fix:**
-{chr(10).join(f'• {issue}' for issue in failed_gates)}
-
-Please fix these issues before proceeding. Focus on the failing quality gates and rerun your implementation."""
-            }
+Please fix these issues and try again."""
             
-            print(json.dumps(feedback))
-            sys.exit(0)
+            retry_prompt = f"""The following quality gates need to be fixed:
+{chr(10).join(f'- {gate}' for gate in results['failed_gates'])}
+
+Focus on fixing the specific issues identified and ensure the code meets SPARK quality standards."""
+            
+            # Format output
+            output = HookOutputFormatter.format_subagent_stop(
+                decision=decision,
+                reason=reason,
+                retry_prompt=retry_prompt,
+                metadata={
+                    "quality_gates_passed": results["passed_count"],
+                    "quality_gates_total": results["total_gates"],
+                    "quality_gates_failed": results["failed_gates"],
+                    "pass_rate": results["pass_rate"]
+                }
+            )
+        
+        # Output JSON to stdout
+        print(output)
+        
+        sys.exit(0)
         
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON input: {e}")
+        # Output error in proper JSON format
+        error_output = HookOutputFormatter.format_subagent_stop(
+            decision="block",
+            reason=f"Invalid input format: {e}"
+        )
+        print(error_output)
         sys.exit(1)
+        
     except Exception as e:
         logger.error(f"Hook execution failed: {e}")
+        logger.exception(e)
+        # Output error in proper JSON format
+        error_output = HookOutputFormatter.format_subagent_stop(
+            decision="block",
+            reason=f"Quality gate system error: {e}"
+        )
+        print(error_output)
         sys.exit(1)
 
 

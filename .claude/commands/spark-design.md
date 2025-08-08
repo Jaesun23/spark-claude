@@ -4,13 +4,14 @@
 
 ## Execution Instructions
 
-When this command is called, use the Task tool to launch the designer-spark agent:
+When this command is called, I will collaborate with the designer-spark specialist:
 
-```
-Use the Task tool with subagent_type "designer-spark" to perform design tasks.
-Pass the user's specific design request as the prompt parameter.
-The designer-spark agent will create designs with architecture and UI/UX best practices.
-```
+The designer-spark specialist will:
+- Create comprehensive system architectures and UI/UX designs
+- Apply mobile-first and accessibility-first principles
+- Design scalable solutions with performance optimization
+- Follow modern design patterns and best practices
+- Deliver production-ready components and specifications
 
 ## Usage Examples
 

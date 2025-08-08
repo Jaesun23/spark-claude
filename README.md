@@ -1,24 +1,29 @@
-# ⚡ SPARK: Universal AI Agent System for Claude Code
+# ⚡ SPARK v3.0: Unified AI Agent System for Claude Code
 
 > **Subagent Performance Architecture with Reduced toKens**
 > 
-> *A complete AI agent system with 88.4% token efficiency and universal compatibility*
+> *The ultimate multi-agent automation system with 88.4% token efficiency and enterprise-grade quality gates*
 
+[![Version](https://img.shields.io/badge/VERSION-3.0%20UNIFIED-gold?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
 [![GitHub stars](https://img.shields.io/github/stars/Jaesun23/spark-claude?style=for-the-badge)](https://github.com/Jaesun23/spark-claude/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-88.4%25-brightgreen?style=for-the-badge)](benchmarks/)
+[![Quality Gates](https://img.shields.io/badge/QUALITY%20GATES-12%20STEPS-purple?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
 [![Claude Code](https://img.shields.io/badge/CLAUDE%20CODE-COMPATIBLE-blue?style=for-the-badge)](https://claude.ai/code)
 
-## 🎯 What is SPARK?
+## 🎯 What is SPARK v3.0?
 
-SPARK is a **universal AI agent system** for [Claude Code](https://claude.ai/code) that provides:
+SPARK v3.0 Unified is the **most advanced AI agent system** for [Claude Code](https://claude.ai/code) that provides:
 
 - 🧠 **16 Specialized Agents**: Implementation, analysis, testing, design, debugging, and more
 - 🚀 **88.4% Token Efficiency**: 5,100 vs 44,000 tokens (compared to traditional approaches)  
-- 🔄 **Smart Hooks System**: Automatic persona routing and quality validation
-- 🛡️ **Universal Quality Gates**: Works with Python, JavaScript, TypeScript, Go, and more
+- 🔄 **Unified Orchestrator**: 6 lifecycle hooks for complete task tracking
+- 🛡️ **12-Step Quality Gates**: Industry-leading validation (8 SPARK + 2 Jason DNA + 2 Unified)
 - ⚡ **Slash Commands**: Simple `/spark`, `/spark-analyze`, `/spark-test` commands
-- 🌍 **Language Agnostic**: No project dependencies, works everywhere
+- 🌍 **Language Agnostic**: Python, JavaScript, TypeScript, Go, Rust, and more
+- 🔒 **Security Hardened**: SecureCommandExecutor prevents malicious operations
+- 🔁 **Intelligent Retry**: Automatic recovery with smart guidance (max 3 attempts)
+- 📊 **8 Persona Modes**: Backend, Frontend, Security, Architecture, DevOps, Data, Testing, Documentation
 
 ## 🚀 Quick Start
 
@@ -29,7 +34,7 @@ git clone https://github.com/Jaesun23/spark-claude.git
 cd spark-claude
 
 # Run the installer (installs to ~/.claude/ automatically)
-./install.sh
+./scripts/install.sh
 ```
 
 ### 2. **Use SPARK Commands**
@@ -163,21 +168,37 @@ spark-claude/
 │   │   ├── analyzer-spark.md
 │   │   ├── designer-spark.md
 │   │   └── ... (13 more agents)
-│   ├── hooks/              # Intelligence system
-│   │   ├── spark_persona_router.py    # Smart agent routing
-│   │   ├── spark_quality_gates.py     # 10-step validation
-│   │   └── spark_test_runner.py       # Test automation
+│   ├── hooks/              # Unified Intelligence System v3.0
+│   │   ├── spark_unified_orchestrator.py  # NEW: Unified 6-hook orchestrator
+│   │   ├── spark_persona_router.py        # Smart agent routing
+│   │   ├── spark_quality_gates.py         # 12-step validation
+│   │   └── spark_test_runner.py           # Test automation
 │   ├── workflows/          # State management (JSON files)
-│   │   ├── current_task.json          # Current task tracking
-│   │   ├── agent_status.json          # Agent state
-│   │   └── task_pipeline.json         # Workflow pipeline
+│   │   ├── unified_context.json           # NEW: Unified task context
+│   │   ├── current_task.json              # Current task tracking
+│   │   ├── agent_status.json              # Agent state
+│   │   └── task_pipeline.json             # Workflow pipeline
 │   └── commands/           # Command definitions
 │       └── implement-spark.md
 ├── benchmarks/             # Performance verification
-│   └── compare_performance.py
-├── README.md              # You are here!
-├── CLAUDE.md             # Instructions for future Claude instances
-└── pyproject.toml        # Package configuration
+│   ├── compare_performance.py
+│   └── benchmark_results.json
+├── docs/                   # Project documentation
+│   ├── UNIFIED_SPARK_SYSTEM.md  # NEW: v3.0 Unified System Guide
+│   ├── SPARK_MANUAL.md         # Complete usage manual
+│   ├── ROADMAP.md              # Future development plans
+│   ├── FIX_DEPLOYMENT_GUIDE.md
+│   └── PR_TEMPLATE.md
+├── scripts/               # Installation and utilities
+│   └── install.sh        # Universal installer with backup support
+├── tests/                 # Test files
+│   └── test_fixes.py
+├── examples/              # Example code (coming soon)
+├── README.md             # You are here!
+├── CLAUDE.md            # Instructions for future Claude instances
+├── LICENSE              # MIT License
+├── pyproject.toml       # Package configuration
+└── uv.lock             # Dependency lock file
 ```
 
 ### Key Components
@@ -259,7 +280,7 @@ If you find SPARK useful, please give us a star! ⭐
 - **Tomorrow**: Automating any knowledge work
 - **Future**: Teams of agents handling massive projects
 
-📖 **[See Full Roadmap](ROADMAP.md)** - Join us in building the future of automation!
+📖 **[See Full Roadmap](docs/ROADMAP.md)** - Join us in building the future of automation!
 
 ---
 

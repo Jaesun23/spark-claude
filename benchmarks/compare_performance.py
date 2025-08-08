@@ -188,10 +188,15 @@ def main():
         'improvements': calculate_improvement(superclaude_result, spark_result)
     }
 
-    with open('benchmark_results.json', 'w') as f:
+    # Save to benchmarks directory
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    results_path = os.path.join(script_dir, 'benchmark_results.json')
+    
+    with open(results_path, 'w') as f:
         json.dump(results, f, indent=2)
 
-    print("\n📁 Results saved to benchmark_results.json")
+    print(f"\n📁 Results saved to {results_path}")
     print("\n🎉 Benchmark complete!")
 
 if __name__ == "__main__":

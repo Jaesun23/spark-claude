@@ -4,13 +4,14 @@
 
 ## Execution Instructions
 
-When this command is called, use the Task tool to launch the tester-spark agent:
+When this command is called, I will engage the tester-spark testing specialist:
 
-```
-Use the Task tool with subagent_type "tester-spark" to perform comprehensive testing.
-Pass the user's specific testing request as the prompt parameter.
-The tester-spark agent will generate, execute, and analyze tests with quality assurance.
-```
+The tester-spark specialist will:
+- Generate comprehensive test suites based on the codebase
+- Execute tests and analyze results
+- Optimize for 95%+ code coverage
+- Ensure all quality standards are met
+- Provide detailed coverage reports and recommendations
 
 ## Usage Examples
 

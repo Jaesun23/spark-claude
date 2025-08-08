@@ -4,16 +4,21 @@
 
 ## Execution Instructions
 
-When this command is called, execute the following multi-agent pipeline:
+When this command is called, I will orchestrate a two-phase research and documentation pipeline:
 
-```
-1. First, use the Task tool with subagent_type "analyzer-spark" to conduct thorough research and analysis.
-   Pass the user's research request as the prompt parameter.
+### Phase 1: Research & Analysis
+I will engage the analyzer-spark specialist to:
+- Conduct thorough research and investigation
+- Analyze the codebase, architecture, or system components
+- Identify patterns, issues, and opportunities
+- Generate evidence-based findings and metrics
 
-2. After the analyzer-spark completes, use the Task tool with subagent_type "documenter-spark" 
-   to create professional documentation based on the analysis results.
-   Pass "Generate comprehensive documentation based on the previous analysis results" as the prompt.
-```
+### Phase 2: Documentation Generation
+Following the analysis, I will activate the documenter-spark specialist to:
+- Transform analysis results into professional documentation
+- Create structured reports with clear sections
+- Include executive summaries and actionable recommendations
+- Generate comprehensive technical documentation
 
 ## Usage Examples
 

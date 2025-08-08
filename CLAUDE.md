@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SPARK (Subagent Performance Architecture with Reduced toKens) is an optimized version of the SuperClaude framework that achieves 88% token reduction while maintaining full functionality. Created through human-AI collaboration between Jason (human architect) and AI assistants.
+SPARK v3.0 Unified (Subagent Performance Architecture with Reduced toKens) is the most advanced multi-agent automation system that achieves 88.4% token reduction while providing enterprise-grade quality gates. Created through human-AI collaboration between Jason (human architect) and AI assistants.
 
 ## Architecture
 
@@ -13,10 +13,12 @@ SPARK (Subagent Performance Architecture with Reduced toKens) is an optimized ve
 - **SPARK**: Loads only the needed agent + router (5,100 tokens average)
 - **Verified Performance**: 88.4% token reduction, 78.7% faster load time
 
-### Key Components
-1. **Smart Persona Router** (`spark-hooks/spark_persona_router.py`): Analyzes tasks and activates only needed personas
-2. **Quality Gates** (`spark-hooks/spark_quality_gates.py`): 10-step validation (8 SPARK + 2 Jason DNA)
-3. **Specialized Agents** (`spark-agents/`): 16 modular agents loaded on-demand
+### Key Components (v3.0 Enhanced)
+1. **Unified Orchestrator** (`spark-hooks/spark_unified_orchestrator.py`): Manages 6 lifecycle hooks
+2. **Smart Persona Router** (`spark-hooks/spark_persona_router.py`): 8 persona modes for intelligent routing
+3. **Quality Gates** (`spark-hooks/spark_quality_gates.py`): 12-step validation (8 SPARK + 2 Jason DNA + 2 Unified)
+4. **Specialized Agents** (`spark-agents/`): 16 modular agents loaded on-demand
+5. **Security Layer**: SecureCommandExecutor prevents malicious operations
 
 ## Development Commands
 
@@ -37,41 +39,65 @@ uv pip install -e ".[full,dev,benchmark]"
 
 ### Testing Hooks
 ```bash
+# Test unified orchestrator (v3.0)
+echo '{"prompt": "implement API endpoint"}' | python3 .claude/hooks/spark_unified_orchestrator.py
+
 # Test persona router
-echo '{"prompt": "implement API endpoint"}' | python3 spark-hooks/spark_persona_router.py
+echo '{"prompt": "implement API endpoint"}' | python3 .claude/hooks/spark_persona_router.py
 
 # Test quality gates (requires current_task.json)
-echo '{}' | python3 spark-hooks/spark_quality_gates.py
+echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 ```
 
 ## Code Architecture
 
-### Persona System
+### Persona System (v3.0 Extended)
 The system uses intelligent persona activation based on task keywords and complexity:
 
 - **Backend Mode**: Activates on API, endpoint, service, database keywords
-- **Security Mode**: Activates on auth, security, vulnerability keywords  
-- **Frontend Mode**: Activates on component, UI, responsive keywords
-- **Architect Mode**: Activates on complexity > 0.7 or architecture keywords
+- **Frontend Mode**: Activates on component, UI, responsive, style keywords
+- **Security Mode**: Activates on auth, security, vulnerability keywords
+- **Architecture Mode**: Activates on complexity > 0.7 or architecture keywords
+- **DevOps Mode**: Activates on deploy, CI/CD, pipeline keywords
+- **Data Mode**: Activates on data, analytics, database keywords
+- **Testing Mode**: Activates on test, coverage keywords
+- **Documentation Mode**: Activates on document, readme keywords
 
-### Quality Gate Protocol
-All code must pass 10 quality gates:
+### Quality Gate Protocol (v3.0 - 12 Steps)
+All code must pass 12 quality gates:
+
+**SPARK Core Gates (8):**
 1. Syntax Validation (0 errors)
 2. Type Verification (MyPy 0 errors)
 3. Lint Enforcement (Ruff 0 violations)
 4. Security Analysis (no hardcoded secrets)
-5. Test Integration (tests must exist)
+5. Test Coverage (95%+ required)
 6. Performance Check
 7. Documentation (docstrings required)
 8. Integration Test
+
+**Jason DNA Gates (2):**
 9. Jason DNA MyPy (strict enforcement)
 10. Jason DNA Ruff (strict enforcement)
 
-### Hook System
-The project uses hooks for workflow automation:
-- **UserPromptSubmit Hook**: `spark_persona_router.py` - Activates personas based on task
-- **SubagentStop Hook**: `spark_quality_gates.py` - Validates code quality
-- Hooks read/write to `.claude/workflows/current_task.json` for state management
+**Unified Gates (2):**
+11. Dependency Audit (security vulnerabilities)
+12. Complexity Threshold (cyclomatic complexity < 10)
+
+### Hook System (v3.0 - 6 Lifecycle Hooks)
+The project uses unified orchestrator for complete lifecycle management:
+
+**Unified Orchestrator** (`spark_unified_orchestrator.py`) handles:
+- **UserPromptSubmit**: Task initialization and persona routing
+- **SubagentStart**: Track agent initialization
+- **SubagentStop**: Quality validation with intelligent retry
+- **ToolUse**: Monitor tool usage patterns
+- **UserPromptComplete**: Finalize task and generate metrics
+- **AssistantResponse**: Track token usage
+
+State management via:
+- `.claude/workflows/unified_context.json` - Complete task context
+- `.claude/workflows/current_task.json` - Legacy compatibility
 
 ## Implementation Workflow
 

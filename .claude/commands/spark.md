@@ -4,23 +4,23 @@
 
 ## Execution Instructions
 
-When this command is called, analyze the user's request and use the appropriate SPARK agent:
+When this command is called, analyze the user's request and delegate it to the appropriate SPARK specialist:
 
-```
-Based on the request type, use the Task tool with the most suitable subagent_type:
+### Task Analysis and Delegation
 
-- **Implementation tasks**: Use "implementer-spark" 
-- **Analysis requests**: Use "analyzer-spark"
-- **UI/Design tasks**: Use "designer-spark" 
-- **Testing requests**: Use "tester-spark"
-- **Documentation**: Use "documenter-spark"
-- **Project cleanup**: Use "cleaner-spark"
-- **Troubleshooting**: Use "troubleshooter-spark"
-- **Code improvement**: Use "improver-spark"
-- **Architecture design**: Use "loader-spark" or "spawner-spark"
+Based on the request type, I will:
 
-The SPARK intelligence system will automatically activate appropriate personas and quality gates.
-```
+- **Implementation tasks**: Delegate to the implementer-spark specialist for high-quality code implementation
+- **Analysis requests**: Engage the analyzer-spark specialist for deep code analysis
+- **UI/Design tasks**: Collaborate with the designer-spark specialist for UI/UX solutions
+- **Testing requests**: Activate the tester-spark specialist for comprehensive testing
+- **Documentation**: Utilize the documenter-spark specialist for clear documentation
+- **Project cleanup**: Deploy the cleaner-spark specialist for optimization
+- **Troubleshooting**: Consult the troubleshooter-spark specialist for debugging
+- **Code improvement**: Work with the improver-spark specialist for enhancements
+- **Architecture design**: Leverage loader-spark or spawner-spark specialists for system design
+
+The SPARK intelligence system automatically activates appropriate personas and quality gates through the hook system.
 
 ## Usage Examples
 

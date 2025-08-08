@@ -1,93 +1,92 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(cat:*)",
-      "Bash(ls:*)",
-      "Bash(grep:*)",
-      "Bash(find:*)",
-      "Bash(tree:*)",
-      "Bash(head:*)",
-      "Bash(tail:*)",
-      "Bash(wc:*)",
-      "Bash(echo:*)",
-      "Bash(pwd:*)",
-      "Bash(cd:*)",
-      "Bash(mkdir:*)",
-      "Bash(touch:*)",
-      "Bash(cp:*)",
-      "Bash(mv:*)",
-      "Bash(which:*)",
-      "Bash(diff:*)",
-      "Bash(sed:*)",
-      "Bash(awk:*)",
-      "Bash(sort:*)",
-      "Bash(uniq:*)",
-      "Bash(uv:*)",
-      "Bash(python:*)",
-      "Bash(python3:*)",
-      "Bash(pip:*)",
-      "Bash(pytest:*)",
-      "Bash(ruff:*)",
-      "Bash(mypy:*)",
-      "Bash(black:*)",
-      "Bash(isort:*)",
-      "Bash(bandit:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git branch:*)",
-      "Bash(git show:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(npm:*)",
-      "Bash(npx:*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "View(*)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:pypi.org)"
-    ],
-    "deny": [
-      "Bash(rm -rf /*)",
-      "Bash(sudo rm:*)",
-      "Bash(:(){ :|:& };:)"
-    ]
-  },
   "hooks": {
     "userPromptSubmit": [
       {
+        "description": "SPARK Unified Orchestrator - Intelligent routing and lifecycle management",
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_persona_router.py"
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
+          }
+        ]
+      }
+    ],
+    "subagentStart": [
+      {
+        "description": "Track subagent initialization",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
           }
         ]
       }
     ],
     "subagentStop": [
       {
+        "description": "SPARK Quality Gates - 12-point validation system",
         "hooks": [
           {
-            "type": "command", 
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_quality_gates.py"
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
           }
         ]
       }
     ],
-    "postToolUse": [
+    "toolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "description": "Monitor tool usage for optimization",
         "hooks": [
           {
             "type": "command",
-            "command": "ruff format . --quiet 2>/dev/null || true",
-            "timeout": 10
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
+          }
+        ]
+      }
+    ],
+    "userPromptComplete": [
+      {
+        "description": "Finalize task and generate metrics",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
+          }
+        ]
+      }
+    ],
+    "assistantResponse": [
+      {
+        "description": "Track token usage and response patterns",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_unified_orchestrator.py"
           }
         ]
       }
     ]
+  },
+  "theme": "dark",
+  "telemetry": false,
+  "maxFileSize": 100,
+  "defaultModel": "sonnet",
+  "spark": {
+    "version": "3.0",
+    "mode": "unified",
+    "features": {
+      "lazyLoading": true,
+      "qualityGates": true,
+      "securityHardening": true,
+      "autoRetry": true,
+      "lifecycleTracking": true,
+      "pluginArchitecture": true
+    },
+    "performance": {
+      "tokenReduction": "88.4%",
+      "maxRetries": 3,
+      "timeout": 30,
+      "cacheEnabled": true
+    }
   }
 }

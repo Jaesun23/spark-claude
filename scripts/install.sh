@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# SPARK Universal AI Agent System Installer
+# SPARK Universal AI Agent System Installer v2.0
 # Installs SPARK to your Claude Code environment
+# Features: Backup, validation, and automatic recovery
 
 set -e
 

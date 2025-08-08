@@ -4,13 +4,14 @@
 
 ## Execution Instructions
 
-When this command is called, use the Task tool to launch the troubleshooter-spark agent:
+When this command is called, I will engage the troubleshooter-spark debugging specialist:
 
-```
-Use the Task tool with subagent_type "troubleshooter-spark" to investigate and fix issues.
-Pass the user's specific problem description as the prompt parameter.
-The troubleshooter-spark agent will systematically debug and resolve issues.
-```
+The troubleshooter-spark specialist will:
+- Systematically investigate the reported issue
+- Analyze error patterns, logs, and stack traces
+- Apply scientific debugging methods to isolate root causes
+- Develop targeted fixes with minimal side effects
+- Verify solutions thoroughly to prevent regressions
 
 ## Usage Examples
 

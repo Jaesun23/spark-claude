@@ -4,13 +4,14 @@
 
 ## Execution Instructions
 
-When this command is called, use the Task tool to launch the cleaner-spark agent:
+When this command is called, I will activate the cleaner-spark optimization specialist:
 
-```
-Use the Task tool with subagent_type "cleaner-spark" to perform comprehensive project cleanup.
-Pass the user's specific cleanup request as the prompt parameter.
-The cleaner-spark agent will analyze, clean, and optimize while maintaining all functionality.
-```
+The cleaner-spark specialist will:
+- Perform comprehensive analysis of project structure and code quality
+- Remove technical debt, duplicates, and unused resources
+- Optimize file organization and directory structure
+- Fix all linting and formatting issues
+- Ensure no functionality is broken during cleanup
 
 ## Usage Examples
 
