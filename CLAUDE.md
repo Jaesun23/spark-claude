@@ -111,9 +111,10 @@ When implementing features:
 ## Project Structure
 ```
 spark-claude/
-├── spark-agents/        # 16 specialized agents (loaded on-demand)
-├── spark-hooks/         # Workflow automation (router, quality gates)
-├── spark-workflows/     # Orchestration patterns
-├── benchmarks/          # Performance verification
-└── pyproject.toml       # Project configuration (uv-compatible)
+├── .claude/                 # Claude Code integration
+│   ├── agents/             # 16 SPARK agents (loaded on-demand)
+│   ├── hooks/              # Workflow automation (router, quality gates)
+│   └── workflows/          # Orchestration patterns & state management
+├── benchmarks/             # Performance verification
+└── pyproject.toml         # Project configuration (uv-compatible)
 ```
