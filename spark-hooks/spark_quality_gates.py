@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-SparkClaude Quality Gates Hook (SubagentStop)
-Implements SparkClaude's 8-step quality validation + Jason's DNA compliance
+SPARK Quality Gates Hook (SubagentStop)
+Implements SPARK's 8-step quality validation + Jason's DNA compliance
 """
 
 import json
@@ -40,7 +40,7 @@ def run_command(cmd: str, cwd: str = None) -> tuple:
 
 
 def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
-    """Execute SparkClaude's 8-step quality gates + Jason DNA extensions"""
+    """Execute SPARK's 8-step quality gates + Jason DNA extensions"""
     
     project_root = os.environ.get('CLAUDE_PROJECT_DIR', '.')
     quality_results = {
@@ -62,9 +62,9 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
         logger.warning("No files to validate - skipping quality gates")
         return quality_results
     
-    logger.info("🛡️ Executing SparkClaude + Jason Quality Gates...")
+    logger.info("🛡️ Executing SPARK + Jason Quality Gates...")
     
-    # SparkClaude Gate 1: Syntax Validation
+    # SPARK Gate 1: Syntax Validation
     logger.info("Step 1/10: Syntax Validation...")
     syntax_violations = 0
     for file_path in all_files:
@@ -79,7 +79,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if syntax_violations == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 2: Type Verification (MyPy)
+    # SPARK Gate 2: Type Verification (MyPy)
     logger.info("Step 2/10: Type Verification...")
     mypy_violations = 0
     for file_path in all_files:
@@ -97,7 +97,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if mypy_violations == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 3: Lint Enforcement (Ruff)
+    # SPARK Gate 3: Lint Enforcement (Ruff)
     logger.info("Step 3/10: Lint Enforcement...")
     ruff_violations = 0
     for file_path in all_files:
@@ -115,7 +115,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if ruff_violations == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 4: Security Analysis (Basic patterns)
+    # SPARK Gate 4: Security Analysis (Basic patterns)
     logger.info("Step 4/10: Security Analysis...")
     security_violations = 0
     security_patterns = [
@@ -144,7 +144,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if security_violations == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 5: Test Integration (Check if tests exist)
+    # SPARK Gate 5: Test Integration (Check if tests exist)
     logger.info("Step 5/10: Test Integration...")
     test_files_exist = any('test' in file_path.lower() for file_path in all_files)
     test_coverage_adequate = test_files_exist  # Simplified for now
@@ -154,7 +154,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if test_coverage_adequate:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 6: Performance Check (Import analysis)
+    # SPARK Gate 6: Performance Check (Import analysis)
     logger.info("Step 6/10: Performance Check...")
     performance_issues = 0
     # Check for potentially expensive imports in main execution paths
@@ -165,7 +165,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if performance_issues == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 7: Documentation (Check for docstrings)
+    # SPARK Gate 7: Documentation (Check for docstrings)
     logger.info("Step 7/10: Documentation...")
     documentation_violations = 0
     for file_path in all_files:
@@ -189,7 +189,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     if documentation_violations == 0:
         quality_results["gates_passed"] += 1
     
-    # SparkClaude Gate 8: Integration Test (Import test)
+    # SPARK Gate 8: Integration Test (Import test)
     logger.info("Step 8/10: Integration Test...")
     integration_failures = 0
     for file_path in all_files:
@@ -226,7 +226,7 @@ def execute_sparkclaude_quality_gates(task_data: dict) -> dict:
     
     # Log results
     logger.info(f"🛡️ Quality Gates Complete: {quality_results['gates_passed']}/10 passed")
-    logger.info(f"⚡ SparkClaude Compliance: {'✅ PASS' if quality_results['sparkclaude_compliance'] else '❌ FAIL'}")
+    logger.info(f"⚡ SPARK Compliance: {'✅ PASS' if quality_results['sparkclaude_compliance'] else '❌ FAIL'}")
     logger.info(f"🧬 Jason DNA Compliance: {'✅ PASS' if quality_results['jason_dna_compliance'] else '❌ FAIL'}")
     
     return quality_results
@@ -314,15 +314,15 @@ def main():
         with open(task_file, 'r') as f:
             task_data = json.load(f)
         
-        # Only run quality gates if SparkClaude is activated or this is implementer-spark
+        # Only run quality gates if SPARK is activated or this is implementer-spark
         sparkclaude_active = task_data.get("sparkclaude_activation") is not None
         current_agent = task_data.get("current_agent", "")
         
         if not sparkclaude_active and "super" not in current_agent:
-            logger.info("SparkClaude not activated - using standard quality gates")
+            logger.info("SPARK not activated - using standard quality gates")
             sys.exit(0)
         
-        # Execute SparkClaude quality gates
+        # Execute SPARK quality gates
         quality_results = execute_sparkclaude_quality_gates(task_data)
         
         # Determine routing decision
@@ -351,7 +351,7 @@ def main():
                 if count > 0:
                     violation_details.append(f"• {violation_type}: {count}")
             
-            feedback = f"""🛡️ SparkClaude Quality Gates Results:
+            feedback = f"""🛡️ SPARK Quality Gates Results:
 
 ❌ **Quality Issues Found** ({quality_results['gates_passed']}/10 gates passed):
 

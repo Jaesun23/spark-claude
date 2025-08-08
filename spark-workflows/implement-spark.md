@@ -1,12 +1,12 @@
 ---
-description: SparkClaude-enhanced implementation with 2호's intelligent quality review and orchestration
+description: SPARK-enhanced implementation with 2호's intelligent quality review and orchestration
 ---
 
-# SparkClaude Implementation Command - Quality-Driven Workflow
+# SPARK Implementation Command - Quality-Driven Workflow
 
 ## 🚀 Intelligent Quality-Driven Orchestration
 
-This command implements a complete development workflow where **2호 acts as the quality gatekeeper**, ensuring all code meets SparkClaude standards before progressing.
+This command implements a complete development workflow where **2호 acts as the quality gatekeeper**, ensuring all code meets SPARK standards before progressing.
 
 ## 📊 Quality-Driven Workflow
 
@@ -45,7 +45,7 @@ This command implements a complete development workflow where **2호 acts as the
 ```python
 # 2호가 실행
 Task(
-    description="SparkClaude Implementation - $ARGUMENTS",
+    description="SPARK Implementation - $ARGUMENTS",
     prompt="""Implement the requested feature using appropriate personas.
     Quality gates will be automatically checked after completion.""",
     subagent_type="implementer-spark"
@@ -109,7 +109,7 @@ Task(
 2호가 직접 생성하는 종합 보고서:
 
 ```markdown
-## ✅ SparkClaude Implementation Complete
+## ✅ SPARK Implementation Complete
 
 ### 📊 Quality Metrics
 - **구현 품질**: 10/10 gates passed
@@ -237,7 +237,7 @@ def execute_sparkclaude_workflow(task_description):
 
 ## 📈 기대 효과
 
-- **품질 보증**: 모든 코드가 SparkClaude 품질 기준 충족
+- **품질 보증**: 모든 코드가 SPARK 품질 기준 충족
 - **자동 재작업**: 품질 미달 시 자동으로 재구현/재테스트
 - **완전한 문서화**: 모든 기능이 문서화됨
 - **82% 토큰 절약**: 효율적인 페르소나 활용

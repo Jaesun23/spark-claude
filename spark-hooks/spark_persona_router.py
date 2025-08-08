@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SparkClaude Persona Router Hook (UserPromptSubmit)
+SPARK Persona Router Hook (UserPromptSubmit)
 Intelligently activates personas and MCP servers based on task analysis
 """
 
@@ -153,7 +153,7 @@ def select_personas_and_mcp(keywords: list, complexity: float) -> dict:
 
 
 def update_task_context(activation_result: dict, prompt: str) -> None:
-    """Update current_task.json with SparkClaude activation info"""
+    """Update current_task.json with SPARK activation info"""
     
     task_file = Path(".claude/workflows/current_task.json")
     
@@ -166,7 +166,7 @@ def update_task_context(activation_result: dict, prompt: str) -> None:
     else:
         task_data = {}
     
-    # Add SparkClaude activation metadata
+    # Add SPARK activation metadata
     task_data.update({
         "sparkclaude_activation": {
             **activation_result,
@@ -202,12 +202,12 @@ def main():
         ]):
             sys.exit(0)
         
-        # Analyze prompt for SparkClaude activation
+        # Analyze prompt for SPARK activation
         keywords = extract_keywords(prompt)
         complexity = calculate_complexity(prompt)
         
         if not keywords and complexity < 0.3:
-            # Simple task, no need for SparkClaude enhancement
+            # Simple task, no need for SPARK enhancement
             sys.exit(0)
             
         # Select personas and MCP servers
@@ -217,14 +217,14 @@ def main():
         update_task_context(activation_result, prompt)
         
         # Log activation details
-        logger.info("🧠 SparkClaude Intelligence Activated!")
+        logger.info("🧠 SPARK Intelligence Activated!")
         logger.info(f"🎭 Personas: {', '.join(activation_result['active_personas'])}")
         logger.info(f"🔧 MCP Servers: {', '.join(activation_result['mcp_servers'])}")
         logger.info(f"📊 Complexity: {activation_result['complexity_score']:.2f}")
         logger.info(f"🛡️ Quality Gates: {activation_result['quality_gates_required']}")
         
         # Generate context for Claude
-        context = f"""🧠 SparkClaude Intelligence System Activated!
+        context = f"""🧠 SPARK Intelligence System Activated!
 
 **Intelligent Analysis Results:**
 - 🎭 **Active Personas**: {', '.join(activation_result['active_personas'])}
@@ -232,7 +232,7 @@ def main():
 - 📊 **Complexity Score**: {activation_result['complexity_score']:.2f}/1.0
 - 🛡️ **Quality Gates**: {activation_result['quality_gates_required']}/10
 
-**Efficiency Achievement**: 82% token reduction vs SparkClaude original (8K vs 44K tokens)
+**Efficiency Achievement**: 82% token reduction vs SuperClaude original (8K vs 44K tokens)
 
 **Important**: Use the **implementer-spark** agent which has been pre-configured with this intelligence for optimal performance."""
         

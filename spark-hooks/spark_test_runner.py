@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SparkClaude Test Runner Hook (SubagentStop)
+SPARK Test Runner Hook (SubagentStop)
 Automatically executes comprehensive test suite after implementation
 """
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class TestRunner:
-    """SparkClaude intelligent test execution engine"""
+    """SPARK intelligent test execution engine"""
     
     def __init__(self, project_root: str):
         self.project_root = project_root
