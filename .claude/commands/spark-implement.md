@@ -27,10 +27,14 @@ This command orchestrates a complete development pipeline with quality gates ens
     ✅ Completion Report
 ```
 
+## 📝 Automatic Orchestration Process
+
+⚡ **핵심 원칙**: 수동 확인 절차 없음 - 모든 단계는 조건 충족 시 자동 진행
+
 ## 📝 Orchestration Process
 
-### Phase 1: Implementation
-I will delegate the implementation task to the implementer-spark specialist:
+### Phase 1: Implementation (자동 실행)
+I will immediately delegate to implementer-spark specialist:
 
 1. **Task Assignment**: Request the implementer-spark specialist to implement the feature
 2. **Quality Validation**: The SPARK quality gates hook automatically validates:
@@ -48,13 +52,13 @@ I will delegate the implementation task to the implementer-spark specialist:
 - ✅ Security scan (보안 이슈 0개)
 - ✅ Documentation (Docstring 존재)
 
-**Phase 1 → Phase 2 진행 조건:**
-- 모든 품질 게이트 통과 (5/5 ✅)
-- SubagentStop hook이 "continue" 신호 반환
-- 구현이 완전히 완료됨 (부분 구현 불가)
+**Phase 1 → Phase 2 자동 진행:**
+- ✅ 모든 품질 게이트 통과 (5/5) → 자동으로 Phase 2 시작
+- ✅ 구현 완료 감지 → 즉시 테스트 단계로 전환
+- ✅ SubagentStop hook 성공 → 대기 없이 다음 단계 실행
 
-### Phase 2: Testing
-After implementation passes quality gates, I will engage the tester-spark specialist:
+### Phase 2: Testing (자동 실행)
+Once quality gates pass, I will immediately engage tester-spark specialist:
 
 1. **Test Development**: Request comprehensive test creation with 95%+ coverage target
 2. **Test Validation**: The test runner hook automatically verifies:
@@ -70,14 +74,14 @@ After implementation passes quality gates, I will engage the tester-spark specia
 - ✅ Edge cases covered (경계값 테스트)
 - ✅ Integration tests exist (통합 테스트)
 
-**Phase 2 → Phase 3 진행 조건:**
-- 모든 테스트 통과 (0 failures)
-- 코드 커버리지 95% 이상 달성
-- SubagentStop hook이 "continue" 신호 반환
-- 테스트가 실제로 기능을 검증함 (테스트 품질 확인)
+**Phase 2 → Phase 3 자동 진행:**
+- ✅ 모든 테스트 통과 (0 failures) → 자동으로 Phase 3 시작
+- ✅ 커버리지 95% 달성 → 즉시 문서화 단계로 전환
+- ✅ 테스트 품질 검증 완료 → 대기 없이 다음 단계 실행
+- ✅ Hook 검증 통과 → 자동 진행 신호
 
-### Phase 3: Documentation
-Once testing achieves 95%+ coverage, I will activate the documenter-spark specialist:
+### Phase 3: Documentation (자동 실행)
+Once 95%+ coverage is achieved, I will immediately activate documenter-spark specialist:
 
 1. **Documentation Creation**: Request comprehensive documentation including:
    - README updates with new features
