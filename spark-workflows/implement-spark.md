@@ -1,30 +1,30 @@
 ---
-description: SuperClaude-enhanced implementation with 2호's intelligent quality review and orchestration
+description: SparkClaude-enhanced implementation with 2호's intelligent quality review and orchestration
 ---
 
-# SuperClaude Implementation Command - Quality-Driven Workflow
+# SparkClaude Implementation Command - Quality-Driven Workflow
 
 ## 🚀 Intelligent Quality-Driven Orchestration
 
-This command implements a complete development workflow where **2호 acts as the quality gatekeeper**, ensuring all code meets SuperClaude standards before progressing.
+This command implements a complete development workflow where **2호 acts as the quality gatekeeper**, ensuring all code meets SparkClaude standards before progressing.
 
 ## 📊 Quality-Driven Workflow
 
 ```
 ┌──────────────────┐
-│ Implementer-Super│ ←────┐
+│ Implementer-Spark│ ←────┐
 └────────┬─────────┘      │
          ↓                │ (품질 실패 시 재구현)
     🧑‍💼 2호 품질 검토 ────┘
          ↓ (품질 통과)
 ┌──────────────────┐
-│  Tester-Super    │ ←────┐
+│  Tester-Spark    │ ←────┐
 └────────┬─────────┘      │
          ↓                │ (95% 미달 시 재작성)
     🧑‍💼 2호 테스트 검토 ───┘
          ↓ (95%+ 달성)
 ┌──────────────────┐
-│ Documenter-Super │
+│ Documenter-Spark │
 └────────┬─────────┘
          ↓
     ✅ 완료 보고서
@@ -41,14 +41,14 @@ This command implements a complete development workflow where **2호 acts as the
 
 ## 📝 상세 워크플로우
 
-### Phase 1: 구현 (Implementer-Super)
+### Phase 1: 구현 (Implementer-Spark)
 ```python
 # 2호가 실행
 Task(
-    description="SuperClaude Implementation - $ARGUMENTS",
+    description="SparkClaude Implementation - $ARGUMENTS",
     prompt="""Implement the requested feature using appropriate personas.
     Quality gates will be automatically checked after completion.""",
-    subagent_type="implementer-super"
+    subagent_type="implementer-spark"
 )
 ```
 
@@ -63,7 +63,7 @@ Task(
 - 모든 항목 통과 시 → Phase 2로 진행
 - 1개 이상 실패 시 → Phase 1 재실행 (최대 3회)
 
-### Phase 2: 테스트 (Tester-Super)
+### Phase 2: 테스트 (Tester-Spark)
 ```python
 # 품질 통과 후 2호가 실행
 Task(
@@ -85,7 +85,7 @@ Task(
 - 95%+ 커버리지 달성 시 → Phase 3로 진행
 - 95% 미달 또는 실패 시 → Phase 2 재실행 (최대 2회)
 
-### Phase 3: 문서화 (Documenter-Super)
+### Phase 3: 문서화 (Documenter-Spark)
 ```python
 # 테스트 통과 후 2호가 실행
 Task(
@@ -109,7 +109,7 @@ Task(
 2호가 직접 생성하는 종합 보고서:
 
 ```markdown
-## ✅ SuperClaude Implementation Complete
+## ✅ SparkClaude Implementation Complete
 
 ### 📊 Quality Metrics
 - **구현 품질**: 10/10 gates passed
@@ -131,7 +131,7 @@ Task(
 
 ```python
 # 2호가 실제로 실행할 오케스트레이션
-def execute_superclaude_workflow(task_description):
+def execute_sparkclaude_workflow(task_description):
     """2호의 품질 기반 워크플로우 실행"""
     
     # Phase 1: Implementation
@@ -139,10 +139,10 @@ def execute_superclaude_workflow(task_description):
     impl_attempt = 0
     
     while impl_attempt < max_impl_retries:
-        # Run implementer-super
+        # Run implementer-spark
         result = Task(
             description=f"Implementation - {task_description}",
-            subagent_type="implementer-super"
+            subagent_type="implementer-spark"
         )
         
         # Check quality gates (automatically done by hook)
@@ -228,16 +228,16 @@ def execute_superclaude_workflow(task_description):
 ```
 
 **실행 과정:**
-1. **Implementer-Super**: Security + Backend 페르소나로 구현
+1. **Implementer-Spark**: Security + Backend 페르소나로 구현
 2. **2호 품질 검토**: 10개 품질 게이트 확인
-3. **Tester-Super**: 95%+ 커버리지 테스트 작성
+3. **Tester-Spark**: 95%+ 커버리지 테스트 작성
 4. **2호 테스트 검토**: 커버리지 및 테스트 통과 확인
-5. **Documenter-Super**: 완전한 문서 생성
+5. **Documenter-Spark**: 완전한 문서 생성
 6. **완료**: 최종 보고서 제공
 
 ## 📈 기대 효과
 
-- **품질 보증**: 모든 코드가 SuperClaude 품질 기준 충족
+- **품질 보증**: 모든 코드가 SparkClaude 품질 기준 충족
 - **자동 재작업**: 품질 미달 시 자동으로 재구현/재테스트
 - **완전한 문서화**: 모든 기능이 문서화됨
 - **82% 토큰 절약**: 효율적인 페르소나 활용
