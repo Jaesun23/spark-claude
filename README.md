@@ -8,7 +8,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/Jaesun23/spark-claude?style=for-the-badge)](https://github.com/Jaesun23/spark-claude/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-88.4%25-brightgreen?style=for-the-badge)](benchmarks/)
-[![Quality Gates](https://img.shields.io/badge/QUALITY%20GATES-12%20STEPS-purple?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
+[![Quality Gates](https://img.shields.io/badge/QUALITY%20GATES-8%20STEPS-purple?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
 [![Claude Code](https://img.shields.io/badge/CLAUDE%20CODE-COMPATIBLE-blue?style=for-the-badge)](https://claude.ai/code)
 
 ## 🎯 What is SPARK v3.0?
