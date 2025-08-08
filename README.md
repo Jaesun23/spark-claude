@@ -33,14 +33,24 @@ cd spark-claude
 ```
 
 ### 2. **Use SPARK Commands**
+
+**Core Commands:**
 ```bash
-# In any Claude Code session:
 /spark "implement JWT authentication with refresh tokens"
 /spark-analyze "find performance bottlenecks in the API layer"
 /spark-test "create comprehensive tests with 95% coverage"
 /spark-design "build responsive dashboard with accessibility"
 /spark-clean "optimize project structure and remove dead code"
 /spark-fix "debug the intermittent connection timeout issues"
+```
+
+**Multi-Agent Pipelines:**
+```bash
+/spark-launch "user notification system with email and SMS support"
+/spark-refactor "modernize authentication module for better maintainability"
+/spark-audit "complete security and performance audit of API layer"
+/spark-migrate "migrate legacy PHP system to modern Node.js architecture"
+/spark-optimize "optimize database queries and API response times"
 ```
 
 ### 3. **Watch the Magic**
