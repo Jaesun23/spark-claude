@@ -48,6 +48,11 @@ I will delegate the implementation task to the implementer-spark specialist:
 - ✅ Security scan (보안 이슈 0개)
 - ✅ Documentation (Docstring 존재)
 
+**Phase 1 → Phase 2 진행 조건:**
+- 모든 품질 게이트 통과 (5/5 ✅)
+- SubagentStop hook이 "continue" 신호 반환
+- 구현이 완전히 완료됨 (부분 구현 불가)
+
 ### Phase 2: Testing
 After implementation passes quality gates, I will engage the tester-spark specialist:
 
@@ -65,6 +70,12 @@ After implementation passes quality gates, I will engage the tester-spark specia
 - ✅ Edge cases covered (경계값 테스트)
 - ✅ Integration tests exist (통합 테스트)
 
+**Phase 2 → Phase 3 진행 조건:**
+- 모든 테스트 통과 (0 failures)
+- 코드 커버리지 95% 이상 달성
+- SubagentStop hook이 "continue" 신호 반환
+- 테스트가 실제로 기능을 검증함 (테스트 품질 확인)
+
 ### Phase 3: Documentation
 Once testing achieves 95%+ coverage, I will activate the documenter-spark specialist:
 
@@ -74,6 +85,13 @@ Once testing achieves 95%+ coverage, I will activate the documenter-spark specia
    - Usage examples and code samples
    - Inline docstrings for all functions
 2. **Final Report**: Generate completion report with all deliverables
+
+**Phase 3 완료 조건:**
+- README.md 업데이트 완료
+- API 문서화 완료 (해당되는 경우)
+- 사용 예제 추가
+- 모든 함수/클래스에 docstring 존재
+- 최종 구현 보고서 작성
 
 ## 💡 품질 기준
 
