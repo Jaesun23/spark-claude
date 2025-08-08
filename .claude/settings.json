@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "userPromptSubmit": [
+    "UserPromptSubmit": [
       {
         "description": "SPARK Persona Router - Intelligent task routing and persona activation",
         "hooks": [
@@ -11,9 +11,9 @@
         ]
       }
     ],
-    "subagentStop": [
+    "SubagentStop": [
       {
-        "description": "SPARK Quality Gates - 12-point validation with intelligent retry",
+        "description": "Jason's 8-Step Strict Quality Gates - zero tolerance validation with intelligent retry",
         "hooks": [
           {
             "type": "command",

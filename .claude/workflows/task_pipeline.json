@@ -18,7 +18,7 @@
       "name": "quality_gates",
       "agent": "spark_quality_gates", 
       "status": "pending",
-      "description": "10-step quality validation (8 SPARK + 2 Jason DNA)"
+      "description": "8-step strict quality validation (Jason's zero-tolerance approach)"
     }
   ],
   "token_budget": 5100,

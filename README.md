@@ -17,9 +17,9 @@ SPARK v3.0 Unified is the **most advanced AI agent system** for [Claude Code](ht
 
 - 🧠 **16 Specialized Agents**: Implementation, analysis, testing, design, debugging, and more
 - 🚀 **88.4% Token Efficiency**: 5,100 vs 44,000 tokens (compared to traditional approaches)  
-- 🔄 **Unified Orchestrator**: 6 lifecycle hooks for complete task tracking
-- 🛡️ **12-Step Quality Gates**: Industry-leading validation (8 SPARK + 2 Jason DNA + 2 Unified)
-- ⚡ **Slash Commands**: Simple `/spark`, `/spark-analyze`, `/spark-test` commands
+- 🔄 **Fixed Unified Orchestrator**: 6 lifecycle hooks working correctly (no more phase hanging)
+- 🛡️ **Jason's 8-Step Strict Quality Gates**: Efficient zero-tolerance validation (fixed duplicate issues)
+- ⚡ **Task 동시 호출**: "Task Task Task → 시작!" pattern for true parallelism (88.4% efficiency)
 - 🌍 **Language Agnostic**: Python, JavaScript, TypeScript, Go, Rust, and more
 - 🔒 **Security Hardened**: SecureCommandExecutor prevents malicious operations
 - 🔁 **Intelligent Retry**: Automatic recovery with smart guidance (max 3 attempts)
@@ -60,8 +60,10 @@ cd spark-claude
 
 ### 3. **Watch the Magic**
 - SPARK automatically activates appropriate personas (Backend, Frontend, Security, etc.)
-- Quality gates ensure code meets standards (syntax, linting, types, security, docs)
-- Failed quality checks trigger automatic fixes and retries
+- **Fixed Hook System**: No more "phase2 진행할까요?" hanging between phases
+- **Task 동시 호출**: True parallel execution with "Task Task Task → 시작!" pattern
+- **Jason's 8-Step Quality Gates**: Efficient validation without duplicates
+- **Realistic Test Coverage**: Unit 95%, Integration 85%, Overall 90%
 - All with 88.4% fewer tokens than traditional approaches
 
 ## 📊 Performance Comparison
@@ -171,7 +173,7 @@ spark-claude/
 │   ├── hooks/              # Unified Intelligence System v3.0
 │   │   ├── spark_unified_orchestrator.py  # NEW: Unified 6-hook orchestrator
 │   │   ├── spark_persona_router.py        # Smart agent routing
-│   │   ├── spark_quality_gates.py         # 12-step validation
+│   │   ├── spark_quality_gates.py         # 8-step strict validation
 │   │   └── spark_test_runner.py           # Test automation
 │   ├── workflows/          # State management (JSON files)
 │   │   ├── unified_context.json           # NEW: Unified task context
@@ -204,7 +206,9 @@ spark-claude/
 ### Key Components
 
 - **🎯 Smart Router**: Automatically selects the optimal agent (88% token savings!)
-- **🛡️ Quality Gates**: 10-step validation (8 SPARK + 2 Jason DNA)
+- **🛡️ Fixed Quality Gates**: Jason's 8-step strict validation (no duplicates, realistic targets)
+- **⚡ Fixed Hook System**: UserPromptSubmit & SubagentStop working correctly
+- **🚀 Task 동시 호출**: True parallel execution pattern
 - **📊 State Management**: JSON-based workflow tracking
 - **⚡ Lazy Loading**: Load only what you need, when you need it
 

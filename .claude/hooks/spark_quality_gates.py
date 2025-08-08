@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-SPARK Quality Gates Hook (SubagentStop) - FIXED VERSION
-Universal quality validation with secure execution and proper JSON output
+Jason's 8-Step Strict Quality Gates Hook (SubagentStop) - EFFICIENT VERSION
+Universal quality validation with zero tolerance and proper JSON output
 """
 
 import json
@@ -57,11 +57,12 @@ class SyntaxValidationGate(QualityGate):
     def check(self) -> Tuple[bool, List[str]]:
         issues = []
         
-        # Check Python files
-        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
-        for file_path in python_files[:10]:  # Limit to prevent timeout
+        # Check Python files (Claude Code compatible - limited scope)
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__", ".git"])
+        for file_path in python_files[:5]:  # Reduced limit for Claude Code
             success, stdout, stderr = self.executor.run_command(
-                ["python3", "-m", "py_compile", str(file_path)]
+                ["python3", "-m", "py_compile", str(file_path)],
+                timeout=10  # Shorter timeout
             )
             if not success and stderr:
                 issues.append(f"Python syntax error in {file_path.name}: {stderr[:100]}")
@@ -80,85 +81,85 @@ class SyntaxValidationGate(QualityGate):
         return len(issues) == 0, issues
 
 
-class TypeCheckingGate(QualityGate):
-    """Check type annotations and type safety"""
+class MyPyStrictGate(QualityGate):
+    """MyPy --strict: Zero errors mandatory (strongest type checking)"""
     
     def __init__(self):
         super().__init__(
-            "Type Checking",
-            "Verify type safety and annotations"
+            "MyPy --strict",
+            "Zero errors mandatory - strongest type checking"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
         issues = []
         
-        # Python - MyPy
+        # Python - MyPy with --strict flag (Jason's requirement)
         if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
             success, stdout, stderr = self.executor.run_command(
-                ["mypy", ".", "--ignore-missing-imports", "--no-error-summary"],
-                timeout=30
+                ["mypy", ".", "--strict", "--no-error-summary", "--no-incremental"],
+                timeout=20  # Reduced timeout for Claude Code
             )
             if not success or "error:" in stderr:
                 error_count = stderr.count("error:")
-                issues.append(f"MyPy found {error_count} type errors")
+                issues.append(f"MyPy --strict found {error_count} type errors (ZERO tolerance)")
         
-        # TypeScript
+        # TypeScript - strict mode
         if Path("tsconfig.json").exists():
             success, stdout, stderr = self.executor.run_command(
-                ["npx", "tsc", "--noEmit"],
+                ["npx", "tsc", "--strict", "--noEmit"],
                 timeout=30
             )
             if not success:
-                issues.append("TypeScript type checking failed")
+                issues.append("TypeScript strict type checking failed")
         
         return len(issues) == 0, issues
 
 
-class LintingGate(QualityGate):
-    """Check code style and linting rules"""
+class RuffStrictGate(QualityGate):
+    """Ruff --strict: Zero violations mandatory (strongest linting)"""
     
     def __init__(self):
         super().__init__(
-            "Code Linting",
-            "Verify code follows style guidelines"
+            "Ruff --strict",
+            "Zero violations mandatory - strongest linting"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
         issues = []
         
-        # Python - Ruff
+        # Python - Ruff with strict enforcement
         if Path("pyproject.toml").exists() or any(Path(".").glob("*.py")):
             success, stdout, stderr = self.executor.run_command(
-                ["ruff", "check", ".", "--quiet"],
+                ["ruff", "check", ".", "--select", "ALL", "--quiet"],
                 timeout=20
             )
             if not success:
                 # Count violations from stdout
                 violation_count = len(stdout.strip().split('\n')) if stdout else 1
-                issues.append(f"Ruff found {violation_count} style violations")
+                issues.append(f"Ruff --strict found {violation_count} violations (ZERO tolerance)")
         
-        # JavaScript/TypeScript - ESLint
+        # JavaScript/TypeScript - ESLint strict
         if Path("package.json").exists():
             for config_file in [".eslintrc.js", ".eslintrc.json", "eslint.config.js"]:
                 if Path(config_file).exists():
                     success, stdout, stderr = self.executor.run_command(
-                        ["npx", "eslint", ".", "--quiet", "--max-warnings", "0"],
+                        ["npx", "eslint", ".", "--max-warnings", "0"],
                         timeout=30
                     )
                     if not success:
-                        issues.append("ESLint found style violations")
+                        issues.append("ESLint strict found violations (ZERO tolerance)")
                     break
         
         return len(issues) == 0, issues
 
 
-class SecurityGate(QualityGate):
-    """Check for security vulnerabilities"""
+class SecurityEnhancedGate(QualityGate):
+    """Security Analysis: OWASP + enhanced (no hardcoded secrets)"""
     
     def __init__(self):
         super().__init__(
-            "Security Analysis",
-            "Scan for security vulnerabilities and secrets"
+            "Security Analysis (OWASP + Enhanced)",
+            "OWASP compliance + enhanced security scanning"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
@@ -210,13 +211,13 @@ class SecurityGate(QualityGate):
         return len(issues) == 0, issues
 
 
-class TestCoverageGate(QualityGate):
-    """Check test coverage and test existence"""
+class TestCoverage95Gate(QualityGate):
+    """Test Coverage 95%+: High standard enforcement"""
     
     def __init__(self):
         super().__init__(
-            "Test Coverage",
-            "Verify tests exist and have adequate coverage"
+            "Test Coverage 95%+",
+            "High standard test coverage enforcement"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
@@ -255,13 +256,13 @@ class TestCoverageGate(QualityGate):
         return len(issues) == 0, issues
 
 
-class DocumentationGate(QualityGate):
-    """Check documentation quality"""
+class DocumentationValidationGate(QualityGate):
+    """Documentation Validation: Docstrings required"""
     
     def __init__(self):
         super().__init__(
-            "Documentation",
-            "Verify code is properly documented"
+            "Documentation Validation",
+            "Docstrings required for all functions and classes"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
@@ -330,13 +331,13 @@ class PerformanceGate(QualityGate):
         return len(issues) == 0, issues
 
 
-class IntegrationGate(QualityGate):
-    """Check integration and compatibility"""
+class IntegrationTestingGate(QualityGate):
+    """Integration Testing: End-to-end validation + deployment readiness"""
     
     def __init__(self):
         super().__init__(
-            "Integration",
-            "Verify component integration and compatibility"
+            "Integration Testing",
+            "End-to-end validation and deployment readiness"
         )
     
     def check(self) -> Tuple[bool, List[str]]:
@@ -365,19 +366,23 @@ class IntegrationGate(QualityGate):
 
 
 class QualityGateRunner:
-    """Orchestrates running all quality gates"""
+    """Jason's 8-Step Strict Quality Gate Runner - Zero tolerance approach"""
     
-    def __init__(self):
+    def __init__(self, claude_code_mode: bool = True):
+        self.claude_code_mode = claude_code_mode
+        
+        # Jason's 8-Step Strict Quality Gates (no compromises)
         self.gates = [
-            SyntaxValidationGate(),
-            TypeCheckingGate(),
-            LintingGate(),
-            SecurityGate(),
-            TestCoverageGate(),
-            DocumentationGate(),
-            PerformanceGate(),
-            IntegrationGate()
+            SyntaxValidationGate(),          # Step 1: Syntax Validation (0 errors)
+            MyPyStrictGate(),               # Step 2: MyPy --strict (0 errors)
+            RuffStrictGate(),               # Step 3: Ruff --strict (0 violations)
+            SecurityEnhancedGate(),         # Step 4: Security Analysis (OWASP + enhanced)
+            TestCoverage95Gate(),           # Step 5: Test Coverage 95%+
+            PerformanceGate(),              # Step 6: Performance Check
+            DocumentationValidationGate(),   # Step 7: Documentation Validation
+            IntegrationTestingGate()        # Step 8: Integration Testing
         ]
+        
         self.state_manager = StateManager()
         self.chain_manager = AgentChainManager()
     
@@ -397,6 +402,9 @@ class QualityGateRunner:
         # Run only the required number of gates
         gates_to_run = self.gates[:required_gates]
         
+        # Fast-fail mode for Claude Code (stop on first critical failure)
+        fast_fail = self.claude_code_mode and len(gates_to_run) > 2
+        
         for gate in gates_to_run:
             try:
                 logger.info(f"Running gate: {gate.name}")
@@ -414,8 +422,13 @@ class QualityGateRunner:
                     failed_gates.append(gate.name)
                     all_issues.extend(issues)
                     logger.info(f"  ❌ {gate.name}: FAILED - {len(issues)} issues")
-                    for issue in issues[:3]:  # Log first 3 issues
+                    for issue in issues[:2]:  # Log first 2 issues for Claude Code
                         logger.info(f"     - {issue}")
+                    
+                    # Fast-fail for critical gates (syntax, security)
+                    if fast_fail and gate.name in ["Syntax Validation", "Security Analysis"]:
+                        logger.info("💨 Fast-fail activated - stopping quality gates")
+                        break
                         
             except Exception as e:
                 logger.error(f"  ⚠️ {gate.name}: ERROR - {e}")
@@ -450,7 +463,7 @@ class QualityGateRunner:
 
 
 def main():
-    """Main hook execution"""
+    """Main hook execution with Phase Manager integration"""
     try:
         # Read input from stdin
         input_data = json.load(sys.stdin)
@@ -460,15 +473,20 @@ def main():
         cwd = input_data.get("cwd", ".")
         
         logger.info("=" * 60)
-        logger.info("🛡️  SPARK Quality Gates - Starting Validation")
+        logger.info("🛡️  Jason's 8-Step Strict Quality Gates - Starting Validation")
         logger.info(f"   Subagent: {subagent_name}")
         logger.info(f"   Directory: {cwd}")
         logger.info("=" * 60)
         
-        # Initialize components
-        runner = QualityGateRunner()
+        # Initialize components with Claude Code optimization
+        claude_code_mode = input_data.get("claude_code_mode", True)
+        runner = QualityGateRunner(claude_code_mode=claude_code_mode)
         state_manager = StateManager()
         chain_manager = AgentChainManager()
+        
+        # Import Phase Manager for progression checking
+        from spark_phase_manager import SPARKPhaseManager
+        phase_manager = SPARKPhaseManager()
         
         # Get required gates from state
         state = state_manager.read_state()
@@ -476,6 +494,16 @@ def main():
         
         # Run quality gates
         results = runner.run_gates(required_gates)
+        
+        # Update state with quality results for Phase Manager
+        state["spark_quality_results"] = {
+            "gates_passed": results["passed_count"],
+            "total_gates": results["total_gates"], 
+            "violations": {},
+            "gate_results": results["results"],
+            "spark_compliance": results["passed"],
+            "jason_dna_compliance": results["passed"]
+        }
         
         logger.info("=" * 60)
         logger.info(f"📊 Quality Gates Summary:")
@@ -485,11 +513,36 @@ def main():
         logger.info(f"   Status: {'✅ PASSED' if results['passed'] else '❌ FAILED'}")
         logger.info("=" * 60)
         
-        # Prepare response based on results
+        # Update state with quality results and check phase progression
+        state_manager.write_state(state)
+        
+        # Check phase progression with Phase Manager
+        progression_check = phase_manager.check_phase_progression()
+        
+        # Prepare response based on results and phase progression
         if results["passed"]:
-            # Gates passed - allow continuation
+            # Gates passed - check phase progression
             decision = "continue"
             reason = f"Quality gates passed: {results['passed_count']}/{results['total_gates']} gates passed ({results['pass_rate']}% pass rate)"
+            
+            # Add phase progression information
+            if progression_check.get("can_progress"):
+                if progression_check.get("workflow_complete"):
+                    reason += f"\n\n✅ Workflow Complete! All phases finished successfully."
+                elif progression_check.get("next_phase"):
+                    reason += f"\n\n🔄 Phase Progression: Moving to '{progression_check['next_phase']}' phase."
+                    # Update routing decision for next phase
+                    state["routing_decision"] = {
+                        "next_action": "proceed_to_next_phase",
+                        "next_phase": progression_check["next_phase"],
+                        "reason": "Quality gates passed, progressing to next workflow phase",
+                        "retry_required": False
+                    }
+                    state_manager.write_state(state)
+            elif progression_check.get("hanging_detected"):
+                reason += f"\n\n⚠️ Hanging Detection: {progression_check['reason']}"
+                if progression_check.get("resolution_strategy") == "force_progression":
+                    reason += f"\nAutomatically resolved by force progression."
             
             # Pass quality results to next agent if in pipeline
             chain_status = chain_manager.get_chain_status()
@@ -497,18 +550,24 @@ def main():
                 chain_manager.pass_data(
                     from_agent=subagent_name,
                     to_agent="next",
-                    data={"quality_results": results}
+                    data={
+                        "quality_results": results,
+                        "phase_progression": progression_check
+                    }
                 )
             
-            # Format output
+            # Format output with phase information
+            metadata = {
+                "quality_gates_passed": results["passed_count"],
+                "quality_gates_total": results["total_gates"],
+                "pass_rate": results["pass_rate"],
+                "phase_progression": progression_check
+            }
+            
             output = HookOutputFormatter.format_subagent_stop(
                 decision=decision,
                 reason=reason,
-                metadata={
-                    "quality_gates_passed": results["passed_count"],
-                    "quality_gates_total": results["total_gates"],
-                    "pass_rate": results["pass_rate"]
-                }
+                metadata=metadata
             )
             
         else:

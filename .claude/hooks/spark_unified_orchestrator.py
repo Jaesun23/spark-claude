@@ -16,14 +16,16 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from enum import Enum
 
+# Import the phase manager
+sys.path.insert(0, str(Path(__file__).parent))
+from spark_phase_manager import PhaseTransitionManager
+
 class HookEvent(Enum):
-    """Unified hook event types"""
+    """Claude Desktop compatible hook event types"""
     USER_PROMPT_SUBMIT = "userPromptSubmit"
-    SUBAGENT_START = "subagentStart"
-    SUBAGENT_STOP = "subagentStop"
+    AGENT_STOP = "agentStop"  # Changed from subagentStop
     TOOL_USE = "toolUse"
     USER_PROMPT_COMPLETE = "userPromptComplete"
-    ASSISTANT_RESPONSE = "assistantResponse"
 
 class PersonaMode(Enum):
     """Intelligent persona modes"""
@@ -290,17 +292,16 @@ class UnifiedOrchestrator:
     def __init__(self):
         self.context_file = Path.home() / ".claude" / "workflows" / "unified_context.json"
         self.context_file.parent.mkdir(parents=True, exist_ok=True)
+        self.phase_manager = PhaseTransitionManager()
         
     def handle_event(self, event: HookEvent, data: Dict[str, Any]) -> Dict[str, Any]:
         """Unified event handler for all hook types"""
         
         handlers = {
             HookEvent.USER_PROMPT_SUBMIT: self._handle_prompt_submit,
-            HookEvent.SUBAGENT_START: self._handle_subagent_start,
-            HookEvent.SUBAGENT_STOP: self._handle_subagent_stop,
+            HookEvent.AGENT_STOP: self._handle_agent_stop,
             HookEvent.TOOL_USE: self._handle_tool_use,
-            HookEvent.USER_PROMPT_COMPLETE: self._handle_prompt_complete,
-            HookEvent.ASSISTANT_RESPONSE: self._handle_assistant_response
+            HookEvent.USER_PROMPT_COMPLETE: self._handle_prompt_complete
         }
         
         handler = handlers.get(event)
@@ -336,13 +337,17 @@ class UnifiedOrchestrator:
         # Save context
         self._save_context(context)
         
+        # Initialize workflow phases
+        complexity = PersonaRouter._calculate_complexity(prompt)
+        self.phase_manager.initialize_workflow(persona_names, complexity)
+        
         # Return enhanced prompt with routing info
         enhanced_prompt = f"""
 [SPARK Unified System Activated]
 Task ID: {task_id}
 Personas: {', '.join(persona_names)}
 MCP Servers: {', '.join(mcp_servers)}
-Quality Gates: 12-point validation enabled
+Quality Gates: Jason's 8-step strict validation enabled
 
 Original Request: {prompt}
 """
@@ -352,7 +357,7 @@ Original Request: {prompt}
             "output": enhanced_prompt
         }
     
-    def _handle_subagent_stop(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_agent_stop(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Handle subagent completion with quality gates"""
         context = self._load_context()
         if not context:
@@ -477,13 +482,6 @@ Original Request: {prompt}
         except Exception:
             return None
     
-    def _handle_subagent_start(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle subagent start event"""
-        context = self._load_context()
-        if context:
-            context.state = "executing"
-            self._save_context(context)
-        return {"continue": True}
     
     def _handle_tool_use(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Handle tool use event for monitoring"""
@@ -499,10 +497,6 @@ Original Request: {prompt}
             self._save_context(context)
         return {"continue": True}
     
-    def _handle_assistant_response(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle assistant response for token tracking"""
-        # Could implement token usage tracking here
-        return {"continue": True}
 
 def main():
     """Main entry point for hook execution"""
@@ -510,20 +504,16 @@ def main():
         # Read input from stdin
         input_data = json.load(sys.stdin)
         
-        # Detect hook event type
+        # Detect hook event type based on Claude Desktop lifecycle
         event_type = None
         if "prompt" in input_data:
             event_type = HookEvent.USER_PROMPT_SUBMIT
-        elif "subagent" in input_data and "stop" in input_data:
-            event_type = HookEvent.SUBAGENT_STOP
-        elif "subagent" in input_data and "start" in input_data:
-            event_type = HookEvent.SUBAGENT_START
+        elif "agent" in input_data or "stop" in input_data:
+            event_type = HookEvent.AGENT_STOP  
         elif "tool" in input_data:
             event_type = HookEvent.TOOL_USE
         elif "complete" in input_data:
             event_type = HookEvent.USER_PROMPT_COMPLETE
-        elif "response" in input_data:
-            event_type = HookEvent.ASSISTANT_RESPONSE
         
         if not event_type:
             print(json.dumps({"continue": True}))
