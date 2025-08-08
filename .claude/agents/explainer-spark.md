@@ -1,5 +1,5 @@
 ---
-name: explainer-super
+name: explainer-spark
 description: SPARK Explanation Expert - Educational explanations and knowledge transfer
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
@@ -121,7 +121,7 @@ Actual code examples
 
 ## 💡 Usage Examples
 ```bash
-@explainer-super "explain microservices architecture"
-@explainer-super "how does JWT authentication work"
-@explainer-super "explain async/await to beginners"
+@explainer-spark "explain microservices architecture"
+@explainer-spark "how does JWT authentication work"
+@explainer-spark "explain async/await to beginners"
 ```

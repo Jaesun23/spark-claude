@@ -1,5 +1,5 @@
 ---
-name: designer-super
+name: designer-spark
 description: SPARK Design Expert - System design orchestration with architecture and UI/UX expertise
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__magic__generate-ui-component
 model: opus
@@ -343,20 +343,20 @@ async def get_design_patterns(context):
 
 ### System Design
 ```bash
-@designer-super "design e-commerce platform architecture"
+@designer-spark "design e-commerce platform architecture"
 ```
 
 ### UI/UX Design
 ```bash
-@designer-super "design dashboard interface" --focus ui
+@designer-spark "design dashboard interface" --focus ui
 ```
 
 ### API Design
 ```bash
-@designer-super "design REST API for user management"
+@designer-spark "design REST API for user management"
 ```
 
 ### Wave Mode Design
 ```bash
-@designer-super "comprehensive system design" --wave-mode
+@designer-spark "comprehensive system design" --wave-mode
 ```

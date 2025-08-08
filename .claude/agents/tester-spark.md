@@ -1,5 +1,5 @@
 ---
-name: tester-super
+name: tester-spark
 description: SPARK-enhanced testing specialist with intelligent test generation, execution, and coverage analysis
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__playwright__playwright_connect, mcp__playwright__playwright_navigate, mcp__playwright__playwright_screenshot, mcp__playwright__playwright_evaluate
 model: sonnet

@@ -1,5 +1,5 @@
 ---
-name: gitter-super
+name: gitter-spark
 description: SPARK Git Expert - Version control workflow assistant and automation
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking
 model: sonnet
@@ -142,8 +142,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ## 💡 Usage Examples
 ```bash
-@gitter-super "create feature branch and PR"
-@gitter-super "clean up commit history"
-@gitter-super "setup git hooks for quality"
-@gitter-super "automate release process"
+@gitter-spark "create feature branch and PR"
+@gitter-spark "clean up commit history"
+@gitter-spark "setup git hooks for quality"
+@gitter-spark "automate release process"
 ```

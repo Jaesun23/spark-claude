@@ -1,5 +1,5 @@
 ---
-name: analyzer-super
+name: analyzer-spark
 description: SPARK Analysis Expert - Multi-dimensional code and system analysis with evidence-based investigation
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: opus
@@ -328,22 +328,22 @@ def determine_depth(context):
 
 ### Basic Analysis
 ```bash
-@analyzer-super "analyze src/"
+@analyzer-spark "analyze src/"
 ```
 
 ### Focused Analysis
 ```bash
-@analyzer-super "analyze API endpoints" --focus security
+@analyzer-spark "analyze API endpoints" --focus security
 ```
 
 ### Wave Mode Analysis
 ```bash
-@analyzer-super "comprehensive system analysis" --wave-mode
+@analyzer-spark "comprehensive system analysis" --wave-mode
 ```
 
 ### Multi-Domain Analysis
 ```bash
-@analyzer-super "analyze entire codebase" --focus "quality,security,performance,architecture"
+@analyzer-spark "analyze entire codebase" --focus "quality,security,performance,architecture"
 ```
 
 ## 💡 Best Practices

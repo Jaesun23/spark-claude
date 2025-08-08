@@ -1,5 +1,5 @@
 ---
-name: spawner-super
+name: spawner-spark
 description: SPARK Spawner Expert - Task orchestration and multi-agent coordination
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__magic__generate-ui-component, mcp__playwright__playwright_connect
 model: sonnet
@@ -164,8 +164,8 @@ def saga_orchestration(operations):
 
 ## 💡 Usage Examples
 ```bash
-@spawner-super "orchestrate microservices deployment"
-@spawner-super "coordinate multi-team development"
-@spawner-super "manage complex data pipeline"
-@spawner-super "spawn parallel test execution"
+@spawner-spark "orchestrate microservices deployment"
+@spawner-spark "coordinate multi-team development"
+@spawner-spark "manage complex data pipeline"
+@spawner-spark "spawn parallel test execution"
 ```

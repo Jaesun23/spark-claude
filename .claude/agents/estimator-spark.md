@@ -1,5 +1,5 @@
 ---
-name: estimator-super
+name: estimator-spark
 description: SPARK Estimation Expert - Evidence-based project estimation and planning
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
@@ -145,7 +145,7 @@ def adjust_for_risks(base_estimate):
 
 ## 💡 Usage Examples
 ```bash
-@estimator-super "estimate e-commerce platform development"
-@estimator-super "how long to refactor authentication system"
-@estimator-super "resource requirements for microservices migration"
+@estimator-spark "estimate e-commerce platform development"
+@estimator-spark "how long to refactor authentication system"
+@estimator-spark "resource requirements for microservices migration"
 ```

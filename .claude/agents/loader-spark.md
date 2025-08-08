@@ -1,5 +1,5 @@
 ---
-name: loader-super
+name: loader-spark
 description: SPARK Loader Expert - Project context loading and environment setup
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__magic__generate-ui-component, mcp__playwright__playwright_connect
 model: sonnet
@@ -131,7 +131,7 @@ def build_context(project):
 
 ## 💡 Usage Examples
 ```bash
-@loader-super "load entire project context"
-@loader-super "setup development environment"
-@loader-super "prepare for new developer onboarding"
+@loader-spark "load entire project context"
+@loader-spark "setup development environment"
+@loader-spark "prepare for new developer onboarding"
 ```

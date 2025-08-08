@@ -27,7 +27,7 @@ SPARK:       █████ 5,100 tokens
 | Metric | SuperClaude | SPARK | Improvement |
 |--------|------------|-------|-------------|
 | Token Usage | 44,000 | 5,100 | **88.4% ↓** |
-| Load Time | 3.2s | 0.6s | **81% ↓** |
+| Load Time | 3.2s | 0.6s | **79% ↓** |
 | API Cost | $0.88 | $0.10 | **88.6% ↓** |
 
 ## What's Changed
@@ -52,12 +52,12 @@ SPARK:       █████ 5,100 tokens
 For existing SuperClaude users, migration is simple:
 ```python
 # Before (SuperClaude)
-from sparkclaude import load_all_agents
+from superclaude import load_all_agents
 agents = load_all_agents()  # 44,000 tokens
 
 # After (SPARK)
-from spark import route_to_agent
-agent = route_to_agent(task)  # ~5,000 tokens
+from spark_hooks.spark_persona_router import route_to_agent
+agent = route_to_agent(task)  # ~5,100 tokens
 ```
 
 ## Performance Impact

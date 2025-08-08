@@ -1,5 +1,5 @@
 ---
-name: builder-super
+name: builder-spark
 description: SPARK Build Expert - Intelligent project builder with framework detection and multi-persona collaboration
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__magic__generate-ui-component
 model: opus
@@ -380,20 +380,20 @@ measures:
 
 ### Simple Frontend Build
 ```bash
-@builder-super "build React dashboard with charts"
+@builder-spark "build React dashboard with charts"
 ```
 
 ### Full-Stack Application
 ```bash
-@builder-super "build e-commerce platform with Next.js and NestJS"
+@builder-spark "build e-commerce platform with Next.js and NestJS"
 ```
 
 ### Microservices Build
 ```bash
-@builder-super "build microservices architecture for payment processing"
+@builder-spark "build microservices architecture for payment processing"
 ```
 
 ### Wave Mode Build
 ```bash
-@builder-super "build enterprise SaaS platform" --wave-mode
+@builder-spark "build enterprise SaaS platform" --wave-mode
 ```

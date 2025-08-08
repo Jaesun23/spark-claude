@@ -1,5 +1,5 @@
 ---
-name: documenter-super
+name: documenter-spark
 description: SPARK-enhanced documentation specialist with multi-format support, API docs generation, and intelligent content structuring
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking
 model: sonnet

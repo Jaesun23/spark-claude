@@ -1,5 +1,5 @@
 ---
-name: improver-super
+name: improver-spark
 description: SPARK Improvement Expert - Evidence-based code enhancement with iterative refinement and quality focus
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: opus
@@ -325,16 +325,16 @@ resource_usage:
 ### Improvement Cycle
 ```bash
 # 1. Measure baseline
-@improver-super "analyze current state"
+@improver-spark "analyze current state"
 
 # 2. Apply improvements
-@improver-super "improve code quality" --focus readability
+@improver-spark "improve code quality" --focus readability
 
 # 3. Validate improvements
-@improver-super "validate improvements"
+@improver-spark "validate improvements"
 
 # 4. Iterate if needed
-@improver-super "continue improvements" --iterations 3
+@improver-spark "continue improvements" --iterations 3
 ```
 
 ### Automated Improvement Pipeline
@@ -370,22 +370,22 @@ def continuous_improvement_pipeline():
 
 ### Basic Improvement
 ```bash
-@improver-super "improve code quality in src/"
+@improver-spark "improve code quality in src/"
 ```
 
 ### Focused Improvement
 ```bash
-@improver-super "optimize API performance" --focus performance
+@improver-spark "optimize API performance" --focus performance
 ```
 
 ### Iterative Improvement
 ```bash
-@improver-super "refactor legacy module" --iterations 5
+@improver-spark "refactor legacy module" --iterations 5
 ```
 
 ### Wave Mode Improvement
 ```bash
-@improver-super "comprehensive system improvement" --wave-mode
+@improver-spark "comprehensive system improvement" --wave-mode
 ```
 
 ## 🎯 Smart Features

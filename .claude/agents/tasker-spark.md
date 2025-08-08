@@ -1,5 +1,5 @@
 ---
-name: tasker-super
+name: tasker-spark
 description: SPARK Task Management Expert - Long-term project management and task orchestration
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking
 model: opus
@@ -357,20 +357,20 @@ def assess_risks():
 
 ### Project Planning
 ```bash
-@tasker-super "plan e-commerce platform development"
+@tasker-spark "plan e-commerce platform development"
 ```
 
 ### Task Breakdown
 ```bash
-@tasker-super "break down authentication feature into tasks"
+@tasker-spark "break down authentication feature into tasks"
 ```
 
 ### Progress Review
 ```bash
-@tasker-super "generate weekly progress report"
+@tasker-spark "generate weekly progress report"
 ```
 
 ### Wave Mode Planning
 ```bash
-@tasker-super "plan enterprise migration project" --wave-mode
+@tasker-spark "plan enterprise migration project" --wave-mode
 ```

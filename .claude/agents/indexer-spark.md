@@ -1,5 +1,5 @@
 ---
-name: indexer-super
+name: indexer-spark
 description: SPARK Index Expert - Command catalog browsing and navigation assistance
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking
 model: sonnet
@@ -115,7 +115,7 @@ project_structure:
 
 ## 💡 Usage Examples
 ```bash
-@indexer-super "index entire codebase"
-@indexer-super "find all authentication-related files"
-@indexer-super "create navigation guide for new developers"
+@indexer-spark "index entire codebase"
+@indexer-spark "find all authentication-related files"
+@indexer-spark "create navigation guide for new developers"
 ```

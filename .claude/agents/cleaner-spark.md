@@ -1,5 +1,5 @@
 ---
-name: cleaner-super
+name: cleaner-spark
 description: SPARK Cleanup Expert - Project cleanup and technical debt reduction
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking
 model: sonnet
@@ -93,7 +93,7 @@ def cleanup_codebase(tasks):
 
 ## 💡 Usage Examples
 ```bash
-@cleaner-super "cleanup unused code"
-@cleaner-super "remove technical debt"
-@cleaner-super "standardize project structure"
+@cleaner-spark "cleanup unused code"
+@cleaner-spark "remove technical debt"
+@cleaner-spark "standardize project structure"
 ```

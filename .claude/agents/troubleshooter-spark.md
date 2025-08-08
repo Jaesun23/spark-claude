@@ -1,5 +1,5 @@
 ---
-name: troubleshooter-super
+name: troubleshooter-spark
 description: SPARK Troubleshooting Expert - Problem investigation and root cause analysis
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__playwright__playwright_connect, mcp__playwright__playwright_navigate, mcp__playwright__playwright_screenshot
 model: sonnet
@@ -143,7 +143,7 @@ def create_minimal_repro():
 
 ## 💡 Usage Examples
 ```bash
-@troubleshooter-super "API returns 500 errors intermittently"
-@troubleshooter-super "Memory leak in production"
-@troubleshooter-super "UI freezes on large datasets"
+@troubleshooter-spark "API returns 500 errors intermittently"
+@troubleshooter-spark "Memory leak in production"
+@troubleshooter-spark "UI freezes on large datasets"
 ```

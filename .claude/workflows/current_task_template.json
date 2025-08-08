@@ -1,0 +1,29 @@
+{
+  "spark_activation": {
+    "active_personas": [],
+    "mcp_servers": [],
+    "complexity_score": 0.0,
+    "quality_gates_required": 0,
+    "activation_timestamp": "",
+    "original_prompt": "",
+    "routing_strategy": "intelligent_persona_selection"
+  },
+  "enhanced_workflow": true,
+  "token_efficiency_target": "88.4%",
+  "spark_quality_results": {
+    "gates_passed": 0,
+    "total_gates": 10,
+    "violations": {},
+    "gate_results": {},
+    "spark_compliance": false,
+    "jason_dna_compliance": false
+  },
+  "routing_decision": {
+    "next_action": "",
+    "reason": "",
+    "specific_instructions": "",
+    "retry_required": false
+  },
+  "quality_gates_timestamp": "",
+  "quality_gates": {}
+}

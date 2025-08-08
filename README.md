@@ -60,61 +60,59 @@ Agents are loaded on-demand, not preloaded.
 
 ## 📦 Installation
 
-### Option 1: Using uv (Recommended - Ultra Fast! ⚡)
+### For Claude Code Users (Recommended)
 ```bash
-# Install uv if you haven't already
+# 1. Clone SPARK repository
+git clone https://github.com/Jaesun23/spark-claude.git
+cd spark-claude
+
+# 2. Install SPARK (optional - for benchmarks)
+pip install -e .
+
+# 3. Copy SPARK configuration to your project
+cp -r .claude ~/your-claude-project/
+
+# That's it! SPARK agents are now available in Claude Code 🎉
+```
+
+### For Standalone Usage
+```bash
+# Install uv if you haven't already (10x faster than pip!)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Clone the repository
+# Clone and setup
 git clone https://github.com/Jaesun23/spark-claude.git
 cd spark-claude
 
-# Create virtual environment and install dependencies with uv (10x faster!)
+# Install with uv (recommended)
 uv venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-uv pip install -r requirements.txt
-
-# Or install with all optional dependencies
+source .venv/bin/activate
 uv pip install -e ".[full,dev,benchmark]"
-```
 
-### Option 2: Traditional pip
-```bash
-# Clone the repository
-git clone https://github.com/Jaesun23/spark-claude.git
-cd spark-claude
-
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Option 3: Direct Copy
-
-# Copy to your Claude project
-cp -r spark-claude/.claude ~/your-project/.claude
-
-# That's it! 🎉
+# Or use traditional pip
+pip install -e ".[full,dev,benchmark]"
 ```
 
 ## 🔧 Usage
 
-### Basic Usage
+### In Claude Code (Main Usage)
 ```bash
-# Use just like SuperClaude, but faster!
-spark-implement "Create a REST API"
+# SPARK automatically routes to the optimal agent
+# Just use your regular commands - SPARK makes them 88% more efficient!
+
+# Examples:
+/implement "REST API for user authentication"  # → activates implementer-spark
+/analyze "code quality issues"                 # → activates analyzer-spark  
+/design "responsive dashboard UI"              # → activates designer-spark
 ```
 
-### Advanced Routing
-```python
-# The router automatically selects the best agent
-from spark_hooks.spark_persona_router import route_to_agent
+### Manual Agent Testing
+```bash
+# Test the persona router
+echo '{"prompt": "implement API endpoint"}' | python .claude/hooks/spark_persona_router.py
 
-agent = route_to_agent(task_description)
-# Only loads the specific agent needed!
+# Run benchmarks
+python benchmarks/compare_performance.py
 ```
 
 ## 📈 Performance Comparison
@@ -122,7 +120,7 @@ agent = route_to_agent(task_description)
 | Metric | SuperClaude | SPARK | Improvement |
 |--------|------------|-------|-------------|
 | Token Usage | 44,000 | 5,100 | **88% ↓** |
-| Initial Load Time | 3.2s | 0.6s | **81% ↓** |
+| Initial Load Time | 3.2s | 0.6s | **79% ↓** |
 | Memory Usage | 528MB | 61MB | **88% ↓** |
 | API Cost | $0.88 | $0.10 | **88% ↓** |
 
@@ -132,6 +130,40 @@ Run the benchmarks yourself:
 ```bash
 python benchmarks/compare_performance.py
 ```
+
+## 📁 Project Structure
+
+```
+spark-claude/
+├── .claude/                 # Claude Code integration
+│   ├── agents/             # 16 SPARK agents (88% more efficient!)
+│   │   ├── implementer-spark.md
+│   │   ├── analyzer-spark.md
+│   │   ├── designer-spark.md
+│   │   └── ... (13 more agents)
+│   ├── hooks/              # Intelligence system
+│   │   ├── spark_persona_router.py    # Smart agent routing
+│   │   ├── spark_quality_gates.py     # 10-step validation
+│   │   └── spark_test_runner.py       # Test automation
+│   ├── workflows/          # State management (JSON files)
+│   │   ├── current_task.json          # Current task tracking
+│   │   ├── agent_status.json          # Agent state
+│   │   └── task_pipeline.json         # Workflow pipeline
+│   └── commands/           # Command definitions
+│       └── implement-spark.md
+├── benchmarks/             # Performance verification
+│   └── compare_performance.py
+├── README.md              # You are here!
+├── CLAUDE.md             # Instructions for future Claude instances
+└── pyproject.toml        # Package configuration
+```
+
+### Key Components
+
+- **🎯 Smart Router**: Automatically selects the optimal agent (88% token savings!)
+- **🛡️ Quality Gates**: 10-step validation (8 SPARK + 2 Jason DNA)
+- **📊 State Management**: JSON-based workflow tracking
+- **⚡ Lazy Loading**: Load only what you need, when you need it
 
 ## 🤝 Contributing
 
@@ -183,31 +215,29 @@ If you find SPARK useful, please give us a star! ⭐
 
 ## 🎯 Roadmap
 
-### ⚡ What's Next? (The Revolution Continues)
+### ⚡ What's Next? Automation Beyond Code!
 
 **Phase 1: Workflow Orchestration** (2 weeks)
-- Chain multiple agents for complex tasks
-- `/spark-workflow deploy` - Complete deployment pipeline
-- `/spark-workflow debug` - Intelligent debugging flow
+- Chain multiple agents for complex automation
+- `/spark-workflow test` - Test automation (highest priority!)
+- `/spark-workflow build` - End-to-end development
 
-**Phase 2: Agent Factory** (1 month)
-- **Agents creating agents!** 🤯
-- `/spark-create "your-expert"` - Generate domain specialists
-- `/spark-combine` - Merge agent capabilities
+**Phase 2: Agent Combinations** (1 month)
+- Combine specialized agents for complex tasks
+- `/spark-team "project"` - Deploy agent teams
+- Template-based → AI-driven generation
 
-**Phase 3: Domain Experts** (6 weeks)
-- AI/ML Engineer Agent
-- DevOps Specialist Agent
-- Blockchain Developer Agent
-- Data Scientist Agent
+**Phase 3: Multi-Domain Expansion** (6 weeks)
+- **Beyond Software**: Content, Education, Research, Business
+- **Agent Teams**: Multiple agents working in parallel
+- **Any Field**: From code to legal documents
 
-**Ultimate Vision: SPARK as Agent OS**
-- Self-improving agents
-- Agent marketplace
-- Cross-LLM compatibility
-- Zero-token operations (the dream!)
+**The Vision**: 
+- **Today**: Automating software development (88% fewer tokens!)
+- **Tomorrow**: Automating any knowledge work
+- **Future**: Teams of agents handling massive projects
 
-📖 **[See Full Roadmap](ROADMAP.md)** - Our complete vision for the future
+📖 **[See Full Roadmap](ROADMAP.md)** - Join us in building the future of automation!
 
 ---
 
