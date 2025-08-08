@@ -118,9 +118,7 @@ This isn't just about saving tokens. It's about democratizing AI development.
 
 **One human + Two AIs created this. Imagine what thousands can build together.**
 
-- **Discord**: [Coming Soon]
-- **Twitter**: [@SPARKFramework](https://twitter.com/SPARKFramework)
-- **Email**: spark@example.com
+- **Email**: jaesun23@gmail.com
 
 ---
 
