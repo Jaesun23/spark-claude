@@ -22,13 +22,14 @@ SPARK is a **universal AI agent system** for [Claude Code](https://claude.ai/cod
 
 ## 🚀 Quick Start
 
-### 1. **Copy to Your User Settings**
+### 1. **Easy Installation**
 ```bash
-# Copy the complete SPARK system to your home directory
-cp -r .claude/ ~/.claude/
+# Clone this repository
+git clone https://github.com/Jaesun23/spark-claude.git
+cd spark-claude
 
-# Or just copy what you need to your project
-cp -r .claude/ /path/to/your/project/
+# Run the installer (installs to ~/.claude/ automatically)
+./install.sh
 ```
 
 ### 2. **Use SPARK Commands**
