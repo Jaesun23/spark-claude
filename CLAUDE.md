@@ -133,6 +133,232 @@ When implementing features:
 4. **Follow persona standards** - Each persona has specific quality requirements
 5. **Document with docstrings** - Required by quality gate #7
 
+## Agent Invocation Guidelines (for 2호)
+
+### Analyzer-Spark Agent (Enhanced with SuperClaude 5-Phase)
+When invoking analyzer-spark, provide:
+```python
+context = {
+    "scope": "specific files or entire system",
+    "focus": ["quality", "security", "performance", "architecture"],
+    "depth": "quick|standard|deep",
+    "complexity_hint": "estimated 0.0-1.0",
+    "expected_time": "5min|30min|1hr",
+    "specific_concerns": "what to investigate"
+}
+```
+
+Example invocation:
+```
+Task("analyzer-spark", f"""
+Analyze the multi-implement system in {target_path}
+Focus: architecture, quality, performance
+Depth: deep
+Specific concerns: synchronization issues, JSON relay patterns
+Expected complexity: 0.75
+Please use SuperClaude 5-phase methodology
+""")
+```
+
+**5-Phase Execution**:
+1. **Scope Definition**: File discovery, complexity scoring
+2. **Evidence Collection**: Pattern search, dependency tracing
+3. **Pattern Analysis**: Anti-patterns, security issues, bottlenecks
+4. **Hypothesis Testing**: Validate findings with evidence
+5. **Synthesis**: Root causes, prioritized recommendations
+
+### Improver-Spark Agent (5-Wave Progressive Pattern)
+When invoking improver-spark, provide:
+```python
+context = {
+    "target": "file, module, or system to improve",
+    "strategy": "comprehensive|quick-wins|refactor|optimize",
+    "focus": ["quality", "performance", "architecture", "security"],
+    "iterations": "1-5 (for polish/refine operations)",
+    "constraints": "backward compatibility, time limits, etc"
+}
+```
+
+Example invocation:
+```
+Task("improver-spark", """
+Improve the Redis atomic operations module
+Strategy: comprehensive (use 5-wave pattern)
+Focus: performance, error handling
+Constraints: maintain backward compatibility
+
+Please follow the 5-Wave pattern:
+Wave 1: Discovery (find all TODOs, issues)
+Wave 2: Pattern Analysis (identify root causes)
+Wave 3: Planning (prioritize improvements)
+Wave 4: Implementation (apply fixes)
+Wave 5: Validation (verify improvements)
+""")
+```
+
+**Wave Keywords** (auto-activates waves):
+- Comprehensive, systematic, thorough, audit → 5-Wave mode
+- Polish, refine, enhance, iteratively → Loop mode (3 iterations)
+
+### Designer-Spark Agent (5-Phase Design Pattern)
+When invoking designer-spark, provide:
+```python
+context = {
+    "target": "system, component, or feature to design",
+    "type": "architecture|api|component|database",
+    "requirements": "functional and non-functional requirements",
+    "constraints": "technical, business, timeline constraints",
+    "format": "diagram|spec|code|documentation"
+}
+```
+
+Example invocation:
+```
+Task("designer-spark", """
+Design fundamental improvements for Memory V3
+Based on: issues discovered by /improve command
+Type: architecture
+
+Please follow 5-Phase design:
+Phase 1: Analyze requirements and constraints
+Phase 2: Create design alternatives (at least 3)
+Phase 3: Develop detailed specifications
+Phase 4: Validate against best practices
+Phase 5: Generate documentation and guides
+""")
+```
+
+**Design Outputs**:
+- Executive summary
+- Alternative approaches with pros/cons
+- Detailed specifications
+- Implementation roadmap
+- Migration strategy
+- ADRs (Architecture Decision Records)
+
+### Builder-Spark Agent (Enhanced with /sc:build Pattern)
+When invoking builder-spark, provide:
+```python
+context = {
+    "project_path": "path to existing project or '.' for current",
+    "build_type": "dev|prod|test",
+    "quality_mode": "strict|progressive|lenient",
+    "optimization": "bundle-size|speed|quality",
+    "report_detail": "summary|detailed|comprehensive"
+}
+```
+
+Example invocation:
+```
+Task("builder-spark", """
+Build and analyze the BioNeX project at /Users/jason/Projects/BioNeX
+Build type: development
+Quality mode: progressive (start lenient, gradually stricten)
+
+Please follow the 4-Phase build process:
+Phase 1: Analyze project structure and configuration
+Phase 2: Validate dependencies and environment  
+Phase 3: Execute build with quality checks
+Phase 4: Generate report with 5-Wave improvement plan
+""")
+```
+
+**Build Execution Phases**:
+1. **Project Analysis**: Detect build system (pyproject.toml, package.json)
+2. **Dependency Validation**: Check versions, test installations
+3. **Quality Checks**: Run linters, type checkers, tests
+4. **Report Generation**: Issues prioritized as 🔴 Critical, 🟡 Medium, 🟢 Low
+
+**Progressive Quality Targets** (Jason's 8 Gates):
+- **Linting**: Start <100 violations → <20 → 0
+- **Type Checking**: Start <50 errors → <10 → 0  
+- **Test Coverage**: Start >60% → >80% → >95%
+- **Security**: Always 0 vulnerabilities required
+
+**Output Example** (from BioNeX build):
+- Found: 4,200+ Ruff violations, multiple MyPy errors
+- Generated: 5-Wave improvement plan with specific commands
+- Tracked: Progress with TodoWrite throughout process
+
+### Tester-Spark Agent
+When invoking tester-spark, provide:
+```python
+context = {
+    "implementation_context": "what was built/changed",
+    "test_types": ["unit", "integration", "e2e"],
+    "coverage_targets": {"unit": 95, "integration": 85, "overall": 90},
+    "specific_scenarios": "edge cases to test"
+}
+```
+
+### Implementer-Spark Agent
+When invoking implementer-spark, provide:
+```python
+context = {
+    "requirements": "clear feature requirements",
+    "file_paths": "where to implement",
+    "quality_standards": "must pass 8 quality gates",
+    "persona_hint": "backend|frontend|security|architecture"
+}
+```
+
+### Documenter-Spark Agent
+When invoking documenter-spark, provide:
+```python
+context = {
+    "audience": "developers|users|stakeholders",
+    "format": "markdown|wiki|api-docs|readme",
+    "language": "en|es|fr|de|ja|zh|ko",
+    "scope": "what to document"
+}
+```
+
+### Tasker-Spark Agent (SuperClaude 5-Phase Project Management)
+When invoking tasker-spark, provide:
+```python
+context = {
+    "project_path": "/path/to/project or current directory",
+    "operation": "analyze|plan|execute|monitor",
+    "strategy": "systematic|agile|enterprise",
+    "wave_mode": True,  # For complex projects
+    "depth": "quick|standard|comprehensive"
+}
+```
+
+Example invocation:
+```
+Task("tasker-spark", """
+Analyze the project at /Users/jason/Projects/BlueprintAI
+Establish comprehensive workflow and task stages
+
+Please follow the 5-Phase Task Management Pattern:
+Phase 1: Project Analysis & Discovery
+Phase 2: Hierarchical Task Decomposition (Epic→Story→Task)
+Phase 3: Dependency Mapping & Critical Path
+Phase 4: Execution Workflow (5-Wave strategy)
+Phase 5: Monitoring & Validation Plan
+
+Use systematic strategy for comprehensive analysis.
+Track progress with TodoWrite throughout.
+Generate visual dependency graph and dashboard.
+""")
+```
+
+**5-Phase Execution**:
+1. **Project Analysis**: Structure scan, tech stack detection, state assessment
+2. **Task Decomposition**: Epic→Story→Task hierarchy with status tracking
+3. **Dependency Mapping**: Critical path, parallel work, bottlenecks
+4. **Execution Workflow**: 5-Wave implementation (Discovery→Core→Integration→Quality→Deployment)
+5. **Monitoring Plan**: Quality gates, metrics, risk tracking, dashboards
+
+**Output Format**:
+- Hierarchical task structure with icons (✅ complete, ⏳ in progress, 📝 planned)
+- Mermaid dependency graph with critical path highlighted
+- 5-Wave execution timeline
+- Quality gate checklist (Jason's 8 steps)
+- Real-time progress dashboard
+- Risk assessment and mitigation plan
+
 ## Project Structure
 ```
 spark-claude/

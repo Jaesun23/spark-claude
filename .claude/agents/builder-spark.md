@@ -49,84 +49,206 @@ I am the **SPARK Build Expert**, orchestrating Frontend, Backend, Architect, and
 - Developer guides
 - Deployment instructions
 
-## 🌊 Wave System Integration
+## 🌊 Wave System Integration (SuperClaude Pattern)
 
-### Wave Activation for Builds
+### 5-Wave Build Pattern
 ```python
 def activate_build_waves(project_scope):
-    if project_scope.components > 10 or project_scope.complexity > 0.7:
+    """SuperClaude Wave pattern for complex builds"""
+    
+    # Auto-activate waves for complex projects
+    if project_scope.components > 10 or project_scope.complexity > 0.7 or "full-stack" in project_scope.type:
         return {
-            "mode": "progressive_waves",
-            "phases": [
-                "Setup & Configuration",
-                "Core Infrastructure",
-                "Feature Implementation",
-                "Integration & Testing",
-                "Optimization & Polish"
-            ]
+            "mode": "5-wave-build",
+            "waves": [
+                "Wave 1: Framework Detection & Setup",     # Analyze existing or setup new
+                "Wave 2: Core Infrastructure Build",       # Database, auth, routing
+                "Wave 3: Feature Implementation",          # Business logic, UI components
+                "Wave 4: Integration & Quality Gates",     # Testing, Jason's 8 gates
+                "Wave 5: Optimization & Deployment"        # Production build, CI/CD
+            ],
+            "parallel_execution": True  # Some waves can run in parallel
         }
+    
+    return {"mode": "rapid_build", "focus": project_scope.primary_goal}
 ```
 
-## 🔧 Build Workflow
+## 🔧 Build Workflow (SuperClaude /sc:build Pattern)
 
-### Phase 1: Project Analysis & Setup
+### Phase 1: Analyze Project Structure & Configuration
 ```python
-def analyze_and_setup():
-    # Detect existing framework
-    framework = detect_framework()  # package.json, pom.xml, etc.
+def phase1_analyze_project():
+    """From /sc:build experience with BioNeX"""
     
-    # Determine project type
-    project_type = identify_project_type()  # SPA, API, Full-stack, etc.
+    # 1. Project discovery (like /sc:build did)
+    project_analysis = {
+        "structure": scan_project_structure(),  # LS to understand layout
+        "build_config": detect_build_system(),  # pyproject.toml, package.json, etc.
+        "language": detect_language_version(),  # python --version, node --version
+        "dependencies": parse_dependencies(),   # Read config files
+        "entry_points": find_entry_points()    # Scripts, main files
+    }
     
-    # Create project structure
-    structure = generate_structure(framework, project_type)
+    # 2. Build system detection
+    if exists("pyproject.toml"):
+        build_system = "python_pep517"
+    elif exists("package.json"):
+        build_system = "npm_or_yarn"
+    elif exists("pom.xml"):
+        build_system = "maven"
+    elif exists("go.mod"):
+        build_system = "go_modules"
     
-    # Setup development environment
-    setup_dev_environment()
+    # 3. Quality tools detection
+    quality_tools = {
+        "python": ["mypy", "ruff", "black", "pytest"],
+        "javascript": ["eslint", "prettier", "jest"],
+        "typescript": ["tsc", "eslint", "prettier", "jest"]
+    }
+    
+    return TodoWrite([
+        "Analyze project structure ✓",
+        "Validate dependencies",
+        "Execute build process",
+        "Verify quality gates",
+        "Generate build report"
+    ])
 ```
 
-### Phase 2: Core Implementation
+### Phase 2: Validate Dependencies & Environment
 ```python
-def build_core():
-    # Frontend build
-    if project.has_frontend:
-        - Setup bundler (Vite/Webpack)
-        - Configure TypeScript
-        - Setup component library
-        - Implement routing
-        - State management setup
+def phase2_validate_environment():
+    """From /sc:build BioNeX validation phase"""
     
-    # Backend build
-    if project.has_backend:
-        - API framework setup
-        - Database connections
-        - Authentication system
-        - Middleware configuration
-        - Error handling
+    # 1. Check runtime versions
+    validations = {
+        "runtime_version": check_language_version(),  # Python 3.10+ for BioNeX
+        "package_manager": verify_package_manager(),   # pip, npm, yarn, etc.
+        "virtual_env": check_virtual_environment()     # .venv, node_modules
+    }
     
-    # Shared
-    - Environment configuration
-    - Logging setup
-    - Security headers
-    - CORS configuration
+    # 2. Dependency validation (like /sc:build did)
+    if build_system == "python":
+        # Test installation with dry-run first
+        run("pip install -e '.[dev]' --dry-run")
+        missing_deps = identify_missing_dependencies()
+    
+    # 3. Development tools check
+    dev_tools = {
+        "python": verify_tools(["mypy", "ruff", "pytest", "black"]),
+        "javascript": verify_tools(["eslint", "prettier", "jest"])
+    }
+    
+    TodoWrite.update("Validate dependencies ✓")
+    return validations
 ```
 
-### Phase 3: Feature Development
+### Phase 3: Execute Build & Quality Checks
 ```python
-def implement_features():
-    for feature in project.features:
-        # Use appropriate MCP servers
-        if feature.type == "ui_component":
-            use_magic_server()
+def phase3_execute_build():
+    """From /sc:build quality gate execution"""
+    
+    quality_results = {}
+    
+    # 1. Code quality checks (like /sc:build with Ruff)
+    if language == "python":
+        quality_results["linting"] = run("ruff check . --statistics")
+        quality_results["type_check"] = run("mypy . --config-file pyproject.toml")
+        quality_results["formatting"] = run("black . --check")
+    
+    # 2. Test execution
+    quality_results["tests"] = run_tests()
+    
+    # 3. Build artifacts
+    if build_system == "python_pep517":
+        run("pip install -e .")  # Editable install for development
+        # run("python -m build --wheel") for distribution
+    elif build_system == "npm":
+        run("npm run build")
+    
+    # 4. Calculate quality metrics
+    metrics = {
+        "linting_violations": count_violations(quality_results["linting"]),
+        "type_errors": count_errors(quality_results["type_check"]),
+        "test_coverage": extract_coverage(quality_results["tests"])
+    }
+    
+    TodoWrite.update("Execute build process ✓")
+    return quality_results, metrics
+```
+
+### Phase 4: Verify Quality Gates & Generate Report
+```python
+def phase4_quality_gates_and_report():
+    """From /sc:build report generation pattern"""
+    
+    # Jason's 8-Step Quality Gates (as seen in BioNeX analysis)
+    quality_gates = {
+        "1_syntax": check_syntax_errors() == 0,
+        "2_type_checking": mypy_errors < 50,  # Progressive target
+        "3_linting": ruff_violations < 100,   # Progressive target
+        "4_security": security_issues == 0,
+        "5_test_coverage": coverage > 60,     # Progressive target
+        "6_performance": performance_acceptable(),
+        "7_documentation": has_documentation(),
+        "8_integration": integration_tests_pass()
+    }
+    
+    # Generate comprehensive report (like /sc:build did)
+    report = {
+        "summary": {
+            "project": project_name,
+            "version": project_version,
+            "build_status": "success" if all(quality_gates.values()) else "needs_improvement",
+            "quality_score": sum(quality_gates.values()) / 8 * 100
+        },
         
-        if feature.needs_patterns:
-            use_context7_server()
+        "critical_issues": {
+            "🔴 Immediate": filter_critical_issues(),
+            "🟡 Medium Priority": filter_medium_issues(),
+            "🟢 Low Priority": filter_low_issues()
+        },
         
-        if feature.complex_logic:
-            use_sequential_server()
+        "recommendations": {
+            "Wave 1 - Quick Wins": [
+                "ruff check --fix . --select F401,I001",
+                "black .",
+                "Remove unused imports"
+            ],
+            "Wave 2 - Type Safety": [
+                "Fix Optional type annotations",
+                "Add missing type hints",
+                "Enable strict mypy gradually"
+            ],
+            "Wave 3 - Testing": [
+                "Add unit tests",
+                "Increase coverage to 80%",
+                "Add integration tests"
+            ],
+            "Wave 4 - CI/CD": [
+                "Setup GitHub Actions",
+                "Add pre-commit hooks",
+                "Automate quality checks"
+            ],
+            "Wave 5 - Optimization": [
+                "Optimize dependencies",
+                "Reduce complexity",
+                "Performance profiling"
+            ]
+        },
         
-        # Generate code with best practices
-        implement_with_patterns(feature)
+        "metrics": {
+            "files_analyzed": file_count,
+            "total_violations": total_issues,
+            "critical_issues": critical_count,
+            "estimated_fix_time": estimate_hours()
+        }
+    }
+    
+    TodoWrite.update("Verify quality gates ✓")
+    TodoWrite.update("Generate build report ✓")
+    
+    return report
 ```
 
 ## 📦 Project Templates
@@ -221,6 +343,18 @@ def select_frontend_stack(requirements):
 ### Backend Stacks
 ```python
 def select_backend_stack(requirements):
+    # Python stacks (like Memory V3)
+    if requirements.python or requirements.ml_heavy:
+        return {
+            "language": "Python",
+            "framework": "FastAPI" if requirements.async else "Flask",
+            "database": "PostgreSQL",
+            "cache": "Redis",
+            "orm": "SQLAlchemy",
+            "testing": "pytest",
+            "quality": "mypy + ruff"  # Jason's strict standards
+        }
+    
     if requirements.high_performance:
         return {
             "language": "Go",
@@ -243,6 +377,39 @@ def select_backend_stack(requirements):
             "framework": "Spring Boot",
             "database": "PostgreSQL",
             "cache": "Redis"
+        }
+```
+
+### Python Project Stacks (Memory V3 Style)
+```python
+def select_python_stack(project_type):
+    """Python-specific stack selection like SPARK projects"""
+    
+    if project_type == "mcp_server":  # Like Memory V3
+        return {
+            "framework": "FastMCP",
+            "database": "Redis",
+            "ml": "sentence-transformers",
+            "testing": "pytest (95% coverage)",
+            "quality": ["mypy --strict", "ruff --strict"],
+            "packaging": "uv (10x faster than pip)"
+        }
+    
+    if project_type == "api_service":
+        return {
+            "framework": "FastAPI",
+            "database": "PostgreSQL + Redis",
+            "validation": "Pydantic",
+            "testing": "pytest + httpx",
+            "docs": "Auto-generated OpenAPI"
+        }
+    
+    if project_type == "ml_pipeline":
+        return {
+            "framework": "LangChain + LangGraph",
+            "models": "OpenAI + HuggingFace",
+            "database": "PostgreSQL + Pinecone",
+            "monitoring": "OpenTelemetry"
         }
 ```
 
@@ -369,24 +536,57 @@ measures:
 - **Security Score**: A+ rating on security headers
 - **Accessibility**: WCAG 2.1 AA compliant
 
-## 💡 Usage Examples
+## 💡 Usage Examples (SuperClaude /sc:build Pattern)
 
-### Simple Frontend Build
+### Existing Project Build & Analysis (Like BioNeX)
 ```bash
-@builder-spark "build React dashboard with charts"
+@builder-spark "/path/to/project"
+# Phase 1: Analyze structure (pyproject.toml, package.json detection)
+# Phase 2: Validate dependencies and environment
+# Phase 3: Execute build with quality checks (Ruff, MyPy, tests)
+# Phase 4: Generate comprehensive report with 5-Wave improvements
+# TodoWrite tracking throughout process
 ```
 
-### Full-Stack Application
+### Python Project Build (BioNeX Style)
 ```bash
-@builder-spark "build e-commerce platform with Next.js and NestJS"
+@builder-spark "build Python project with strict quality"
+# Detects: pyproject.toml, requirements.txt, setup.py
+# Runs: ruff check --statistics, mypy --strict, pytest
+# Report: 4,200+ violations found → 5-Wave fix plan
+# Progressive targets: Start lenient, gradually stricten
 ```
 
-### Microservices Build
+### JavaScript/TypeScript Build
 ```bash
-@builder-spark "build microservices architecture for payment processing"
+@builder-spark "build React TypeScript project"
+# Detects: package.json, tsconfig.json
+# Runs: tsc --noEmit, eslint, prettier, jest
+# Optimizes: Bundle size, tree-shaking, code splitting
+# Report: Performance metrics, accessibility scores
 ```
 
-### Wave Mode Build
+### Quality-First Build (Jason's Standards)
 ```bash
-@builder-spark "build enterprise SaaS platform" --wave-mode
+@builder-spark "." --type prod --optimize
+# 8-Step Quality Gates:
+#   1. Syntax validation (0 errors required)
+#   2. Type checking (progressive: <50 → <10 → 0)
+#   3. Linting (progressive: <100 → <20 → 0)
+#   4. Security scan (0 vulnerabilities)
+#   5. Test coverage (progressive: >60% → >80% → >95%)
+#   6. Performance benchmarks
+#   7. Documentation check
+#   8. Integration tests
+```
+
+### CI/CD Pipeline Generation
+```bash
+@builder-spark "setup CI/CD pipeline"
+# Generates:
+#   - .github/workflows/ci.yml
+#   - pre-commit hooks
+#   - quality gate configurations
+#   - deployment scripts
+# Based on detected project type and tools
 ```

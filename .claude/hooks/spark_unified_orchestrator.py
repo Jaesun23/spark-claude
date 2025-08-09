@@ -358,14 +358,27 @@ Original Request: {prompt}
         }
     
     def _handle_agent_stop(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle subagent completion with quality gates"""
+        """Handle subagent completion with quality gates and JSON context update"""
         context = self._load_context()
         if not context:
             return {"continue": True}
         
+        # Extract agent info from data
+        agent_name = data.get("agent_name", "")
+        team_id = self._extract_team_id(agent_name)
+        
+        # Load team-specific JSON if multi-team
+        team_context = None
+        if team_id:
+            team_json_path = Path(f".claude/workflows/{team_id}_current_task.json")
+            if team_json_path.exists():
+                with open(team_json_path, 'r') as f:
+                    team_context = json.load(f)
+        
         # Run quality validation
         files_modified = data.get("files_modified", [])
         all_passed = True
+        quality_results = {}
         
         for file_path in files_modified:
             if Path(file_path).exists():
@@ -374,8 +387,39 @@ Original Request: {prompt}
                 
                 for gate, passed in results.items():
                     context.quality_gates[gate] = "passed" if passed else "failed"
+                    quality_results[gate] = passed
                     if not passed:
                         all_passed = False
+        
+        # Update team JSON with results
+        if team_context:
+            if "implementer" in agent_name:
+                team_context["implementation"] = {
+                    "files_created": data.get("files_created", []),
+                    "files_modified": files_modified,
+                    "quality_results": quality_results,
+                    "completed": datetime.now().isoformat()
+                }
+                team_context["status"] = "implementation_complete"
+            elif "tester" in agent_name:
+                team_context["testing"] = {
+                    "test_files": data.get("test_files", []),
+                    "coverage": data.get("coverage", 0),
+                    "results": data.get("test_results", {}),
+                    "completed": datetime.now().isoformat()
+                }
+                team_context["status"] = "testing_complete"
+            elif "documenter" in agent_name:
+                team_context["documentation"] = {
+                    "docs_created": data.get("docs_created", []),
+                    "docs_updated": data.get("docs_updated", []),
+                    "completed": datetime.now().isoformat()
+                }
+                team_context["status"] = "documentation_complete"
+            
+            # Save updated team JSON
+            with open(team_json_path, 'w') as f:
+                json.dump(team_context, f, indent=2)
         
         if not all_passed and context.retry_count < context.max_retries:
             # Retry with guidance
@@ -400,6 +444,12 @@ Original Request: {prompt}
             "continue": True,
             "output": f"✅ Task {context.task_id} completed successfully!"
         }
+    
+    def _extract_team_id(self, agent_name: str) -> Optional[str]:
+        """Extract team ID from agent name (e.g., 'team1-implementer-spark' -> 'team1')"""
+        if agent_name.startswith("team"):
+            return agent_name.split("-")[0]
+        return None
     
     def _select_mcp_servers(self, personas: List[PersonaMode]) -> List[str]:
         """Select appropriate MCP servers based on personas"""

@@ -1,0 +1,20 @@
+{
+  "team_id": "team2",
+  "task_id": "TEST-UTIL-02",
+  "status": "assigned",
+  "task_details": {
+    "description": "Create a simple string utility function",
+    "files_to_create": ["src/utils/string_helpers.py"],
+    "requirements": [
+      "Function to capitalize first letter of each word",
+      "Function to remove extra whitespace",
+      "Include type hints and docstrings"
+    ]
+  },
+  "implementation": {},
+  "testing": {},
+  "documentation": {},
+  "locks_held": [],
+  "locks_needed": [],
+  "messages": []
+}

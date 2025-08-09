@@ -14,7 +14,7 @@
 
 ## 📌 Hook System 핵심 가이드라인
 
-### ✅ 존재하는 Hook 이벤트 (7개만)
+### ✅ 존재하는 Hook 이벤트 (8개만)
 ```json
 {
   "hooks": {
@@ -126,11 +126,152 @@
 }
 ```
 
+#### PostToolUse 전용 필드
+```json
+{
+  "decision": "block" | undefined,
+  "reason": "차단 이유 (Claude에게 전달)"
+}
+```
+
+#### Stop 전용 필드
+```json
+{
+  "decision": "block" | undefined,
+  "reason": "계속해야 하는 이유 (필수)"
+}
+```
+
 #### SubagentStop 전용 필드
 ```json
 {
   "decision": "block" | undefined,
   "reason": "계속해야 하는 이유 (필수)"
+}
+```
+
+#### SessionStart 전용 필드
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "세션 시작 시 추가할 컨텍스트"
+  }
+}
+```
+
+#### PreCompact 전용 필드
+```json
+{
+  // PreCompact는 특별한 JSON 출력 없음
+  // Exit code로만 제어 (0=성공, 2=차단, 기타=오류)
+}
+```
+
+#### Notification 전용 필드
+```json
+{
+  // Notification은 특별한 JSON 출력 없음
+  // Exit code로만 제어 (0=성공, 기타=오류)
+}
+```
+
+### 📥 Hook 입력 JSON 구조
+
+#### 공통 입력 필드
+```json
+{
+  "session_id": "string",
+  "transcript_path": "string",  // 대화 JSON 경로
+  "cwd": "string",             // Hook 실행 시 작업 디렉토리
+  "hook_event_name": "string"
+}
+```
+
+#### PreToolUse 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "cwd": "/Users/.../project",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/path/to/file.txt",
+    "content": "file content"
+  }
+}
+```
+
+#### PostToolUse 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl", 
+  "cwd": "/Users/.../project",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/path/to/file.txt",
+    "content": "file content"
+  },
+  "tool_response": {
+    "filePath": "/path/to/file.txt",
+    "success": true
+  }
+}
+```
+
+#### UserPromptSubmit 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "cwd": "/Users/.../project", 
+  "hook_event_name": "UserPromptSubmit",
+  "prompt": "사용자가 입력한 프롬프트 내용"
+}
+```
+
+#### Stop/SubagentStop 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "hook_event_name": "Stop", // 또는 "SubagentStop"
+  "stop_hook_active": true  // 이미 Stop Hook이 실행 중인지 여부
+}
+```
+
+#### SessionStart 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "hook_event_name": "SessionStart",
+  "source": "startup" | "resume" | "clear"
+}
+```
+
+#### PreCompact 입력
+```json
+{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "hook_event_name": "PreCompact",
+  "trigger": "manual" | "auto",
+  "custom_instructions": "사용자 지정 압축 지시사항"
+}
+```
+
+#### Notification 입력
+```json
+{
+  "session_id": "abc123", 
+  "transcript_path": "/Users/.../.claude/projects/.../conversation.jsonl",
+  "cwd": "/Users/.../project",
+  "hook_event_name": "Notification",
+  "message": "알림 메시지 내용"
 }
 ```
 
@@ -219,6 +360,22 @@ tools: Read, Edit, Bash, Grep
 
 # MCP 도구 포함 (자동 상속됨)
 # tools 필드 생략 시 MCP 도구도 자동 포함
+
+# ❌ Task 도구 절대 포함 금지 (서브에이전트는 다른 서브에이전트 호출 불가)
+# tools: Read, Task  # 이렇게 하면 안됨!
+```
+
+### ⚠️ **중요: 서브에이전트 도구 사용 제한**
+```yaml
+핵심 원리:
+  - 서브에이전트는 frontmatter에 정의된 도구만 사용 가능
+  - 정의되지 않은 도구는 "사용할 생각조차 못함"
+  - Task 도구는 frontmatter에 절대 포함하면 안됨
+  
+예시:
+  tools: Read, Edit, Bash  # 이 3개만 사용 가능
+  → Write 도구는 사용하지 않음 (정의되지 않았으므로)
+  → Task 도구 포함 시 오류 발생 (서브에이전트는 다른 서브에이전트 호출 불가)
 ```
 
 ### 🔄 **서브에이전트 실행 시 중요한 동작 원리**
@@ -260,15 +417,13 @@ tools: Read, Edit, Bash, Grep
 
 ### ⚡ **도구 동시 호출 및 병렬 처리**
 
-#### 🚀 도구 동시 호출 제한
+#### 🚀 도구 동시 호출 원리
 ```yaml
-일반 Claude Code:
-  - 동시 도구 호출: 최대 8개 (실제 테스트 결과)
+Claude Code:
+  - 병렬 도구 호출 지원: 단일 응답에서 여러 도구 동시 사용 가능
+  - 독립적 작업들 동시 실행: I/O 대기 시간 최적화
   
-서브에이전트:
-  - 동시 도구 호출: 최대 10개 (공식 문서 기준)
-  
-⚠️ 중요: "진짜 동시" 호출이어야 함!
+⚠️ 중요: "진짜 동시" 호출이어야 함 (단일 응답 내 모든 도구 호출)!
 ```
 
 #### 📋 올바른 동시 호출 패턴
@@ -305,17 +460,13 @@ tools: Read, Edit, Bash, Grep
 </function_calls>
 ```
 
-#### 🚀 병렬 작업 진행 (실제 검증됨)
+#### 🚀 병렬 작업 처리 원리
 ```yaml
-병렬 작업 테스트 결과 (Jason 검증):
-  - 4개 작업 동시 병렬 처리: ✅ 성공
-  - git status, git diff, 파일 읽기, 검색 등 동시 실행
-  - 각 작업이 독립적으로 완료되어 결과 반환
-
-효율성 향상:
-  - 순차 처리 대비 75% 시간 절약
-  - I/O 대기 시간 최적화
-  - SPARK 시스템 핵심 성능 최적화 기능
+Claude Code 병렬 처리 장점:
+  - 독립적 작업들의 동시 실행 가능
+  - git 명령어, 파일 읽기, 검색 등 병렬 수행
+  - I/O 대기 시간 최적화로 성능 향상
+  - 순차 처리 대비 상당한 시간 단축 효과
 ```
 
 #### 💡 동시 호출 최적화 팁
@@ -334,10 +485,10 @@ tools: Read, Edit, Bash, Grep
   - 테스트 실행 → 결과 분석 → 보고서 생성
 ```
 
-#### 🎯 SPARK 에이전트별 최적화
+#### 🎯 SPARK 에이전트별 최적화 패턴
 ```yaml
 Implementer-Spark:
-  - 분석 단계: Read + Grep + Glob 동시 호출 (최대 8개)
+  - 분석 단계: Read + Grep + Glob 병렬 호출
   - 구현 단계: 독립적 파일들 동시 편집
   - 검증 단계: 테스트 + 린트 + 타입체크 병렬 실행
 
@@ -445,6 +596,8 @@ if __name__ == "__main__":
 - **상세한 프롬프트**: 구체적인 지시사항과 예제 포함
 - **도구 권한 최소화**: 필요한 도구만 허용
 - **버전 관리**: 프로젝트 subagent는 Git에 포함
+- **독립성 보장**: 메인 에이전트와 소통 불가하므로 완전한 컨텍스트 제공
+- **명확한 완료 기준**: 언제 작업이 완료되었는지 명확히 정의
 
 ---
 
@@ -461,12 +614,17 @@ if __name__ == "__main__":
 - 진행 조건 없는 multi-phase 명령어
 - Frontmatter 필드 오타
 - 보안 검증 없는 Bash 실행
+- $ARGUMENTS 없이 인수가 필요한 명령어 작성
 
 ### ❌ Subagents 관련
 - 필수 필드 누락 (name, description)
 - 모호한 description
 - 과도한 권한 부여
 - YAML 문법 오류
+- 메인 에이전트와 동시 실행 가정
+- Task 도구 frontmatter에 포함 (서브에이전트는 다른 서브에이전트 호출 불가)
+- frontmatter에 정의되지 않은 도구 사용 기대
+- tools 필드와 실제 사용 도구 불일치
 
 ---
 
@@ -498,23 +656,29 @@ claude --debug
 ## ✅ 체크리스트
 
 ### Hook 구현 시
-- [ ] 존재하는 Hook 이벤트만 사용
+- [ ] 존재하는 Hook 이벤트만 사용 (8개: PreToolUse, PostToolUse, UserPromptSubmit, Stop, SubagentStop, PreCompact, SessionStart, Notification)
 - [ ] 올바른 JSON 구조 적용
-- [ ] Exit code 의미 준수
-- [ ] 보안 검증 포함
-- [ ] 에러 처리 구현
+- [ ] Exit code 의미 준수 (0=성공, 2=차단, 기타=비차단 오류)
+- [ ] 보안 검증 포함 (절대 경로, 입력 검증)
+- [ ] 에러 처리 구현 (try-catch, stderr 사용)
+- [ ] $CLAUDE_PROJECT_DIR 환경변수 활용
 
 ### Command 구현 시
-- [ ] 올바른 Frontmatter 사용
+- [ ] 올바른 Frontmatter 사용 (allowed-tools, argument-hint, description, model)
 - [ ] 진행 조건 명시 (multi-phase인 경우)
 - [ ] $ARGUMENTS 올바른 사용
-- [ ] 보안 고려 (Bash 사용 시)
+- [ ] 보안 고려 (Bash 사용 시 변수 인용, 위험한 명령어 차단)
+- [ ] 네임스페이싱 적절히 활용
 
 ### Subagent 구현 시
-- [ ] 필수 필드 모두 포함
-- [ ] 구체적인 description 작성
-- [ ] 적절한 도구 권한 설정
-- [ ] 상세한 시스템 프롬프트 작성
+- [ ] 필수 필드 모두 포함 (name, description)
+- [ ] 구체적인 description 작성 (언제 사용할지 명시)
+- [ ] 적절한 도구 권한 설정 (최소 권한 원칙)
+- [ ] 상세한 시스템 프롬프트 작성 (역할, 능력, 제약사항)
+- [ ] 독립 실행 가능하도록 완전한 컨텍스트 제공
+- [ ] Task 도구 절대 포함 금지 (frontmatter tools 필드에서 제외)
+- [ ] 정의된 도구만 사용 가능함을 인지 (frontmatter에 없는 도구는 사용 불가)
+- [ ] tools 필드 생략 시 모든 도구 상속됨 확인
 
 ---
 

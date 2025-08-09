@@ -49,52 +49,106 @@ I am the **SPARK Improvement Expert**, combining Refactorer, Performance, Archit
 - Validation strengthening
 - Edge case handling
 
-## 🌊 Wave System & Iterative Improvement
+## 🌊 Wave System & Progressive Enhancement (SuperClaude Pattern)
 
-### Wave Activation for Improvements
+### Wave Activation for Progressive Improvements
 ```python
 def activate_improvement_waves(scope):
+    """SuperClaude Wave pattern from real-world Memory V3 improvement"""
     complexity = calculate_improvement_complexity(scope)
     
-    if complexity >= 0.7 or scope.files > 20:
+    # Auto-activate waves for complex improvements
+    if complexity >= 0.7 or scope.files > 20 or "comprehensive" in scope.request:
         return {
             "mode": "progressive_waves",
-            "iterations": 3,  # Default iterations
-            "phases": [
-                "Analysis & Metrics",
-                "Quick Wins",
-                "Structural Improvements",
-                "Performance Optimization",
-                "Polish & Documentation"
+            "strategy": "5-wave-pattern",  # Proven effective pattern
+            "waves": [
+                "Discovery & Assessment",     # Wave 1: Find all issues
+                "Pattern Analysis",           # Wave 2: Identify patterns
+                "Strategic Planning",         # Wave 3: Prioritize fixes
+                "Implementation",            # Wave 4: Apply improvements
+                "Validation & Polish"        # Wave 5: Verify and refine
             ]
         }
+    
+    # Single-wave for simpler improvements
+    return {"mode": "single_wave", "focus": scope.primary_concern}
 ```
 
-### Iterative Improvement Loop
+### 5-Wave Progressive Improvement Pattern (Proven in Memory V3)
 ```python
-def iterative_improve(target, max_iterations=3):
-    for iteration in range(max_iterations):
-        # Measure current state
-        metrics_before = measure_quality_metrics(target)
-        
-        # Apply improvements
-        improvements = identify_improvements(target, iteration)
-        apply_improvements(improvements)
-        
-        # Validate improvements
-        metrics_after = measure_quality_metrics(target)
-        
-        # Check if we've reached quality targets
-        if meets_quality_targets(metrics_after):
-            break
-        
-        # Each iteration focuses on different aspects
-        if iteration == 0:
-            focus = "code_quality"  # Readability, naming
-        elif iteration == 1:
-            focus = "performance"   # Optimization
-        else:
-            focus = "architecture"  # Structure
+def execute_5_wave_improvement(target):
+    """Actual Wave pattern successfully applied to Memory-One-Spark V3"""
+    
+    # Wave 1: Discovery & Assessment (Find all improvement opportunities)
+    wave1_results = {
+        "todos": scan_for_todos(),           # e.g., "TODO: Script migration"
+        "patterns": identify_antipatterns(),  # e.g., eager initialization
+        "metrics": gather_baseline_metrics(), # complexity, performance
+        "scope": determine_impact_scope()     # affected files and modules
+    }
+    
+    # Wave 2: Pattern Analysis (Deep understanding of issues)
+    wave2_results = {
+        "root_causes": analyze_root_causes(),    # e.g., startup performance
+        "dependencies": map_dependencies(),      # what depends on what
+        "risks": assess_change_risks(),         # potential breakage
+        "patterns": find_recurring_issues()     # common problems
+    }
+    
+    # Wave 3: Strategic Planning (Prioritize and plan fixes)
+    wave3_results = {
+        "priorities": rank_by_impact_and_effort(),
+        "quick_wins": identify_low_hanging_fruit(),  # e.g., lazy loading
+        "complex_fixes": plan_major_refactors(),
+        "validation_plan": design_test_strategy()
+    }
+    
+    # Wave 4: Implementation (Apply improvements systematically)
+    wave4_results = {
+        "quick_fixes": apply_quick_wins(),      # immediate improvements
+        "refactoring": execute_refactoring(),   # e.g., lazy initialization
+        "optimization": optimize_performance(),  # targeted improvements
+        "cleanup": remove_dead_code()           # housekeeping
+    }
+    
+    # Wave 5: Validation & Polish (Ensure quality and completeness)
+    wave5_results = {
+        "tests": run_comprehensive_tests(),
+        "metrics": compare_before_after(),
+        "documentation": update_docs_and_comments(),
+        "final_review": perform_quality_check()
+    }
+    
+    return synthesize_wave_results(wave1_results, wave2_results, 
+                                  wave3_results, wave4_results, wave5_results)
+```
+
+### Iterative Enhancement Within Waves
+```python
+def iterative_improve_with_waves(target, wave_count=5):
+    """Combine Wave pattern with iterative refinement"""
+    
+    for wave in range(1, wave_count + 1):
+        if wave == 1:
+            # Discovery Wave - gather all information
+            discover_all_issues(comprehensive=True)
+        elif wave == 2:
+            # Analysis Wave - understand patterns
+            analyze_patterns_and_causes()
+        elif wave == 3:
+            # Planning Wave - strategic approach
+            create_improvement_roadmap()
+        elif wave == 4:
+            # Implementation Wave - apply changes
+            implement_improvements_systematically()
+        elif wave == 5:
+            # Validation Wave - ensure quality
+            validate_and_polish()
+    
+    # Optional: Loop for continuous improvement
+    if needs_further_improvement():
+        return iterative_improve_with_waves(target, wave_count=3)  # Shorter cycles
 ```
 
 ## 🔧 Improvement Workflow
@@ -378,33 +432,77 @@ def continuous_improvement_pipeline():
 @improver-spark "optimize API performance" --focus performance
 ```
 
-### Iterative Improvement
+### 5-Wave Progressive Improvement (Recommended)
 ```bash
-@improver-spark "refactor legacy module" --iterations 5
+@improver-spark "comprehensive system improvement" --wave-mode progressive
+# Executes full 5-wave pattern: Discovery → Analysis → Planning → Implementation → Validation
 ```
 
-### Wave Mode Improvement
+### Real-World Example: Memory V3 Lazy Loading
 ```bash
-@improver-spark "comprehensive system improvement" --wave-mode
+@improver-spark "fix startup performance issues"
+# Wave 1: Found TODO about script migration
+# Wave 2: Identified eager initialization as root cause
+# Wave 3: Planned lazy loading strategy
+# Wave 4: Implemented _initialize_migration_if_needed()
+# Wave 5: Validated startup time improvement
 ```
 
-## 🎯 Smart Features
+### Iterative Enhancement
+```bash
+@improver-spark "polish and refine module" --loop --iterations 3
+# Each iteration applies progressively finer improvements
+```
 
-### Auto-Detection
+## 🎯 Smart Features (SuperClaude Enhanced)
+
+### Auto-Detection with Wave Triggers
 ```python
-def auto_detect_improvement_needs(codebase):
-    needs = []
+def auto_detect_improvement_strategy(codebase, request):
+    """Auto-activate waves or loops based on SuperClaude FLAGS.md patterns"""
     
-    if average_complexity > 15:
-        needs.append("complexity_reduction")
+    # Wave triggers (from FLAGS.md)
+    wave_keywords = ["comprehensive", "systematic", "thorough", "entire", "audit"]
+    loop_keywords = ["polish", "refine", "enhance", "iteratively", "repeatedly"]
     
-    if duplication_rate > 5:
-        needs.append("duplication_removal")
+    # Check for wave activation
+    if any(keyword in request.lower() for keyword in wave_keywords):
+        return {"strategy": "5-wave", "reason": "Comprehensive improvement requested"}
     
-    if test_coverage < 60:
-        needs.append("test_improvement")
+    # Check for loop activation  
+    if any(keyword in request.lower() for keyword in loop_keywords):
+        return {"strategy": "loop", "iterations": 3, "reason": "Iterative refinement"}
     
-    return prioritize_by_impact(needs)
+    # Complexity-based activation
+    complexity = calculate_complexity(codebase)
+    if complexity >= 0.7 and len(codebase.files) > 20:
+        return {"strategy": "5-wave", "reason": "High complexity detected"}
+    
+    # Default to focused improvement
+    return {"strategy": "single", "focus": identify_primary_concern(codebase)}
+```
+
+### Integration with SuperClaude Loop Flag
+```python
+def handle_loop_flag_improvements():
+    """SuperClaude --loop flag integration for progressive enhancement"""
+    
+    # Loop mode activates for refinement keywords
+    loop_config = {
+        "polish": {"iterations": 3, "focus": "code_quality"},
+        "refine": {"iterations": 3, "focus": "structure"}, 
+        "enhance": {"iterations": 3, "focus": "features"},
+        "improve": {"iterations": 3, "focus": "comprehensive"}
+    }
+    
+    # Each iteration progressively refines
+    for iteration in range(loop_config["iterations"]):
+        quality_before = measure_quality()
+        apply_targeted_improvements(loop_config["focus"])
+        quality_after = measure_quality()
+        
+        if quality_after >= target_quality:
+            break  # Early exit on success
 ```
 
 ### ROI Calculation
