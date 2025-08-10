@@ -1,29 +1,42 @@
-# ⚡ SPARK v3.0: Unified AI Agent System for Claude Code
+# ⚡ SPARK v3.5: Unified AI Agent System for Claude Code
 
 > **Subagent Performance Architecture with Reduced toKens**
 > 
 > *The ultimate multi-agent automation system with 88.4% token efficiency and enterprise-grade quality gates*
 
-[![Version](https://img.shields.io/badge/VERSION-3.0%20UNIFIED-gold?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
+[![Version](https://img.shields.io/badge/VERSION-3.5%20UNIFIED-gold?style=for-the-badge)](docs/SPARK_AGENTS_GUIDE.md)
 [![GitHub stars](https://img.shields.io/github/stars/Jaesun23/spark-claude?style=for-the-badge)](https://github.com/Jaesun23/spark-claude/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Performance](https://img.shields.io/badge/TOKEN%20REDUCTION-88.4%25-brightgreen?style=for-the-badge)](benchmarks/)
 [![Quality Gates](https://img.shields.io/badge/QUALITY%20GATES-8%20STEPS-purple?style=for-the-badge)](docs/UNIFIED_SPARK_SYSTEM.md)
 [![Claude Code](https://img.shields.io/badge/CLAUDE%20CODE-COMPATIBLE-blue?style=for-the-badge)](https://claude.ai/code)
 
-## 🎯 What is SPARK v3.0?
+## 🎯 What is SPARK v3.5?
 
-SPARK v3.0 Unified is the **most advanced AI agent system** for [Claude Code](https://claude.ai/code) that provides:
+SPARK v3.5 Unified is the **most advanced AI agent system** for [Claude Code](https://claude.ai/code) that provides:
 
 - 🧠 **16 Specialized Agents**: Implementation, analysis, testing, design, debugging, and more
 - 🚀 **88.4% Token Efficiency**: 5,100 vs 44,000 tokens (compared to traditional approaches)  
-- 🔄 **Fixed Unified Orchestrator**: 6 lifecycle hooks working correctly (no more phase hanging)
-- 🛡️ **Jason's 8-Step Strict Quality Gates**: Efficient zero-tolerance validation (fixed duplicate issues)
-- ⚡ **Task 동시 호출**: "Task Task Task → 시작!" pattern for true parallelism (88.4% efficiency)
+- 🔄 **Unified Orchestrator**: 6 lifecycle hooks with intelligent routing
+- 🛡️ **Jason's 8-Step Quality Gates**: Efficient zero-tolerance validation system
+- ⚡ **Task Orchestration**: "Task Task Task → 시작!" pattern for true parallelism
 - 🌍 **Language Agnostic**: Python, JavaScript, TypeScript, Go, Rust, and more
 - 🔒 **Security Hardened**: SecureCommandExecutor prevents malicious operations
 - 🔁 **Intelligent Retry**: Automatic recovery with smart guidance (max 3 attempts)
 - 📊 **8 Persona Modes**: Backend, Frontend, Security, Architecture, DevOps, Data, Testing, Documentation
+- 🎯 **SuperClaude Integration**: All agents incorporate SuperClaude 5-Phase methodology
+
+## 🚨 Critical Architecture Principles
+
+### 1. **Only 2호 (Number Two) Can Call Agents**
+- Agents CANNOT call other agents - only 2호 has Task tool permission
+- All orchestration decisions belong exclusively to 2호
+- Agents work independently and relay information through JSON files
+
+### 2. **Parallel Execution Synchronization**
+- ALL parallel agents must complete before proceeding to next phase
+- If team1 finishes early, it waits for team2, team3, team4
+- This ensures consistency and prevents race conditions
 
 ## 🚀 Quick Start
 
@@ -60,9 +73,9 @@ cd spark-claude
 
 ### 3. **Watch the Magic**
 - SPARK automatically activates appropriate personas (Backend, Frontend, Security, etc.)
-- **Fixed Hook System**: No more "phase2 진행할까요?" hanging between phases
-- **Task 동시 호출**: True parallel execution with "Task Task Task → 시작!" pattern
-- **Jason's 8-Step Quality Gates**: Efficient validation without duplicates
+- **SuperClaude Integration**: All agents incorporate 5-Phase methodology patterns
+- **Task Orchestration**: True parallel execution with "Task Task Task → 시작!" pattern
+- **Jason's 8-Step Quality Gates**: Efficient validation system
 - **Realistic Test Coverage**: Unit 95%, Integration 85%, Overall 90%
 - All with 88.4% fewer tokens than traditional approaches
 

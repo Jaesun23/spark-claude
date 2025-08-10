@@ -74,3 +74,6 @@ Thumbs.db
 *.bak
 /tmp/
 /temp/
+
+# Symbolic links to external archives
+docs/Archive

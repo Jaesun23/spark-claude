@@ -27,7 +27,20 @@ This command orchestrates a complete development pipeline with quality gates ens
     ✅ Completion Report
 ```
 
-## 📝 Automatic Orchestration Process
+## 📝 2호 Immediate Action Protocol
+
+### **UPON RECEIVING /implement COMMAND:**
+```python
+# 2호's IMMEDIATE ACTION (no questions, no confirmation)
+1. Task("implementer-spark", user_request)  # CALL IMMEDIATELY
+2. Wait for SubagentStop hook signal
+3. If quality_passed:
+   Task("tester-spark", context)  # CALL IMMEDIATELY
+4. Wait for test completion
+5. If coverage >= 95%:
+   Task("documenter-spark", context)  # CALL IMMEDIATELY
+6. Report completion to user
+```
 
 ⚡ **핵심 원칙**: 수동 확인 절차 없음 - 모든 단계는 조건 충족 시 자동 진행
 

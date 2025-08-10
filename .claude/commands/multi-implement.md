@@ -16,6 +16,29 @@ Orchestrates up to 4 teams working simultaneously on independent tasks with qual
         └── Team4 → team4_current_task.json
 ```
 
+## 📝 2호 Immediate Action Protocol
+
+### **UPON RECEIVING /multi-implement COMMAND:**
+```python
+# 2호's IMMEDIATE PARALLEL EXECUTION (no intermediate checks)
+1. Parse task IDs, create team JSONs
+2. SIMULTANEOUS CALLS (no waiting between):
+   Task("team1-implementer-spark", task1)
+   Task("team2-implementer-spark", task2)
+   Task("team3-implementer-spark", task3)
+   Task("team4-implementer-spark", task4)
+3. WAIT for ALL teams to complete
+4. SIMULTANEOUS TEST CALLS:
+   Task("team1-tester-spark", test1)
+   Task("team2-tester-spark", test2)
+   Task("team3-tester-spark", test3)
+   Task("team4-tester-spark", test4)
+5. WAIT for ALL tests to complete
+6. Report results
+```
+
+⚠️ **CRITICAL**: Never check individual agents during parallel execution - it breaks parallelism!
+
 ## 📝 Orchestration Process
 
 ### Phase 0: Task Allocation
@@ -25,8 +48,9 @@ Orchestrates up to 4 teams working simultaneously on independent tasks with qual
 3. Identify shared resources needing locks
 
 ### Phase 1: Parallel Implementation
-2호 calls all assigned teams simultaneously:
+2호 calls all assigned teams SIMULTANEOUSLY (not sequentially):
 ```
+# ALL FOUR CALLS AT ONCE - NO WAITING BETWEEN!
 Task("team1-implementer-spark", prompt_with_json_path)
 Task("team2-implementer-spark", prompt_with_json_path)
 Task("team3-implementer-spark", prompt_with_json_path)

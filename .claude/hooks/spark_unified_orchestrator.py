@@ -21,11 +21,15 @@ sys.path.insert(0, str(Path(__file__).parent))
 from spark_phase_manager import PhaseTransitionManager
 
 class HookEvent(Enum):
-    """Claude Desktop compatible hook event types"""
-    USER_PROMPT_SUBMIT = "userPromptSubmit"
-    AGENT_STOP = "agentStop"  # Changed from subagentStop
-    TOOL_USE = "toolUse"
-    USER_PROMPT_COMPLETE = "userPromptComplete"
+    """Claude Desktop compatible hook event types (only 8 exist per Anthropic docs)"""
+    PRE_TOOL_USE = "PreToolUse"
+    POST_TOOL_USE = "PostToolUse"
+    USER_PROMPT_SUBMIT = "UserPromptSubmit"
+    STOP = "Stop"
+    SUBAGENT_STOP = "SubagentStop"
+    PRE_COMPACT = "PreCompact"
+    SESSION_START = "SessionStart"
+    NOTIFICATION = "Notification"
 
 class PersonaMode(Enum):
     """Intelligent persona modes"""
@@ -299,9 +303,9 @@ class UnifiedOrchestrator:
         
         handlers = {
             HookEvent.USER_PROMPT_SUBMIT: self._handle_prompt_submit,
-            HookEvent.AGENT_STOP: self._handle_agent_stop,
-            HookEvent.TOOL_USE: self._handle_tool_use,
-            HookEvent.USER_PROMPT_COMPLETE: self._handle_prompt_complete
+            HookEvent.SUBAGENT_STOP: self._handle_agent_stop,
+            HookEvent.PRE_TOOL_USE: self._handle_pre_tool_use,
+            HookEvent.POST_TOOL_USE: self._handle_post_tool_use
         }
         
         handler = handlers.get(event)
@@ -533,12 +537,12 @@ Original Request: {prompt}
             return None
     
     
-    def _handle_tool_use(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_pre_tool_use(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Handle tool use event for monitoring"""
         # Could implement tool usage tracking here
         return {"continue": True}
     
-    def _handle_prompt_complete(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _handle_post_tool_use(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Handle prompt completion"""
         context = self._load_context()
         if context:
@@ -554,16 +558,22 @@ def main():
         # Read input from stdin
         input_data = json.load(sys.stdin)
         
-        # Detect hook event type based on Claude Desktop lifecycle
-        event_type = None
-        if "prompt" in input_data:
-            event_type = HookEvent.USER_PROMPT_SUBMIT
-        elif "agent" in input_data or "stop" in input_data:
-            event_type = HookEvent.AGENT_STOP  
-        elif "tool" in input_data:
-            event_type = HookEvent.TOOL_USE
-        elif "complete" in input_data:
-            event_type = HookEvent.USER_PROMPT_COMPLETE
+        # Get hook event name from input (Anthropic standard field)
+        hook_event_name = input_data.get('hook_event_name', '')
+        
+        # Map event name to enum
+        event_mapping = {
+            'UserPromptSubmit': HookEvent.USER_PROMPT_SUBMIT,
+            'SubagentStop': HookEvent.SUBAGENT_STOP,
+            'PreToolUse': HookEvent.PRE_TOOL_USE,
+            'PostToolUse': HookEvent.POST_TOOL_USE,
+            'Stop': HookEvent.STOP,
+            'PreCompact': HookEvent.PRE_COMPACT,
+            'SessionStart': HookEvent.SESSION_START,
+            'Notification': HookEvent.NOTIFICATION
+        }
+        
+        event_type = event_mapping.get(hook_event_name)
         
         if not event_type:
             print(json.dumps({"continue": True}))
