@@ -523,7 +523,7 @@ show_summary() {
     echo "• 16개 전문 에이전트"
     echo "• Jason의 8단계 엄격 품질 게이트"
     echo "• 자동 페르소나 활성화"
-    echo "• Task 동시 호출 패턴"
+    echo "• 병렬 실행: 한 메시지에 여러 Task 호출"
     echo "• Fallback 경로 지원 (전역/프로젝트 자동 감지)"
     
     if [ "$INSTALL_AGENTS" = true ]; then

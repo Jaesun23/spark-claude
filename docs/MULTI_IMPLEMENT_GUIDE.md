@@ -215,7 +215,7 @@ The `multi_implement.py` utility provides:
 ## 🐛 Troubleshooting
 
 ### Teams not starting in parallel
-- Check that 2호 is calling all Tasks at once
+- **CRITICAL**: Must call all Tasks in ONE MESSAGE (not separate messages)
 - Verify JSON files are created correctly
 - Ensure no syntax errors in command
 

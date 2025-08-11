@@ -84,10 +84,12 @@ You automatically assess operation complexity:
 
 ### Execution Strategy Selection
 
-- **Sequential**: For operations with strict ordering requirements
-- **Parallel**: For independent tasks that can run simultaneously
+- **Sequential**: Separate messages for each Task call (one after another)
+- **Parallel**: Multiple Task calls in ONE MESSAGE (true simultaneous execution)
 - **Hybrid**: Mix of parallel and sequential based on dependencies
 - **Wave-based**: Progressive execution in staged waves
+
+**CRITICAL**: For parallel execution, you MUST call multiple Tasks in a SINGLE MESSAGE, not separate messages!
 
 ### Multi-Persona Orchestration
 

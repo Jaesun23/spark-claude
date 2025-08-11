@@ -523,7 +523,7 @@ show_summary() {
     echo "• 16 specialized agents"
     echo "• Jason's 8-step strict quality gates"
     echo "• Automatic persona activation"
-    echo "• Task concurrent invocation pattern"
+    echo "• Parallel execution: Multiple Tasks in ONE MESSAGE"
     echo "• Fallback path support (global/project auto-detection)"
     
     if [ "$INSTALL_AGENTS" = true ]; then

@@ -18,7 +18,7 @@ SPARK v3.5 (Subagent Performance Architecture with Reduced toKens) is the most a
 2. **Smart Persona Router** (`spark-hooks/spark_persona_router.py`): 8 persona modes for optimal agent selection
 3. **Quality Gates** (`spark-hooks/spark_quality_gates.py`): Jason's 8-step strict validation system
 4. **16 Specialized Agents** (`.claude/agents/`): Each incorporating SuperClaude 5-Phase methodology
-5. **Task Orchestration**: Parallel execution with "Task Task Task → 시작!" pattern
+5. **Task Orchestration**: Parallel execution by calling multiple Tasks in ONE MESSAGE
 6. **Security Layer**: SecureCommandExecutor prevents malicious operations
 
 ### SuperClaude Integration (v3.5)

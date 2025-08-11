@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 SPARK Simultaneous Task Calling Demo
-Demonstrates Jason's "Task Task Task Task → 시작!" pattern
+Demonstrates parallel execution: Multiple Tasks in ONE MESSAGE
 
 This script shows how to properly implement parallel agent execution
-without sequential confirmation steps that kill parallelism.
+by calling multiple Tasks in a single message, not separate messages.
 """
 
 import json
@@ -17,8 +17,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from spark_integration_commands import SparkIntegrationCommands
 
 def demo_task_task_task_sijak():
-    """Demo the Task Task Task Task → 시작! pattern"""
-    print("🎯 DEMO: Jason's Task Task Task Task → 시작! Pattern")
+    """Demo parallel execution: Multiple Tasks in ONE MESSAGE"""
+    print("🎯 DEMO: Parallel Execution - Multiple Tasks in ONE MESSAGE")
     print("=" * 60)
     
     spark = SparkIntegrationCommands()
@@ -43,8 +43,8 @@ def demo_task_task_task_sijak():
     print(f"✅ Simultaneous agents: {result2.get('simultaneous_agents', [])}")
     print(f"🚀 Parallel execution: {result2.get('parallel_execution', False)}")
     
-    # Example 3: 동시 호출 pattern
-    print("\n📋 Example 3: Task 동시 호출 pattern")
+    # Example 3: Parallel execution pattern
+    print("\n📋 Example 3: Parallel execution (one message, multiple tasks)")
     print("Task: 'user authentication system'")
     print("Agents: security-spark, implementer-spark, tester-spark")
     result3 = spark.dongsi_hocul(
