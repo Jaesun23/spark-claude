@@ -210,6 +210,74 @@ def validate_path(path: str) -> bool:
     return not ('..' in path or path.startswith('/'))
 ```
 
+## 🔒 Agent Self-Validation System (New!)
+
+### Overview
+A two-tier validation system that allows agents to self-validate before exit, reducing retry cycles and improving quality.
+
+### Tier 1: Agent Self-Validation (Recommended)
+Agents can validate their own work before exiting:
+
+```bash
+# Agent runs self-validation
+echo '{"subagent": "implementer-spark", "self_check": true}' | \
+python3 ~/.claude/hooks/spark_quality_gates.py
+```
+
+#### Self-Validation Flow
+```mermaid
+graph TD
+    A[Agent Completes Work] --> B[Run Self-Validation]
+    B --> C{Validation Pass?}
+    C -->|Yes| D[Mark self_validated in state]
+    D --> E[Exit Agent]
+    C -->|No| F[Show Actionable Fixes]
+    F --> G[Agent Fixes Issues]
+    G --> B
+    E --> H[SubagentStop Hook]
+    H --> I{Already Self-Validated?}
+    I -->|Yes| J[Skip Validation - Continue]
+    I -->|No| K[Run Full Validation]
+```
+
+#### Actionable Fix Messages
+```
+🚫 VALIDATION FAILED - Fix these issues before exiting:
+
+• Implementation Verification:
+  - Claimed file does not exist: /src/api/auth.py
+  - API endpoint not found in code: POST /api/login
+
+📋 ACTION REQUIRED:
+📝 Create the missing file: /src/api/auth.py
+🔌 Add the missing API endpoint to your code
+```
+
+### Tier 2: Hook Validation (Fallback)
+If agent skips self-validation, SubagentStop hook enforces quality:
+
+#### Duplicate Prevention Logic
+```python
+# In SubagentStop hook
+if state.get("self_validated_by") == subagent_name:
+    if time_since_validation < 5_minutes:
+        return "continue"  # Skip duplicate validation
+```
+
+### Validation Gates
+
+#### ImplementationVerificationGate
+- Verifies files_created actually exist
+- Checks files_modified were really changed (git diff)
+- Searches for claimed API endpoints in code
+- Validates database changes through migration files
+
+#### TestVerificationGate  
+- Verifies test files exist
+- Runs pytest/jest to verify tests pass
+- Checks actual coverage vs claimed coverage
+- Counts test functions vs claimed count
+
 ## 📝 State Management
 
 ### State File Locations
@@ -217,7 +285,8 @@ def validate_path(path: str) -> bool:
 .claude/workflows/
 ├── unified_context.json      # Unified context
 ├── current_task.json         # Current task state
-└── team1_current_task.json   # Team-specific task state
+├── team1_current_task.json   # Team-specific task state
+└── state.json                # Validation state & self-validation tracking
 ```
 
 ### State Structure
@@ -232,12 +301,34 @@ def validate_path(path: str) -> bool:
     "linting": "failed"
   },
   "retry_count": 1,
-  "state": "retrying"
+  "state": "retrying",
+  "self_validated_by": "implementer-spark",
+  "self_validated_at": "2025-01-11T12:30:00.000Z",
+  "implementation_verification": {
+    "verified_at": "2025-01-11T12:30:00.000Z",
+    "verification_passed": true,
+    "verification_results": {
+      "claimed_files": ["api.py", "auth.py"],
+      "actual_files": ["api.py", "auth.py"],
+      "discrepancies": []
+    }
+  },
+  "test_verification": {
+    "verified_at": "2025-01-11T12:35:00.000Z",
+    "verification_passed": true,
+    "verification_results": {
+      "claimed_coverage": 95,
+      "actual_coverage": 96,
+      "claimed_test_files": ["test_api.py"],
+      "actual_test_files": ["test_api.py"]
+    }
+  }
 }
 ```
 
 ## 🚀 Hook Activation Workflow
 
+### Standard Workflow (Without Self-Validation)
 ```mermaid
 graph TD
     A[User Prompt] --> B[UserPromptSubmit Hook]
@@ -248,6 +339,30 @@ graph TD
     F --> G{Quality Gates Pass?}
     G -->|Yes| H[Task Complete]
     G -->|No| I[Retry or Fail]
+```
+
+### Enhanced Workflow (With Self-Validation)
+```mermaid
+graph TD
+    A[User Prompt] --> B[UserPromptSubmit Hook]
+    B --> C[Execute Persona Router]
+    C --> D[Select Agent]
+    D --> E[Agent Works]
+    E --> F[Self-Validate?]
+    F -->|Yes| G[Run Validation]
+    G --> H{Pass?}
+    H -->|No| I[Fix & Retry]
+    I --> G
+    H -->|Yes| J[Mark Validated]
+    F -->|No| K[Exit Agent]
+    J --> K
+    K --> L[SubagentStop Hook]
+    L --> M{Already Validated?}
+    M -->|Yes| N[Skip - Continue]
+    M -->|No| O[Run Validation]
+    O --> P{Pass?}
+    P -->|Yes| Q[Complete]
+    P -->|No| R[Claude CODE Retry]
 ```
 
 ## 🔍 Debugging
