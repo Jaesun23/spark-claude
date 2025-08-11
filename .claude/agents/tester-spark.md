@@ -287,3 +287,48 @@ After completing testing, you MUST:
 
 3. **Update Progress**:
    Mark all TodoWrite phases as completed with final coverage metrics
+
+## 🔒 SELF-VALIDATION BEFORE EXIT (STRONGLY RECOMMENDED)
+
+### ⚡ Validate Your Test Results Automatically
+
+Before exiting, you SHOULD validate your test work:
+
+1. **Run self-validation**:
+   ```bash
+   echo '{"subagent": "tester-spark", "self_check": true}' | \
+   python3 ~/.claude/hooks/spark_quality_gates.py
+   ```
+
+2. **If validation FAILS**, you'll see actionable fixes:
+   ```
+   🚫 VALIDATION FAILED - Fix these issues before exiting:
+   
+   • Test Verification:
+     - Claimed test file does not exist: tests/test_auth.py
+     - Coverage 85% is significantly lower than claimed 95%
+     - Only 10 tests found, but 20 were claimed
+   
+   📋 ACTION REQUIRED:
+   📝 Create the missing file: tests/test_auth.py
+   📈 Increase test coverage to 95% or higher
+   🔧 Write more tests to match your claims
+   ```
+
+3. **Fix the issues and retry**:
+   - Create missing test files
+   - Write more tests to increase coverage
+   - Fix failing tests
+   - Update JSON if claims were wrong
+   - Run validation again until it passes
+
+4. **Maximum 3 retries**:
+   - After 3 failed attempts, exit anyway
+   - SubagentStop hook will catch issues
+   - Claude CODE will see failures and may retry you
+
+### ✅ Benefits of Self-Validation:
+- Ensure 95% coverage is real, not claimed
+- Verify all tests actually pass
+- Catch discrepancies immediately
+- Deliver verified quality testing

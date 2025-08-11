@@ -829,9 +829,13 @@ def main():
         # Get context from input
         subagent_name = input_data.get("subagent", "unknown")
         cwd = input_data.get("cwd", ".")
+        self_check = input_data.get("self_check", False)  # Agent self-validation mode
         
         logger.info("=" * 60)
-        logger.info("🛡️  Jason's 8-Step Strict Quality Gates - Starting Validation")
+        if self_check:
+            logger.info("🔍  Self-Validation Mode - Agent checking its own work")
+        else:
+            logger.info("🛡️  Jason's 8-Step Strict Quality Gates - Starting Validation")
         logger.info(f"   Subagent: {subagent_name}")
         logger.info(f"   Directory: {cwd}")
         logger.info("=" * 60)
@@ -841,6 +845,31 @@ def main():
         runner = QualityGateRunner(claude_code_mode=claude_code_mode)
         state_manager = StateManager()
         chain_manager = AgentChainManager()
+        
+        # Check if already self-validated (to avoid duplicate validation)
+        if not self_check:  # Only check in hook mode
+            state = state_manager.read_state()
+            if state.get("self_validated_by") == subagent_name:
+                # Check if validation was recent (within 5 minutes)
+                validated_at = state.get("self_validated_at")
+                if validated_at:
+                    try:
+                        from datetime import datetime, timedelta
+                        validated_time = datetime.fromisoformat(validated_at.replace('Z', '+00:00'))
+                        current_time = datetime.now(validated_time.tzinfo) if validated_time.tzinfo else datetime.now()
+                        time_diff = current_time - validated_time
+                        if time_diff.total_seconds() < 300:  # 5 minutes
+                            logger.info("✅ Already self-validated recently, skipping duplicate check")
+                            # Return success response
+                            output = HookOutputFormatter.format_subagent_stop(
+                                decision="continue",
+                                reason="Already self-validated successfully",
+                                metadata={"self_validated": True}
+                            )
+                            print(json.dumps(output))
+                            return
+                    except Exception:
+                        pass  # If parsing fails, continue with validation
         
         # Import Phase Manager for progression checking
         from spark_phase_manager import SPARKPhaseManager
@@ -870,6 +899,11 @@ def main():
         logger.info(f"   Required: {results['required_gates']} gates to pass")
         logger.info(f"   Status: {'✅ PASSED' if results['passed'] else '❌ FAILED'}")
         logger.info("=" * 60)
+        
+        # Mark if self-validation passed (to avoid duplicate validation in hook)
+        if self_check and results["passed"]:
+            state["self_validated_at"] = datetime.now().isoformat()
+            state["self_validated_by"] = subagent_name
         
         # Update state with quality results and check phase progression
         state_manager.write_state(state)
@@ -932,8 +966,10 @@ def main():
             # Gates failed - block and request fixes
             decision = "block"
             
-            # Generate detailed failure message
+            # Generate detailed failure message with actionable fixes
             failure_details = []
+            actionable_fixes = []
+            
             for gate_name in results["failed_gates"]:
                 gate_results = results["results"].get(gate_name, {})
                 issues = gate_results.get("issues", [])
@@ -941,8 +977,34 @@ def main():
                     failure_details.append(f"• {gate_name}:")
                     for issue in issues[:2]:  # Show first 2 issues per gate
                         failure_details.append(f"  - {issue}")
+                        
+                        # Add actionable fix suggestions
+                        if "does not exist" in issue:
+                            actionable_fixes.append(f"📝 Create the missing file: {issue.split(':')[1].strip()}")
+                        elif "coverage" in issue.lower():
+                            actionable_fixes.append(f"📈 Increase test coverage to 95% or higher")
+                        elif "endpoint not found" in issue:
+                            actionable_fixes.append(f"🔌 Add the missing API endpoint to your code")
+                        elif "no changes detected" in issue:
+                            actionable_fixes.append(f"✏️ Make actual changes to the file or remove from modified list")
+                        elif "tests are failing" in issue:
+                            actionable_fixes.append(f"🔧 Fix failing tests or update JSON to reflect actual status")
             
-            reason = f"""Quality gates failed: {results['passed_count']}/{results['total_gates']} passed ({results['pass_rate']}% pass rate)
+            if self_check and actionable_fixes:
+                # Self-check mode: provide clear instructions
+                reason = f"""🚫 VALIDATION FAILED - Fix these issues before exiting:
+
+{chr(10).join(failure_details)}
+
+📋 ACTION REQUIRED:
+{chr(10).join(actionable_fixes)}
+
+After fixing, run validation again:
+echo '{{"subagent": "{subagent_name}", "self_check": true}}' | python3 ~/.claude/hooks/spark_quality_gates.py
+"""
+            else:
+                # Hook mode: standard message
+                reason = f"""Quality gates failed: {results['passed_count']}/{results['total_gates']} passed ({results['pass_rate']}% pass rate)
 
 Failed Gates ({len(results['failed_gates'])}):
 {chr(10).join(failure_details)}
