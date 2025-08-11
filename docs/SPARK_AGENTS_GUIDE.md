@@ -3,7 +3,7 @@
 > **Complete guide for optimal agent information provision and context management**
 > 
 > *Last updated: August 10, 2025*
-> *Version: SPARK v3.5 - SuperClaude Enhanced*
+> *Version: SPARK v3.5 - Advanced Multi-Agent System*
 
 This guide details exactly what information each SPARK agent needs to deliver optimal results. Every detail is crucial for Hook automation and seamless agent operation.
 

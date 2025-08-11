@@ -23,7 +23,7 @@
 
 ```
 ┌─────────────────────────────────────────────┐
-│              2호 (Orchestrator)              │
+│              Claude CODE (Orchestrator)              │
 │                                              │
 │  1. Parse tasks → Create team JSONs          │
 │  2. Call 4 teams SIMULTANEOUSLY              │
@@ -52,7 +52,7 @@
 
 ## 🔄 Execution Phases
 
-### Phase 1: Initialization (2호)
+### Phase 1: Initialization (Claude CODE)
 ```python
 1. Parse command and extract tasks
 2. Validate task independence
@@ -83,7 +83,7 @@ Task("team4-tester-spark", test4)
 ```
 
 ### Phase 4: Consolidation
-- 2호 reviews all team results
+- Claude CODE reviews all team results
 - Generates unified report
 - Handles any integration needs
 
@@ -125,7 +125,7 @@ Each team works with its own JSON file for complete isolation:
 For shared files (e.g., `constants.py`, `types.py`):
 
 1. **Team requests lock** via JSON
-2. **2호 manages allocation** (first-come-first-served)
+2. **Claude CODE manages allocation** (first-come-first-served)
 3. **30-second timeout** prevents deadlocks
 4. **Automatic release** on completion
 

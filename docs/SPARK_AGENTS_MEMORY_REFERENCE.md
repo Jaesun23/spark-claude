@@ -1,6 +1,6 @@
-# 🧠 SPARK Agents Memory Reference (2호 전용)
+# 🧠 SPARK Agents Memory Reference (Claude CODE 전용)
 
-> **2호 메모리 저장용 핵심 정보만 포함**
+> **Claude CODE 메모리 저장용 핵심 정보만 포함**
 > *복잡한 설명 제거, 즉시 활용 가능한 레퍼런스*
 
 ---
@@ -127,7 +127,7 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 
 ## 🔴 중요 제약사항
 
-1. **에이전트는 다른 에이전트 호출 불가** (오직 2호만 Task 사용)
+1. **에이전트는 다른 에이전트 호출 불가** (오직 Claude CODE만 Task 사용)
 2. **병렬 실행 = 한 메시지에 여러 Task 호출** (각각 호출하면 순차 실행)
 3. **JSON 컨텍스트로만 정보 전달** (직접 대화 불가)
 4. **SubagentStop 후 품질 게이트 자동 실행**
@@ -177,5 +177,5 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 
 ---
 
-*이 문서는 2호의 메모리 저장용으로 최적화되었습니다.*
+*이 문서는 Claude CODE의 메모리 저장용으로 최적화되었습니다.*
 *상세 정보는 `/docs/SPARK_AGENTS_GUIDE.md` 참조*

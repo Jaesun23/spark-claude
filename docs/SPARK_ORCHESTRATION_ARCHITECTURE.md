@@ -11,7 +11,7 @@
 
 ```mermaid
 graph TD
-    A[사용자 요청] --> B[2호 직접 주입]
+    A[사용자 요청] --> B[Claude CODE 직접 주입]
     A --> C[Hook 자동 주입]
     B --> D[에이전트]
     C --> D
@@ -24,7 +24,7 @@ graph TD
 
 | 방법 | 용도 | 예시 | 장점 |
 |------|------|------|------|
-| **2호 프롬프트** | 핵심 요청 전달 | "implement auth system" | 직접적, 명확 |
+| **Claude CODE 프롬프트** | 핵심 요청 전달 | "implement auth system" | 직접적, 명확 |
 | **Hook 컨텍스트** | 자동 메타데이터 | 페르소나, 복잡도 | 자동화, 일관성 |
 | **상태 파일** | 구조화된 정보 | current_task.json | 상세 정보, 재사용 |
 | **사전 읽기** | 필수 컨텍스트 | "MUST READ requirements.md" | 표준화, 강제성 |
@@ -34,7 +34,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[에이전트] --> B[2호 보고]
+    A[에이전트] --> B[Claude CODE 보고]
     A --> C[결과 파일]
     A --> D[TodoWrite]
     A --> E[다음 에이전트]
@@ -92,7 +92,7 @@ Step 4: Documenter
 ### **병렬 실행 패턴**
 
 ```python
-# 2호의 병렬 호출
+# Claude CODE의 병렬 호출
 tasks = [
     Task("team1-implementer-spark", "implement auth module"),
     Task("team2-implementer-spark", "implement API endpoints"),
@@ -152,7 +152,7 @@ After completing work, you MUST:
 ### **Level 1: 경량 (Simple)**
 ```yaml
 복잡도: < 0.3
-방법: 2호 프롬프트만
+방법: Claude CODE 프롬프트만
 예시: "fix typo in README"
 ```
 
@@ -181,7 +181,7 @@ After completing work, you MUST:
 
 ## 🔧 Implementation Strategy
 
-### **2호의 역할 (Orchestrator)**
+### **Claude CODE의 역할 (Orchestrator)**
 
 ```python
 class Orchestrator:
@@ -257,7 +257,7 @@ def validate_quality(input_data):
 sequenceDiagram
     participant U as User
     participant H as Hook
-    participant O as 2호
+    participant O as Claude CODE
     participant A as Analyzer
     participant I as Implementer×4
     participant T as Tester
@@ -399,7 +399,7 @@ Coordinate all agents and manage dependencies.
 
 ---
 
-## 🎮 2호 Control Commands
+## 🎮 Claude CODE Control Commands
 
 ### **Sequential Execution**
 ```python

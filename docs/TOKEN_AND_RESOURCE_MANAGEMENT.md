@@ -9,19 +9,32 @@ This document consolidates validated findings on token management and resource o
 ## 🎯 Core Truths About Token Management
 
 ### 1. The Reality of Token Measurement
-- **Nobody can measure actual token usage** - Neither 2호 nor agents have access to token counting APIs
+- **Nobody can measure actual token usage** - Neither Claude CODE nor agents have access to token counting APIs
 - Each agent gets an independent 200K context window
 - Context accumulates and **cannot be cleared** during execution
 - At 190K, agents must stop and summarize
 - At 200K, hard termination with no output
 
-### 2. The 90K Practical Limit
+### 2. The 90K Practical Limit (Detailed Calculation)
+
+**Mathematical Breakdown:**
 ```yaml
-Why 90K is the real limit:
-  - Write tool doubles token consumption (memory + output)
-  - Safety margin needed for unexpected growth
-  - Practical limit: 90K for all agents
+200K Context Window (Claude 3.5 Sonnet base)
+÷ 2 = 100K (Write tool doubling factor)
+- 10K (Initial context overhead)
+= 90K (Actual working capacity per agent)
 ```
+
+**Initial Context Overhead (10K tokens):**
+- **Agent definition**: ~3-5K tokens (system prompt, capabilities, examples)
+- **Claude CODE injection**: ~2-3K tokens (task context, previous results, state)
+- **Work instructions**: ~3-5K tokens (checklists, requirements, standards)
+
+**Why This Conservative Approach:**
+- Write operations double token consumption (memory + output)
+- Context accumulates and cannot be cleared during execution
+- Agents must estimate total token usage before starting work
+- Prevents memory overflow situations that cause hard termination
 
 ### 3. Write Tool Token Doubling
 ```yaml

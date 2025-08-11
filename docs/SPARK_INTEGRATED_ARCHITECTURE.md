@@ -18,7 +18,7 @@ Components communicate through well-defined interfaces (JSON files).
 ```
 User Intent (Highest Priority)
     ↓
-2호 Interpretation
+Claude CODE Interpretation
     ↓
 Hook Enhancement
     ↓
@@ -28,7 +28,7 @@ Agent Standards (Default)
 ```
 
 ### 4. **Decision Authority**
-Only 2호 (Number Two) has decision-making power. All other components follow instructions.
+Only Claude CODE has decision-making power. All other components follow instructions.
 
 ---
 
@@ -36,7 +36,7 @@ Only 2호 (Number Two) has decision-making power. All other components follow in
 
 | Component | Primary Role | What It Controls | What It Cannot Do |
 |-----------|-------------|------------------|-------------------|
-| **2호 (Orchestrator)** | Decision & Control | Task assignment, Flow control, Agent selection | Direct file modification |
+| **Claude CODE (Orchestrator)** | Decision & Control | Task assignment, Flow control, Agent selection | Direct file modification |
 | **Hooks** | Automation | Context enhancement, Quality validation | Agent selection, Task creation |
 | **JSON Files** | State Management | Information relay, Progress tracking | Decision making |
 | **Agents** | Execution | Actual work, Result generation | Calling other agents |
@@ -49,7 +49,7 @@ Only 2호 (Number Two) has decision-making power. All other components follow in
 ### **Layer 1: Input Processing**
 ```mermaid
 graph LR
-    U[User] -->|Request| O[2호]
+    U[User] -->|Request| O[Claude CODE]
     O -->|Analyze| C{Command?}
     C -->|Yes| CMD[Command Definition]
     C -->|No| D[Direct Processing]
@@ -60,7 +60,7 @@ graph LR
 ### **Layer 2: Context Enhancement**
 ```mermaid
 graph TD
-    O[2호] -->|Prompt| H[UserPromptSubmit Hook]
+    O[Claude CODE] -->|Prompt| H[UserPromptSubmit Hook]
     H -->|Calculate| CX[Complexity Score]
     H -->|Identify| P[Personas]
     H -->|Create| J[current_task.json]
@@ -71,7 +71,7 @@ graph TD
 ### **Layer 3: Execution Control**
 ```mermaid
 graph TD
-    O[2호] -->|Task Call| A[Agent]
+    O[Claude CODE] -->|Task Call| A[Agent]
     A -->|Read| J1[current_task.json]
     A -->|Read| J2[previous_result.json]
     A -->|Execute| W[Work]
@@ -90,10 +90,10 @@ graph TD
 ```yaml
 Example: "Fix typo in README"
 Flow:
-  1. User → 2호
-  2. 2호 directly executes (no agent needed)
+  1. User → Claude CODE
+  2. Claude CODE directly executes (no agent needed)
   3. Complete
-Components Used: Only 2호
+Components Used: Only Claude CODE
 Time: < 1 minute
 ```
 
@@ -102,19 +102,19 @@ Time: < 1 minute
 Example: "/implement JWT authentication"
 Flow:
   1. User → "/implement" command
-  2. 2호 reads command workflow
+  2. Claude CODE reads command workflow
   3. UserPromptSubmit Hook:
      - Complexity: 0.5
      - Personas: Backend, Security
      - Creates: current_task.json
-  4. 2호 → implementer-spark
+  4. Claude CODE → implementer-spark
      - Reads: current_task.json
      - Writes: implementation_result.json
   5. SubagentStop Hook validates quality
-  6. 2호 → tester-spark
+  6. Claude CODE → tester-spark
      - Reads: implementation_result.json
      - Writes: test_result.json
-  7. 2호 → documenter-spark
+  7. Claude CODE → documenter-spark
      - Writes: documentation
   8. Complete
 Components Used: All (orchestrated)
@@ -130,9 +130,9 @@ Flow:
      - Complexity: 0.9
      - Wave mode activated
      - Creates: team_coordination.json
-  3. 2호 → spawner-spark (orchestrator)
+  3. Claude CODE → spawner-spark (orchestrator)
      - Creates: team1-4_task.json
-  4. 2호 parallel calls (SIMULTANEOUS):
+  4. Claude CODE parallel calls (SIMULTANEOUS):
      - Task(team1-implementer-spark, "auth service")
      - Task(team2-implementer-spark, "payment service")
      - Task(team3-implementer-spark, "notification service")
@@ -145,9 +145,9 @@ Flow:
   6. SYNCHRONIZATION POINT:
      - ALL teams must complete
      - Even if team1 finishes in 10min, waits for slowest team
-     - 2호 waits for ALL team[N]_result.json files
-  7. 2호 collects all results (ONLY after all complete)
-  8. 2호 → tester-spark (integration testing)
+     - Claude CODE waits for ALL team[N]_result.json files
+  7. Claude CODE collects all results (ONLY after all complete)
+  8. Claude CODE → tester-spark (integration testing)
   9. Complete
 Components Used: All (parallel + orchestrated)
 Time: 30-60 minutes (determined by slowest team)
@@ -183,7 +183,7 @@ Critical: No agent can proceed to next phase until ALL parallel agents finish
 {
   "team_coordination.json": "Overall parallel plan (Spawner → Teams)",
   "team1-4_task.json": "Team assignments (Spawner → Each team)",
-  "team1-4_result.json": "Team outputs (Teams → 2호)"
+  "team1-4_result.json": "Team outputs (Teams → Claude CODE)"
 }
 ```
 
@@ -192,7 +192,7 @@ Critical: No agent can proceed to next phase until ALL parallel agents finish
 CREATE: Hook/Agent writes file
 READ: Next agent consumes file
 UPDATE: Hook updates status
-DELETE: 2호 cleans up after completion
+DELETE: Claude CODE cleans up after completion
 ```
 
 ---
@@ -223,18 +223,18 @@ DELETE: 2호 cleans up after completion
 - Choose next agent
 - Create new tasks
 - Modify workflow
-- Override 2호 decisions
+- Override Claude CODE decisions
 
 ---
 
-## 🎮 2호 Orchestration Powers
+## 🎮 Claude CODE Orchestration Powers
 
 ### **⚠️ CRITICAL ARCHITECTURAL CONSTRAINT**
-**Only 2호 (Number Two) can call agents using the Task tool.**
+**Only Claude CODE can call agents using the Task tool.**
 - Agents CANNOT call other agents
 - Agents CANNOT use the Task tool
 - Agents must complete their work independently
-- All orchestration decisions belong to 2호 alone
+- All orchestration decisions belong to Claude CODE alone
 
 ### **🔄 Parallel Execution Constraint**
 **In parallel execution, ALL agents must complete before proceeding:**
@@ -244,12 +244,12 @@ Team2 ─┼─ ALL must finish → Next phase
 Team3 ─┘
 ```
 - If Team1 finishes in 5 minutes but Team2 needs 20 minutes, Team1's results wait
-- 2호 collects results ONLY after all parallel agents complete
+- Claude CODE collects results ONLY after all parallel agents complete
 - No partial processing or early continuation
 - This ensures consistency and prevents race conditions
 
 ### **Exclusive Capabilities**
-1. **Task Tool Usage** - ONLY 2호 can call agents (절대 원칙)
+1. **Task Tool Usage** - ONLY Claude CODE can call agents (절대 원칙)
 2. **Flow Control** - Sequential vs Parallel decisions
 3. **Result Integration** - Combining multi-agent outputs
 4. **User Communication** - Interpreting and responding
@@ -285,7 +285,7 @@ def orchestrate(request):
 
 ### **Priority Levels** (Highest → Lowest)
 1. **User Direct Instruction** - "Do X specifically this way"
-2. **2호 Interpretation** - Task prompts with context
+2. **Claude CODE Interpretation** - Task prompts with context
 3. **Hook Automation** - Calculated enhancements
 4. **JSON State** - Stored context and results
 5. **Agent Defaults** - Standard procedures
@@ -313,7 +313,7 @@ Each reads previous agent's JSON output
 ### **Pattern 2: Parallel Burst**
 ```
         ┌→ Team1 ─┐
-2호 ─────┼→ Team2 ─┼───→ Integration
+Claude CODE ─────┼→ Team2 ─┼───→ Integration
         └→ Team3 ─┘
 Teams work independently, merge results
 ```
@@ -333,7 +333,7 @@ Wave 5: Deployment (Builder)
 
 | Complexity | Execution Mode | Components Used | Typical Time |
 |------------|---------------|-----------------|--------------|
-| **0.0-0.3** | Direct by 2호 | None | < 1 min |
+| **0.0-0.3** | Direct by Claude CODE | None | < 1 min |
 | **0.3-0.5** | Single Agent | Agent + Hooks | 5-10 min |
 | **0.5-0.7** | Sequential | Multiple Agents | 15-30 min |
 | **0.7-0.9** | Parallel | Teams + Spawner | 30-60 min |
@@ -360,7 +360,7 @@ Wave 5: Deployment (Builder)
 ## 💡 Best Practices
 
 ### **DO's ✅**
-1. Let 2호 orchestrate - don't fight the system
+1. Let Claude CODE orchestrate - don't fight the system
 2. Use JSON for state - explicit is better than implicit
 3. Trust the hooks - they prevent errors
 4. Follow the workflow - commands define proven paths
@@ -369,22 +369,22 @@ Wave 5: Deployment (Builder)
 7. Wait for all parallel agents - synchronization is mandatory
 
 ### **DON'Ts ❌**
-1. Bypass 2호 - it breaks orchestration
+1. Bypass Claude CODE - it breaks orchestration
 2. Skip JSON files - loses state tracking
 3. Ignore hooks - misses automation benefits
 4. Modify workflows dynamically - causes confusion
 5. Mix responsibilities - violates architecture
-6. Try to call other agents - ONLY 2호 can use Task tool
+6. Try to call other agents - ONLY Claude CODE can use Task tool
 7. Proceed before all parallel agents finish - breaks consistency
 
 ### **What Agents CANNOT DO ⛔**
 ```yaml
 Forbidden Actions:
   - Call other agents: "Task('another-agent', ...)"  # ❌ NEVER
-  - Use Task tool: Only 2호 has this permission      # ❌ NEVER
+  - Use Task tool: Only Claude CODE has this permission      # ❌ NEVER
   - Skip synchronization: Wait for parallel peers    # ❌ NEVER
   - Direct communication: Use JSON files instead     # ❌ NEVER
-  - Make orchestration decisions: 2호's job only     # ❌ NEVER
+  - Make orchestration decisions: Claude CODE's job only     # ❌ NEVER
   
 Agent Limitations:
   - Cannot see other agents' work in progress
@@ -403,27 +403,27 @@ Agent Limitations:
 **Execution Flow**:
 ```
 1. User → "/implement real-time chat with WebSocket"
-2. 2호 reads /implement command definition
+2. Claude CODE reads /implement command definition
 3. UserPromptSubmit Hook:
    - Complexity: 0.8 (real-time + WebSocket)
    - Activates: Backend, Frontend, Security personas
    - Creates: current_task.json with requirements
-4. 2호 → spawner-spark: "Orchestrate 4-team implementation"
+4. Claude CODE → spawner-spark: "Orchestrate 4-team implementation"
 5. Spawner creates team assignments:
    - Team1: WebSocket server implementation
    - Team2: Chat UI components
    - Team3: Message persistence layer
    - Team4: Authentication & security
-6. 2호 parallel execution:
+6. Claude CODE parallel execution:
    Task × 4 (all teams simultaneously)
 7. Each team:
    - Reads own team[N]_task.json
    - Implements assigned module
    - Writes team[N]_result.json
 8. SubagentStop × 4: Each team's quality validated
-9. 2호 collects all team results
-10. 2호 → tester-spark: "Integration testing"
-11. 2호 → documenter-spark: "Complete documentation"
+9. Claude CODE collects all team results
+10. Claude CODE → tester-spark: "Integration testing"
+11. Claude CODE → documenter-spark: "Complete documentation"
 12. Final report to user
 ```
 
@@ -455,7 +455,7 @@ Agent Limitations:
 5. **Real-time Monitoring** - Live progress dashboard
 
 ### **Research Areas**
-1. **AI-driven Orchestration** - 2호 learns optimal paths
+1. **AI-driven Orchestration** - Claude CODE learns optimal paths
 2. **Predictive Quality** - Anticipate issues before they occur
 3. **Auto-scaling** - Dynamic team allocation
 4. **Cross-project Learning** - Share patterns across projects
@@ -473,7 +473,7 @@ SPARK v3.5's integrated architecture achieves:
 5. **Full Visibility** - Explicit tracking throughout
 
 The system transforms chaos into order through:
-- **2호's intelligent orchestration**
+- **Claude CODE's intelligent orchestration**
 - **Hook's automated enhancements**
 - **JSON's explicit state tracking**
 - **Agent's specialized execution**
