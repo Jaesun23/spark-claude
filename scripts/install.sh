@@ -431,14 +431,26 @@ configure_settings() {
   "hooks": {
     "UserPromptSubmit": [
       {
-        "command": "$HOOK_PATH/spark_persona_router.py",
-        "description": "SPARK Persona Router - Task analysis and optimal agent selection"
+        "description": "SPARK Persona Router - Task analysis and optimal agent selection",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOOK_PATH/spark_persona_router.py",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "SubagentStop": [
       {
-        "command": "$HOOK_PATH/spark_quality_gates.py",
-        "description": "SPARK Quality Gates - Jason's 8-step strict validation"
+        "description": "SPARK Quality Gates - Jason's 8-step strict validation",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOOK_PATH/spark_quality_gates.py",
+            "timeout": 60
+          }
+        ]
       }
     ]
   },

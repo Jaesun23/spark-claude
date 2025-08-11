@@ -40,7 +40,8 @@ The SPARK v3.5 Hook System leverages official Anthropic Claude Code Hook events 
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_persona_router.py"
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_persona_router.py",
+            "timeout": 60
           }
         ]
       }
@@ -51,7 +52,8 @@ The SPARK v3.5 Hook System leverages official Anthropic Claude Code Hook events 
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_quality_gates.py"
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spark_quality_gates.py",
+            "timeout": 60
           }
         ]
       }

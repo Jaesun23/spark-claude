@@ -431,14 +431,26 @@ configure_settings() {
   "hooks": {
     "UserPromptSubmit": [
       {
-        "command": "$HOOK_PATH/spark_persona_router.py",
-        "description": "SPARK 페르소나 라우터 - 작업 분석 및 최적 에이전트 선택"
+        "description": "SPARK 페르소나 라우터 - 작업 분석 및 최적 에이전트 선택",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOOK_PATH/spark_persona_router.py",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "SubagentStop": [
       {
-        "command": "$HOOK_PATH/spark_quality_gates.py",
-        "description": "SPARK 품질 게이트 - Jason의 8단계 엄격 검증"
+        "description": "SPARK 품질 게이트 - Jason의 8단계 엄격 검증",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOOK_PATH/spark_quality_gates.py",
+            "timeout": 60
+          }
+        ]
       }
     ]
   },
