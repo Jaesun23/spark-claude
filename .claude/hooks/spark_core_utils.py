@@ -148,21 +148,40 @@ class StateManager:
         """Find project root using Claude Code environment variables or directory search"""
         import os
         
+        # Debug logging for hook context
+        logger.info(f"Hook execution context: cwd={Path.cwd()}, CLAUDE_PROJECT_DIR={os.getenv('CLAUDE_PROJECT_DIR')}")
+        
         # First try Claude Code's project directory environment variable
         claude_project_dir = os.getenv('CLAUDE_PROJECT_DIR')
         if claude_project_dir:
             project_path = Path(claude_project_dir)
             if project_path.exists() and (project_path / ".claude").exists():
+                logger.info(f"Using CLAUDE_PROJECT_DIR: {project_path}")
                 return project_path
         
-        # Fallback: search for .claude directory from current location
-        current = Path.cwd()
-        while current != current.parent:
-            if (current / ".claude").exists():
-                return current
-            current = current.parent
+        # Enhanced fallback: search for .claude directory from multiple starting points
+        search_paths = [
+            Path.cwd(),  # Current working directory
+            Path(__file__).parent.parent,  # .claude directory (hooks/../)
+            # Dynamic project locations based on common patterns
+            Path.home() / "Projects" / "spark-claude",
+            Path.home() / "Projects" / "mcp-servers" / "memory-one-spark",
+        ]
+        
+        for start_path in search_paths:
+            if start_path.exists():
+                current = start_path
+                while current != current.parent:
+                    if (current / ".claude").exists():
+                        # Verify this is a SPARK project (has agents/hooks directories)
+                        claude_dir = current / ".claude"
+                        if (claude_dir / "agents").exists() and (claude_dir / "hooks").exists():
+                            logger.info(f"Found valid SPARK project root: {current}")
+                            return current
+                    current = current.parent
         
         # Final fallback to current directory
+        logger.warning(f"No valid SPARK project found, using fallback: {Path.cwd()}")
         return Path.cwd()
     
     def __init__(self):

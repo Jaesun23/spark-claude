@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""
+SPARK 명령어 문서를 TXT로 변환하고 통합하는 스크립트
+"""
+
+import os
+import sys
+from pathlib import Path
+
+def convert_commands_to_txt():
+    """
+    commands 디렉토리의 모든 .md 파일을 .txt로 변환하고 통합
+    """
+    # 경로 설정
+    commands_dir = Path("/Users/jason/Projects/spark-claude/.claude/commands")
+    output_dir = commands_dir.parent / "commands_txt"
+    
+    if not commands_dir.exists():
+        print(f"❌ commands 디렉토리를 찾을 수 없습니다: {commands_dir}")
+        return False
+    
+    # 출력 디렉토리 생성
+    output_dir.mkdir(exist_ok=True)
+    
+    # .md 파일 찾기
+    md_files = list(commands_dir.glob("*.md"))
+    
+    if not md_files:
+        print(f"⚠️ {commands_dir}에 .md 파일이 없습니다.")
+        return False
+    
+    print("🚀 SPARK 명령어 MD → TXT 변환")
+    print("=" * 50)
+    print(f"📁 출력 디렉토리: {output_dir}")
+    print(f"📝 {len(md_files)}개의 명령어 파일을 변환합니다...\n")
+    
+    converted_count = 0
+    
+    # 개별 파일 변환
+    for md_file in md_files:
+        try:
+            txt_filename = md_file.stem + ".txt"
+            txt_path = output_dir / txt_filename
+            
+            with open(md_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            with open(txt_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            print(f"✅ {md_file.name} → {txt_filename}")
+            converted_count += 1
+            
+        except Exception as e:
+            print(f"❌ {md_file.name} 변환 실패: {e}")
+    
+    print(f"\n🎉 개별 변환 완료! {converted_count}/{len(md_files)} 파일이 변환되었습니다.")
+    
+    # 통합 파일 생성
+    print("\n📚 통합 파일을 생성합니다...")
+    
+    combined_path = output_dir / "all_commands_combined.txt"
+    with open(combined_path, 'w', encoding='utf-8') as combined:
+        combined.write("=" * 80 + "\n")
+        combined.write("SPARK v3.5 - 모든 명령어 정의 통합 파일\n")
+        combined.write("=" * 80 + "\n")
+        combined.write("\n목차:\n")
+        combined.write("-" * 40 + "\n")
+        
+        # 목차 생성
+        for md_file in sorted(md_files):
+            combined.write(f"• {md_file.stem}\n")
+        
+        combined.write("\n" + "=" * 80 + "\n\n")
+        
+        # 각 파일 내용 추가
+        for md_file in sorted(md_files):
+            with open(md_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            combined.write(f"\n{'='*80}\n")
+            combined.write(f"명령어: {md_file.stem}\n")
+            combined.write(f"파일: {md_file.name}\n")
+            combined.write(f"{'='*80}\n\n")
+            combined.write(content)
+            combined.write("\n\n")
+    
+    print(f"✅ 통합 파일 생성: {combined_path}")
+    
+    # 전체 통합 파일 생성 (agents + commands)
+    print("\n🎯 전체 통합 파일을 생성합니다 (agents + commands)...")
+    
+    agents_txt_dir = Path("/Users/jason/Projects/spark-claude/.claude/agents_txt")
+    full_combined_path = Path("/Users/jason/Projects/spark-claude/.claude") / "spark_full_documentation.txt"
+    
+    with open(full_combined_path, 'w', encoding='utf-8') as full:
+        full.write("=" * 80 + "\n")
+        full.write("SPARK v3.5 - 완전한 시스템 문서\n")
+        full.write("(에이전트 + 명령어 통합)\n")
+        full.write("=" * 80 + "\n\n")
+        
+        # Part 1: Commands
+        full.write("\n" + "=" * 80 + "\n")
+        full.write("PART 1: SPARK 명령어 시스템\n")
+        full.write("=" * 80 + "\n\n")
+        
+        if combined_path.exists():
+            with open(combined_path, 'r', encoding='utf-8') as f:
+                full.write(f.read())
+        
+        # Part 2: Agents
+        full.write("\n\n" + "=" * 80 + "\n")
+        full.write("PART 2: SPARK 에이전트 시스템\n")
+        full.write("=" * 80 + "\n\n")
+        
+        agents_combined = agents_txt_dir / "all_agents_combined.txt"
+        if agents_combined.exists():
+            with open(agents_combined, 'r', encoding='utf-8') as f:
+                full.write(f.read())
+        else:
+            full.write("⚠️ 에이전트 통합 파일을 찾을 수 없습니다.\n")
+            full.write("'spark-convert-agents' 명령을 먼저 실행해주세요.\n")
+    
+    print(f"✅ 전체 통합 파일 생성: {full_combined_path}")
+    
+    # 요약 정보 출력
+    print("\n" + "=" * 50)
+    print("📊 변환 결과 요약:")
+    print(f"  • 명령어 파일: {converted_count}개")
+    print(f"  • 개별 TXT: {output_dir}/*.txt")
+    print(f"  • 명령어 통합: {combined_path}")
+    print(f"  • 전체 통합: {full_combined_path}")
+    
+    return True
+
+if __name__ == "__main__":
+    success = convert_commands_to_txt()
+    sys.exit(0 if success else 1)
