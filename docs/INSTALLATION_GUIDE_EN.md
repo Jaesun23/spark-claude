@@ -67,9 +67,16 @@ This makes SPARK available in all your projects.
 Enter project directory path: /Users/jason/my-project
 ```
 
-### 3. Current Project Override
+### 3. Current Project Installation (./.claude/)
 
-Install directly in SPARK development directory (for developers)
+**Purpose:**
+- Install directly in current directory
+- Overwrite existing SPARK configuration
+- Primarily for SPARK development and testing
+
+**Use Case:**
+- SPARK developers testing changes
+- Temporary installations
 
 ---
 
@@ -268,7 +275,7 @@ rm -rf .claude
 - Per-project customization
 
 ### SPARK Testing/Development
-- **Current Project Override**
+- **Current Project Installation**
 - For development and testing
 
 ---
