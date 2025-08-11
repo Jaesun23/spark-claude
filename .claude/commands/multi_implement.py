@@ -238,8 +238,11 @@ def main():
     
     print(json.dumps(output, indent=2))
     
-    # Save config for orchestrator
-    config_path = Path.home() / ".claude" / "workflows" / "multi_implement_config.json"
+    # Save config for orchestrator (project-specific)
+    # Use project root instead of global ~/.claude/
+    import os
+    project_dir = os.getenv('CLAUDE_PROJECT_DIR', '.')
+    config_path = Path(project_dir) / ".claude" / "workflows" / "multi_implement_config.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
