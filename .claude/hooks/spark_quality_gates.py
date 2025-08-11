@@ -365,14 +365,181 @@ class IntegrationTestingGate(QualityGate):
         return len(issues) == 0, issues
 
 
+class ImplementationVerificationGate(QualityGate):
+    """Verify implementation claims against actual code"""
+    
+    def __init__(self):
+        super().__init__(
+            "Implementation Verification",
+            "Verify claimed implementation against actual files and code"
+        )
+    
+    def check(self) -> Tuple[bool, List[str]]:
+        """Verify implementation claims from current_task.json"""
+        issues = []
+        verification_results = {
+            "claimed_files": [],
+            "actual_files": [],
+            "claimed_endpoints": [],
+            "actual_endpoints": [],
+            "claimed_db_changes": [],
+            "actual_db_changes": [],
+            "discrepancies": []
+        }
+        
+        # Try to read current_task.json
+        json_paths = [
+            Path.home() / ".claude/workflows/current_task.json",
+            Path(".claude/workflows/current_task.json")
+        ]
+        
+        current_task = None
+        for json_path in json_paths:
+            if json_path.exists():
+                try:
+                    with open(json_path, 'r') as f:
+                        current_task = json.load(f)
+                    break
+                except Exception as e:
+                    logger.error(f"Failed to read {json_path}: {e}")
+        
+        if not current_task:
+            # No current_task.json, can't verify
+            return True, []
+        
+        # Check if there's an implementation section
+        implementation = current_task.get("implementation", {})
+        if not implementation:
+            # No implementation claimed yet
+            return True, []
+        
+        results = implementation.get("results", {})
+        
+        # 1. Verify files_created
+        files_created = results.get("files_created", [])
+        verification_results["claimed_files"] = files_created
+        for file_path in files_created:
+            if Path(file_path).exists():
+                verification_results["actual_files"].append(file_path)
+            else:
+                issues.append(f"Claimed file does not exist: {file_path}")
+                verification_results["discrepancies"].append(f"Missing file: {file_path}")
+        
+        # 2. Verify files_modified
+        files_modified = results.get("files_modified", [])
+        for file_path in files_modified:
+            if not Path(file_path).exists():
+                issues.append(f"Claimed modified file does not exist: {file_path}")
+                verification_results["discrepancies"].append(f"Missing modified file: {file_path}")
+            else:
+                # Check if file was actually modified (using git)
+                success, stdout, stderr = self.executor.run_command(
+                    ["git", "diff", "--name-only", file_path],
+                    timeout=5
+                )
+                if success and not stdout.strip():
+                    # File not modified according to git
+                    success2, stdout2, stderr2 = self.executor.run_command(
+                        ["git", "diff", "--cached", "--name-only", file_path],
+                        timeout=5
+                    )
+                    if not stdout2.strip():
+                        issues.append(f"File claimed as modified but no changes detected: {file_path}")
+                        verification_results["discrepancies"].append(f"Unchanged file: {file_path}")
+        
+        # 3. Verify API endpoints
+        api_endpoints = results.get("api_endpoints", [])
+        verification_results["claimed_endpoints"] = [f"{ep.get('method', 'GET')} {ep.get('path', '')}" for ep in api_endpoints]
+        
+        if api_endpoints:
+            # Search for FastAPI/Flask/Express endpoints in Python/JS files
+            for endpoint in api_endpoints:
+                method = endpoint.get("method", "GET").lower()
+                path = endpoint.get("path", "")
+                
+                # Search in Python files for FastAPI/Flask
+                found = False
+                python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+                for py_file in python_files[:20]:  # Limit search
+                    try:
+                        content = py_file.read_text()
+                        # FastAPI patterns
+                        if f'@app.{method}("{path}")' in content or f"@app.{method}('{path}')" in content:
+                            found = True
+                            break
+                        # Flask patterns
+                        if f'@app.route("{path}", methods=["{method.upper()}"])' in content:
+                            found = True
+                            break
+                    except Exception:
+                        pass
+                
+                if found:
+                    verification_results["actual_endpoints"].append(f"{method.upper()} {path}")
+                else:
+                    issues.append(f"API endpoint not found in code: {method.upper()} {path}")
+                    verification_results["discrepancies"].append(f"Missing endpoint: {method.upper()} {path}")
+        
+        # 4. Verify database changes (check for migration files)
+        db_changes = results.get("database_changes", [])
+        verification_results["claimed_db_changes"] = db_changes
+        
+        if db_changes:
+            # Look for migration files
+            migration_patterns = ["**/migrations/*.py", "**/alembic/versions/*.py", "**/*.sql"]
+            migration_files = []
+            for pattern in migration_patterns:
+                migration_files.extend(Path(".").glob(pattern))
+            
+            if migration_files:
+                verification_results["actual_db_changes"].append("Migration files found")
+            else:
+                issues.append("Database changes claimed but no migration files found")
+                verification_results["discrepancies"].append("No migration files for DB changes")
+        
+        # Save verification results to state manager
+        from spark_core_utils import StateManager as SM
+        state_manager = SM()
+        state = state_manager.read_state()
+        
+        # Add implementation verification results to state
+        state["implementation_verification"] = {
+            "verified_at": datetime.now().isoformat(),
+            "verification_passed": len(issues) == 0,
+            "verification_results": verification_results,
+            "issues": issues
+        }
+        
+        # Also update the current_task if we have it
+        if current_task:
+            current_task["implementation_verification"] = state["implementation_verification"]
+            
+            # Write back to the same JSON file
+            for json_path in json_paths:
+                if json_path.exists():
+                    try:
+                        with open(json_path, 'w') as f:
+                            json.dump(current_task, f, indent=2)
+                        logger.info(f"Saved implementation verification to {json_path}")
+                        break
+                    except Exception as e:
+                        logger.error(f"Failed to write verification results: {e}")
+        
+        # Write state (this ensures it's saved even if JSON write fails)
+        state_manager.write_state(state)
+        
+        return len(issues) == 0, issues
+
+
 class QualityGateRunner:
     """Jason's 8-Step Strict Quality Gate Runner - Zero tolerance approach"""
     
     def __init__(self, claude_code_mode: bool = True):
         self.claude_code_mode = claude_code_mode
         
-        # Jason's 8-Step Strict Quality Gates (no compromises)
+        # Jason's 9-Step Strict Quality Gates (with Implementation Verification)
         self.gates = [
+            ImplementationVerificationGate(), # Step 0: Verify implementation claims FIRST
             SyntaxValidationGate(),          # Step 1: Syntax Validation (0 errors)
             MyPyStrictGate(),               # Step 2: MyPy --strict (0 errors)
             RuffStrictGate(),               # Step 3: Ruff --strict (0 violations)
