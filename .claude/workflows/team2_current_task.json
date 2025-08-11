@@ -100,5 +100,5 @@
   "quality_gates_timestamp": "",
   "quality_gates": {},
   "enhanced_workflow": true,
-  "token_efficiency_target": "88.4%"
+  "token_optimization": "enabled"
 }

@@ -530,7 +530,7 @@ show_summary() {
     
     echo ""
     echo -e "${CYAN}주요 기능:${NC}"
-    echo "• 88.4% 토큰 효율성 (검증됨)"
+    echo "• 어전한 토큰 효율성 (검증됨)"
     echo "• 16개 전문 에이전트"
     echo "• Jason의 8단계 엄격 품질 게이트"
     echo "• 자동 페르소나 활성화"

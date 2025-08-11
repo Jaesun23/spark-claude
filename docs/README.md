@@ -15,11 +15,11 @@
 
 ## 🎯 What is SPARK?
 
-SPARK is an advanced multi-agent orchestration system that achieves **88.4% token reduction** through intelligent lazy-loading and parallel execution. It provides 28 specialized agents (16 base + 12 team) that work together seamlessly.
+SPARK is an advanced multi-agent orchestration system that achieves **significant token efficiency** through intelligent lazy-loading and parallel execution. It provides 28 specialized agents (16 base + 12 team) that work together seamlessly.
 
 ### Key Features
 
-- **🔥 Lazy Loading**: Only loads required agents (5,100 tokens vs 44,000)
+- **🔥 Lazy Loading**: Only loads required agents on-demand
 - **⚡ Parallel Execution**: Up to 4 teams working simultaneously
 - **🔒 FileLockManager**: Safe concurrent file access
 - **📊 Quality Gates**: 8-step validation with automatic retry
@@ -86,7 +86,7 @@ cd spark-claude
 
 ## 📈 Performance Metrics
 
-- **Token Usage**: 5,100 average (88.4% reduction)
+- **Token Usage**: Optimized through lazy-loading architecture
 - **Parallel Teams**: Up to 4 simultaneous
 - **Quality Gates**: 8-step validation
 - **Success Rate**: 99.2% first-pass

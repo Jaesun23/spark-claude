@@ -39,7 +39,7 @@
       "intelligentRetry": true
     },
     "performance": {
-      "tokenReduction": "88.4%",
+      "tokenOptimization": "enabled",
       "maxRetries": 3,
       "timeout": 30
     }
