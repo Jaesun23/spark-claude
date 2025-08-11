@@ -25,6 +25,46 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def create_team_json_files(prompt: str, state_manager) -> None:
+    """Create team JSON files for multi-team parallel execution"""
+    try:
+        # Check if this is a multi-team task
+        if not ("team" in prompt.lower() or "multi" in prompt.lower()):
+            return
+            
+        template_path = state_manager.state_dir / "team_current_task_template.json"
+        
+        # If template doesn't exist, create a basic one
+        if not template_path.exists():
+            logger.warning("Team template not found, skipping team JSON creation")
+            return
+            
+        # Read template
+        with open(template_path, 'r') as f:
+            template = json.load(f)
+        
+        # Create JSON files for teams 1-4
+        for team_id in range(1, 5):
+            team_file = state_manager.state_dir / f"team{team_id}_current_task.json"
+            
+            # Only create if doesn't exist
+            if not team_file.exists():
+                # Deep copy the template
+                import copy
+                team_data = copy.deepcopy(template)
+                team_data["team_info"]["team_id"] = str(team_id)
+                team_data["team_info"]["status"] = "INACTIVE"
+                team_data["team_info"]["team_type"] = f"team{team_id}"
+                
+                with open(team_file, 'w') as f:
+                    json.dump(team_data, f, indent=2)
+                    
+                logger.info(f"Created team{team_id}_current_task.json")
+    except Exception as e:
+        logger.warning(f"Could not create team JSON files: {e}")
+        # Non-critical error, continue
+        
+
 class PersonaAnalyzer:
     """Analyzes prompts to determine optimal persona activation"""
     
@@ -294,6 +334,9 @@ def main():
         
         # Initialize state management
         state_manager = StateManager()
+        
+        # Create team JSON files if multi-team task
+        create_team_json_files(prompt, state_manager)
         
         # Create task state
         task_state = {

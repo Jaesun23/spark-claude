@@ -15,21 +15,21 @@
 
 ### 📊 상황별 에이전트 매칭
 
-| 상황 | 에이전트 | 명령어 예시 |
+| Situation | Agent | Command Example |
 |------|----------|-------------|
-| "버그 고쳐줘" | troubleshooter-spark | `/spark-troubleshoot "fix login error"` |
-| "성능 개선" | analyzer-spark → improver-spark | `/spark-analyze "find bottlenecks"` |
-| "테스트 작성" | tester-spark | `/spark-test "create unit tests"` |
-| "문서 작성" | documenter-spark | `/spark-document "API docs"` |
-| "코드 정리" | cleaner-spark | `/spark-clean "remove dead code"` |
-| "설명해줘" | explainer-spark | `/spark-explain "how auth works"` |
-| "예상 시간" | estimator-spark | `/spark-estimate "new feature"` |
-| "Git 작업" | gitter-spark | `/spark-git "commit changes"` |
-| "빌드/배포" | builder-spark | `/spark-build "deploy to prod"` |
-| "멀티 작업" | spawner-spark | `/spark-spawn "parallel tasks"` |
-| "명령 찾기" | indexer-spark | `/spark-index "list commands"` |
-| "작업 관리" | tasker-spark | `/spark-task "manage todos"` |
-| "프로젝트 로드" | loader-spark | `/spark-load "project context"` |
+| "Fix bug" | troubleshooter-spark | `/spark-troubleshoot "fix login error"` |
+| "Improve performance" | analyzer-spark → improver-spark | `/spark-analyze "find bottlenecks"` |
+| "Write tests" | tester-spark | `/spark-test "create unit tests"` |
+| "Create documentation" | documenter-spark | `/spark-document "API docs"` |
+| "Clean up code" | cleaner-spark | `/spark-clean "remove dead code"` |
+| "Explain" | explainer-spark | `/spark-explain "how auth works"` |
+| "Estimate time" | estimator-spark | `/spark-estimate "new feature"` |
+| "Git operations" | gitter-spark | `/spark-git "commit changes"` |
+| "Build/Deploy" | builder-spark | `/spark-build "deploy to prod"` |
+| "Multi-tasks" | spawner-spark | `/spark-spawn "parallel tasks"` |
+| "Find command" | indexer-spark | `/spark-index "list commands"` |
+| "Manage tasks" | tasker-spark | `/spark-task "manage todos"` |
+| "Load project" | loader-spark | `/spark-load "project context"` |
 
 ---
 
@@ -67,7 +67,7 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 {
   "task": "구현할 내용",
   "complexity": 0.1-1.0,  // 0.7+ = 아키텍처 모드
-  "context": "기존 코드 패턴"
+  "context": "existing code patterns"
 }
 ```
 
@@ -118,7 +118,7 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 | 파이프라인 | 에이전트 순서 | 용도 |
 |------------|--------------|------|
 | **/spark-launch** | analyze → design → implement → test → document | 전체 기능 개발 |
-| **/spark-refactor** | analyze → clean → improve → test | 코드 개선 |
+| **/spark-refactor** | analyze → clean → improve → test | Code improvement |
 | **/spark-audit** | analyze → troubleshoot → tester → documenter | 보안/성능 감사 |
 | **/spark-migrate** | analyze → design → implement → test → deploy | 시스템 마이그레이션 |
 | **/spark-optimize** | analyze → improve → test → build → deploy | 성능 최적화 |

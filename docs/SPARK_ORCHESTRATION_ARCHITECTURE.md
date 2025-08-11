@@ -11,7 +11,7 @@
 
 ```mermaid
 graph TD
-    A[사용자 요청] --> B[Claude CODE 직접 주입]
+    A[User Request] --> B[Claude CODE Direct Injection]
     A --> C[Hook 자동 주입]
     B --> D[에이전트]
     C --> D
@@ -45,7 +45,7 @@ graph LR
 
 | 방법 | 내용 | 형식 | 활용 |
 |------|------|------|------|
-| **텍스트 보고** | 완료 메시지 | 자연어 | 사용자 피드백 |
+| **Text Report** | Completion message | Natural language | User feedback |
 | **JSON 파일** | 구조화 결과 | implementation_result.json | 다음 에이전트 입력 |
 | **TodoWrite** | 진행 상태 | 작업 목록 | 진행률 추적 |
 | **HANDOFF.md** | 인수인계 | 마크다운 | 컨텍스트 전달 |

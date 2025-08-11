@@ -44,7 +44,13 @@ Message 4: Task("implementer-spark", "Team4...")  # NO! This waits for Team3!
 ### Phase 0: Task Allocation
 Analyze tasks and allocate to teams:
 1. Parse task IDs from command
-2. Create team JSON files with task details
+2. Create team JSON files with task details:
+   ```python
+   # For each team, create team#_current_task.json from template
+   # If team1_current_task.json doesn't exist:
+   cp ~/.claude/workflows/team_current_task_template.json ~/.claude/workflows/team1_current_task.json
+   # Then update with team-specific task details
+   ```
 3. Identify shared resources needing locks
 
 ### Phase 1: Parallel Implementation

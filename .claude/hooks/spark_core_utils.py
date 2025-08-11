@@ -14,6 +14,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+# Import FileLockManager for parallel execution support
+from file_lock_manager import FileLockManager
+
 # Set up logging to stderr to avoid contaminating stdout
 logging.basicConfig(
     level=logging.INFO,
@@ -142,9 +145,18 @@ class StateManager:
     """Manages persistent state for SPARK workflows"""
     
     def __init__(self):
-        self.state_dir = Path.home() / ".claude" / "workflows"
+        # Check for project-level workflows first, then global
+        project_workflows = Path(".claude/workflows")
+        global_workflows = Path.home() / ".claude" / "workflows"
+        
+        if project_workflows.exists():
+            self.state_dir = project_workflows.resolve()
+        else:
+            self.state_dir = global_workflows
+            
         self.state_file = self.state_dir / "current_task.json"
         self._ensure_state_dir()
+        self.lock_manager = FileLockManager()
     
     def _ensure_state_dir(self):
         """Ensure state directory exists"""
@@ -164,35 +176,71 @@ class StateManager:
             logger.error(f"Failed to read state: {e}")
             return self._default_state()
     
-    def write_state(self, state: Dict[str, Any]) -> bool:
-        """Write task state atomically"""
+    def write_state(self, state: Dict[str, Any], team_id: Optional[str] = None) -> bool:
+        """Write task state atomically with file locking for parallel safety"""
         try:
-            # Add metadata
-            state["last_updated"] = datetime.now().isoformat()
-            state["version"] = "1.0.0"
+            # Determine team ID from state or parameter
+            if not team_id:
+                team_id = state.get("team_id", "main")
             
-            # Write to temp file first (atomic operation)
-            temp_file = self.state_file.with_suffix('.tmp')
-            with temp_file.open('w') as f:
-                json.dump(state, f, indent=2)
+            # Acquire lock for file write (wait up to 5 seconds)
+            file_path = str(self.state_file)
+            if not self.lock_manager.acquire_lock(file_path, team_id, timeout=5):
+                logger.warning(f"Could not acquire lock for {file_path}, retrying...")
+                # Try once more with longer timeout
+                if not self.lock_manager.acquire_lock(file_path, team_id, timeout=10):
+                    logger.error(f"Failed to acquire lock for {file_path}")
+                    return False
             
-            # Atomic rename
-            temp_file.replace(self.state_file)
-            return True
+            try:
+                # Add metadata
+                state["last_updated"] = datetime.now().isoformat()
+                state["version"] = "1.0.0"
+                
+                # Write to temp file first (atomic operation)
+                temp_file = self.state_file.with_suffix('.tmp')
+                with temp_file.open('w') as f:
+                    json.dump(state, f, indent=2)
+                
+                # Atomic rename
+                temp_file.replace(self.state_file)
+                return True
+            finally:
+                # Always release lock
+                self.lock_manager.release_lock(file_path, team_id)
             
         except Exception as e:
             logger.error(f"Failed to write state: {e}")
             return False
     
-    def update_state(self, updates: Dict[str, Any]) -> bool:
-        """Update specific state fields"""
+    def update_state(self, updates: Dict[str, Any], team_id: Optional[str] = None) -> bool:
+        """Update specific state fields with file locking"""
         try:
             current = self.read_state()
             current.update(updates)
-            return self.write_state(current)
+            return self.write_state(current, team_id)
         except Exception as e:
             logger.error(f"Failed to update state: {e}")
             return False
+    
+    def get_team_state_file(self, team_id: str) -> Path:
+        """Get team-specific state file path"""
+        return self.state_dir / f"team{team_id}_current_task.json"
+    
+    def write_team_state(self, team_id: str, state: Dict[str, Any]) -> bool:
+        """Write team-specific state with locking"""
+        # Use team-specific file
+        original_state_file = self.state_file
+        self.state_file = self.get_team_state_file(team_id)
+        
+        try:
+            # Add team ID to state
+            state["team_id"] = team_id
+            result = self.write_state(state, team_id)
+            return result
+        finally:
+            # Restore original state file
+            self.state_file = original_state_file
     
     def clear_state(self) -> bool:
         """Clear current task state"""
