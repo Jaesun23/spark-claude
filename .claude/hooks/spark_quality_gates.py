@@ -365,6 +365,196 @@ class IntegrationTestingGate(QualityGate):
         return len(issues) == 0, issues
 
 
+class TestVerificationGate(QualityGate):
+    """Verify test claims against actual test execution"""
+    
+    def __init__(self):
+        super().__init__(
+            "Test Verification",
+            "Verify claimed test results against actual test execution"
+        )
+    
+    def check(self) -> Tuple[bool, List[str]]:
+        """Verify test claims from current_task.json"""
+        issues = []
+        verification_results = {
+            "claimed_test_files": [],
+            "actual_test_files": [],
+            "claimed_coverage": 0,
+            "actual_coverage": 0,
+            "claimed_tests_pass": False,
+            "actual_tests_pass": False,
+            "test_execution_results": {},
+            "discrepancies": []
+        }
+        
+        # Try to read current_task.json
+        json_paths = [
+            Path.home() / ".claude/workflows/current_task.json",
+            Path(".claude/workflows/current_task.json")
+        ]
+        
+        current_task = None
+        for json_path in json_paths:
+            if json_path.exists():
+                try:
+                    with open(json_path, 'r') as f:
+                        current_task = json.load(f)
+                    break
+                except Exception as e:
+                    logger.error(f"Failed to read {json_path}: {e}")
+        
+        if not current_task:
+            return True, []
+        
+        # Check if there's a testing section
+        testing = current_task.get("testing", {})
+        if not testing:
+            # No testing claimed yet
+            return True, []
+        
+        # 1. Verify test files exist
+        test_files = testing.get("test_files", [])
+        verification_results["claimed_test_files"] = test_files
+        
+        for test_file in test_files:
+            if Path(test_file).exists():
+                verification_results["actual_test_files"].append(test_file)
+            else:
+                issues.append(f"Claimed test file does not exist: {test_file}")
+                verification_results["discrepancies"].append(f"Missing test file: {test_file}")
+        
+        # 2. Run tests and verify they pass (Python)
+        if any(Path(".").glob("test_*.py")) or any(Path(".").glob("*_test.py")):
+            # First, collect tests
+            success, stdout, stderr = self.executor.run_command(
+                ["pytest", "--collect-only", "-q"],
+                timeout=10
+            )
+            
+            if success:
+                # Count collected tests
+                test_count = stdout.count(" selected") or stdout.count("test")
+                verification_results["test_execution_results"]["collected_tests"] = test_count
+                
+                # Now run the tests
+                success, stdout, stderr = self.executor.run_command(
+                    ["pytest", "-v", "--tb=short"],
+                    timeout=60
+                )
+                
+                if success and "failed" not in stdout.lower():
+                    verification_results["actual_tests_pass"] = True
+                    passed_count = stdout.count(" PASSED")
+                    verification_results["test_execution_results"]["passed_tests"] = passed_count
+                else:
+                    verification_results["actual_tests_pass"] = False
+                    failed_count = stdout.count(" FAILED")
+                    verification_results["test_execution_results"]["failed_tests"] = failed_count
+                    
+                    # Check if tests were claimed to pass
+                    if testing.get("all_tests_pass", False):
+                        issues.append(f"Tests are failing ({failed_count} failed) despite claims of passing")
+                        verification_results["discrepancies"].append(f"{failed_count} tests failing")
+        
+        # 3. Verify coverage (Python)
+        claimed_coverage = testing.get("coverage", 0)
+        verification_results["claimed_coverage"] = claimed_coverage
+        
+        if claimed_coverage > 0:
+            # Run coverage
+            success, stdout, stderr = self.executor.run_command(
+                ["pytest", "--cov=.", "--cov-report=term-missing", "--cov-report=json", "-q"],
+                timeout=60
+            )
+            
+            if success:
+                # Try to parse coverage from output
+                import re
+                coverage_match = re.search(r'TOTAL\s+\d+\s+\d+\s+(\d+)%', stdout)
+                if coverage_match:
+                    actual_coverage = int(coverage_match.group(1))
+                    verification_results["actual_coverage"] = actual_coverage
+                    
+                    if actual_coverage < claimed_coverage - 5:  # Allow 5% tolerance
+                        issues.append(f"Coverage {actual_coverage}% is significantly lower than claimed {claimed_coverage}%")
+                        verification_results["discrepancies"].append(f"Coverage gap: {claimed_coverage - actual_coverage}%")
+                
+                # Also try to read coverage.json if it exists
+                coverage_json = Path("coverage.json")
+                if coverage_json.exists():
+                    try:
+                        with open(coverage_json) as f:
+                            cov_data = json.load(f)
+                            actual_coverage = round(cov_data.get("totals", {}).get("percent_covered", 0))
+                            verification_results["actual_coverage"] = actual_coverage
+                    except Exception:
+                        pass
+        
+        # 4. Verify test count
+        claimed_test_count = testing.get("test_count", 0)
+        if claimed_test_count > 0:
+            actual_test_count = verification_results["test_execution_results"].get("passed_tests", 0)
+            if actual_test_count < claimed_test_count:
+                issues.append(f"Only {actual_test_count} tests found, but {claimed_test_count} were claimed")
+                verification_results["discrepancies"].append(f"Test count mismatch: {actual_test_count} vs {claimed_test_count}")
+        
+        # 5. Check JavaScript/TypeScript tests
+        if Path("package.json").exists():
+            package_json = Path("package.json").read_text()
+            
+            # Jest tests
+            if "jest" in package_json:
+                success, stdout, stderr = self.executor.run_command(
+                    ["npx", "jest", "--listTests"],
+                    timeout=10
+                )
+                if success:
+                    js_test_count = len(stdout.strip().split('\n'))
+                    verification_results["test_execution_results"]["jest_tests"] = js_test_count
+                
+                # Run Jest tests
+                success, stdout, stderr = self.executor.run_command(
+                    ["npx", "jest", "--passWithNoTests"],
+                    timeout=60
+                )
+                
+                if not success or "FAIL" in stdout:
+                    if testing.get("all_tests_pass", False):
+                        issues.append("JavaScript tests are failing despite claims of passing")
+                        verification_results["discrepancies"].append("Jest tests failing")
+        
+        # Save verification results
+        from spark_core_utils import StateManager as SM
+        state_manager = SM()
+        state = state_manager.read_state()
+        
+        state["test_verification"] = {
+            "verified_at": datetime.now().isoformat(),
+            "verification_passed": len(issues) == 0,
+            "verification_results": verification_results,
+            "issues": issues
+        }
+        
+        # Also update current_task if we have it
+        if current_task:
+            current_task["test_verification"] = state["test_verification"]
+            
+            for json_path in json_paths:
+                if json_path.exists():
+                    try:
+                        with open(json_path, 'w') as f:
+                            json.dump(current_task, f, indent=2)
+                        logger.info(f"Saved test verification to {json_path}")
+                        break
+                    except Exception as e:
+                        logger.error(f"Failed to write test verification: {e}")
+        
+        state_manager.write_state(state)
+        
+        return len(issues) == 0, issues
+
+
 class ImplementationVerificationGate(QualityGate):
     """Verify implementation claims against actual code"""
     
@@ -537,9 +727,10 @@ class QualityGateRunner:
     def __init__(self, claude_code_mode: bool = True):
         self.claude_code_mode = claude_code_mode
         
-        # Jason's 9-Step Strict Quality Gates (with Implementation Verification)
+        # Jason's 10-Step Strict Quality Gates (with Implementation & Test Verification)
         self.gates = [
             ImplementationVerificationGate(), # Step 0: Verify implementation claims FIRST
+            TestVerificationGate(),          # Step 0.5: Verify test claims (if testing phase)
             SyntaxValidationGate(),          # Step 1: Syntax Validation (0 errors)
             MyPyStrictGate(),               # Step 2: MyPy --strict (0 errors)
             RuffStrictGate(),               # Step 3: Ruff --strict (0 violations)
