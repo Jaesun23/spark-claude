@@ -9,7 +9,7 @@
 
 ## 🎯 Executive Summary
 
-SuperClaude operates through a **5-stage intelligent pipeline** (Detection → Routing → Personas → MCP → Execution), achieving **88.4% token efficiency** while delivering **30-50% higher quality in Wave mode**. This summary focuses on **hidden mechanisms and optimization strategies** discovered through Jason's real-world usage analysis.
+SuperClaude operates through a **5-stage intelligent pipeline** (Detection → Routing → Personas → MCP → Execution), achieving **significant token reduction token efficiency** while delivering **30-50% higher quality in Wave mode**. This summary focuses on **hidden mechanisms and optimization strategies** discovered through Jason's real-world usage analysis.
 
 ---
 
@@ -530,7 +530,7 @@ adaptive_execution = {
 
 Through Jason's meta-cognitive analysis, we discovered SuperClaude's **hidden mechanisms and optimization strategies**. The keys are **appropriate complexity assessment**, **persona/MCP combination optimization**, and **judicious use of Wave mode**.
 
-**SPARK v3.0's 88.4% token efficiency** is the result of these discoveries implemented as a system. We encourage you to use the patterns and formulas in this summary to unleash SuperClaude's true potential.
+**SPARK v3.0's significant token reduction token efficiency** is the result of these discoveries implemented as a system. We encourage you to use the patterns and formulas in this summary to unleash SuperClaude's true potential.
 
 > **"Tools are just the beginning; true masters know how to transcend the tools."**  
 > \- Jason's SuperClaude Master Philosophy

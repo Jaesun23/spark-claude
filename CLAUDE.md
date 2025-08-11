@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SPARK v3.5 (Subagent Performance Architecture with Reduced toKens) is a multi-agent orchestration system for Claude Code that achieves 88.4% token reduction through lazy-loading architecture. Unlike traditional approaches that load all agents simultaneously, SPARK loads only the required agent on-demand.
+SPARK v3.5 (Subagent Performance Architecture with Reduced toKens) is a multi-agent orchestration system for Claude Code that achieves significant token reduction through lazy-loading architecture. Unlike traditional approaches that load all agents simultaneously, SPARK loads only the required agent on-demand.
 
 ## Development Commands
 
@@ -28,7 +28,7 @@ uv run black [file.py]             # Code formatting
 uv run pytest tests/               # Test suite
 
 # Performance verification
-python3 benchmarks/compare_performance.py  # Verify 88.4% token reduction
+python3 benchmarks/compare_performance.py  # Verify token efficiency
 ```
 
 ### Testing Hooks

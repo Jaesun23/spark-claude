@@ -41,7 +41,7 @@ clear
 echo -e "${MAGENTA}"
 echo "⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡"
 echo "     SPARK Universal AI Agent System Installer v3.0"
-echo "     88.4% Token Efficiency • 16 Specialized Agents"
+echo "              16 Specialized Agents"
 echo "⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡"
 echo -e "${NC}"
 
@@ -531,7 +531,7 @@ show_summary() {
     
     echo ""
     echo -e "${CYAN}Key Features:${NC}"
-    echo "• 88.4% token efficiency (verified)"
+    echo "• significant token efficiency token efficiency (verified)"
     echo "• 16 specialized agents"
     echo "• Jason's 8-step strict quality gates"
     echo "• Automatic persona activation"

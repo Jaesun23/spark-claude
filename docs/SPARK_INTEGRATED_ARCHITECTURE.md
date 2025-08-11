@@ -437,7 +437,7 @@ Agent Limitations:
 
 | Metric | Traditional | SPARK v3.5 | Improvement |
 |--------|------------|------------|-------------|
-| **Token Usage** | 44,000 | 5,100 | -88.4% |
+| **Token Usage** | large baseline | efficient | -significant token reduction |
 | **Execution Time** | Sequential only | Parallel capable | -60% on complex |
 | **Quality Consistency** | Variable | Enforced gates | 100% compliance |
 | **State Tracking** | Implicit | Explicit JSON | Full visibility |
@@ -479,7 +479,7 @@ The system transforms chaos into order through:
 - **Agent's specialized execution**
 - **Command's proven workflows**
 
-Together, they create a symphony of coordinated automation that delivers consistent, high-quality results at 88.4% reduced token cost.
+Together, they create a symphony of coordinated automation that delivers consistent, high-quality results at significant token reduction reduced token cost.
 
 ---
 
