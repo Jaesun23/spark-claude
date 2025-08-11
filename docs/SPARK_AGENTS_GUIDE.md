@@ -1,11 +1,11 @@
-# 🎯 SPARK v3.5 Agents Implementation Guide
+# 🎯 SPARK v3.5 Agents Implementation Guide (28 Agents)
 
 > **Complete guide for optimal agent information provision and context management**
 > 
-> *Last updated: August 10, 2025*
-> *Version: SPARK v3.5 - Advanced Multi-Agent System*
+> *Last updated: August 11, 2025*
+> *Version: SPARK v3.5 - Advanced Multi-Agent System with 28 Specialized Agents*
 
-This guide details exactly what information each SPARK agent needs to deliver optimal results. Every detail is crucial for Hook automation and seamless agent operation.
+This guide details exactly what information each of the 28 SPARK agents (16 base agents + 12 team agents) needs to deliver optimal results. Every detail is crucial for Hook automation and seamless agent operation.
 
 ---
 
@@ -1395,6 +1395,143 @@ execution_environment:
 - **Quality Metrics**: Monitor compliance with standards and requirements
 - **User Satisfaction**: Track successful task completion and user feedback
 - **Improvement Opportunities**: Identify optimization potential
+
+---
+
+## 👥 Team Agents (12 Agents) - Multi-Team Parallel Execution
+
+SPARK v3.5 introduces 12 specialized team agents for true parallel execution across 4 independent teams. Each team has 3 specialized agents:
+
+### Team Architecture
+
+```
+Team 1: team1-implementer-spark | team1-tester-spark | team1-documenter-spark
+Team 2: team2-implementer-spark | team2-tester-spark | team2-documenter-spark  
+Team 3: team3-implementer-spark | team3-tester-spark | team3-documenter-spark
+Team 4: team4-implementer-spark | team4-tester-spark | team4-documenter-spark
+```
+
+### Core Information Requirements for Team Agents
+
+#### 📋 **Essential Team Context (All Team Agents)**
+```json
+{
+  "team_context": {
+    "team_id": "team1|team2|team3|team4",
+    "team_task": {
+      "description": "specific_task_assigned_to_this_team",
+      "files_scope": ["list_of_files_this_team_will_modify"],
+      "independence_level": "fully_independent | shares_some_files | highly_dependent"
+    },
+    "parallel_coordination": {
+      "other_teams": ["team2", "team3", "team4"],
+      "shared_resources": ["constants.py", "types.py", "base_models.py"],
+      "lock_requirements": ["files_requiring_exclusive_access"]
+    }
+  },
+  "json_context": {
+    "template_path": "~/.claude/workflows/team{N}_task.json",
+    "status_tracking": "ready|implementing|testing|documenting|complete",
+    "file_locks": ["requested_files", "acquired_files"]
+  }
+}
+```
+
+### Team Agent Specializations
+
+#### 🔧 **team{N}-implementer-spark** - Team-Specific Implementation
+- **Purpose**: Handle implementation for assigned team tasks
+- **JSON Integration**: Updates `team{N}_task.json` with implementation progress
+- **Lock Management**: Requests and manages file locks via FileLockManager
+- **Quality Gates**: Runs team-specific quality validation
+- **Coordination**: Cannot communicate directly with other teams (JSON-only)
+
+#### 🧪 **team{N}-tester-spark** - Team-Specific Testing  
+- **Purpose**: Create and run tests for team's implementation
+- **Coverage Target**: 95% unit, 85% integration within team scope
+- **Parallel Safety**: Tests isolated to team's changes only
+- **Validation**: Ensures team's implementation meets quality standards
+- **Reporting**: Updates team JSON with test results and coverage metrics
+
+#### 📚 **team{N}-documenter-spark** - Team-Specific Documentation
+- **Purpose**: Document team's implementation changes
+- **Scope**: APIs, components, or features implemented by the team
+- **Integration**: Coordinates with implementation and testing phases
+- **Format**: Technical documentation focused on team's deliverables
+- **Context**: Links team's work to overall project architecture
+
+### Team Execution Patterns
+
+#### 🔄 **Parallel Implementation Pattern**
+```bash
+# Called simultaneously by Claude CODE
+Task("team1-implementer-spark", team1_context)
+Task("team2-implementer-spark", team2_context) 
+Task("team3-implementer-spark", team3_context)
+Task("team4-implementer-spark", team4_context)
+
+# All teams work in parallel, FileLockManager coordinates shared access
+```
+
+#### 🔒 **FileLockManager Coordination**
+```json
+{
+  "file_locks": {
+    "requested": ["shared/constants.py"],
+    "acquired": ["models/user.py"],
+    "timeout_seconds": 30,
+    "lock_manager": "FileLockManager",
+    "priority": "normal"
+  }
+}
+```
+
+#### ⚡ **Performance Characteristics**
+- **Speedup**: Up to 3.1x faster than sequential implementation
+- **Isolation**: Each team works independently with separate contexts
+- **Coordination**: Automatic via FileLockManager and JSON state files
+- **Scaling**: Optimal for 2-4 independent tasks
+
+### Team Agent Configuration
+
+#### 📋 **Resource Allocation**
+- **Memory**: Each team agent gets independent 200K context window
+- **Token Budget**: Shared from total 90K limit across all teams
+- **File Access**: Coordinated through FileLockManager
+- **JSON State**: Independent `team{N}_task.json` files
+
+#### ⚙️ **Team-Specific Parameters**
+```yaml
+team_configuration:
+  max_teams: 4
+  context_isolation: true
+  json_template_auto_generation: true
+  file_lock_timeout: 30_seconds
+  quality_gates_per_team: true
+  parallel_testing: true
+  consolidated_documentation: false
+```
+
+#### 🎯 **Team Selection Logic**
+- **Independent Tasks**: Use multiple teams for parallel execution
+- **Dependent Tasks**: Use single team or sequential execution
+- **Shared File Heavy**: Consider sequential to minimize lock contention
+- **Large Feature**: Split into team-appropriate independent components
+
+### Team Agent Limitations
+
+❌ **Cannot Do:**
+- Direct communication between teams
+- Call other team agents
+- Access other team's JSON contexts
+- Modify global state without locks
+
+✅ **Can Do:**
+- Work on independent file sets
+- Request and manage file locks
+- Update own team JSON status
+- Run team-specific quality gates
+- Coordinate via FileLockManager
 
 ---
 

@@ -1,8 +1,30 @@
-# 🪝 SPARK Hook System Guide
+# 🪝 SPARK v3.5 Hook System Guide (5 Essential Hooks)
 
 ## 📋 Overview
 
-The SPARK v3.5 Hook System leverages official Anthropic Claude Code Hook events to implement automated workflows.
+The SPARK v3.5 Hook System has been streamlined from 10 hooks to 5 essential hooks, leveraging official Anthropic Claude Code Hook events to implement automated workflows with integrated FileLockManager support.
+
+## 🎆 SPARK v3.5 Changes
+
+### ❌ **Hooks Removed (Obsolete)**
+- ❌ spark_pipeline_orchestrator.py
+- ❌ spark_test_runner.py  
+- ❌ spark_token_validator.py
+- ❌ spark_unified_orchestrator.py
+- ❌ spark_validator.py
+
+### ✅ **Essential Hooks Remaining (5)**
+- ✅ spark_persona_router.py
+- ✅ spark_phase_manager.py
+- ✅ spark_quality_gates.py
+- ✅ spark_core_utils.py
+- ✅ file_lock_manager.py (integrated)
+
+### 🆕 **Key Improvements**
+- **FileLockManager Integration**: Thread-safe parallel execution
+- **Streamlined Architecture**: 50% reduction in hook complexity
+- **Automated Team JSON**: Auto-generation of team templates
+- **Enhanced Quality Gates**: Jason's 8-step protocol with retry logic
 
 ## ✅ Official Anthropic Hook Events (Only 8 Exist)
 

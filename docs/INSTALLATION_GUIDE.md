@@ -1,246 +1,277 @@
-# SPARK 설치 가이드
+# SPARK v3.5 Installation Guide
 
-## 📋 목차
+## 📋 Table of Contents
 
-1. [빠른 시작](#빠른-시작)
-2. [설치 옵션](#설치-옵션)
-3. [구성요소 선택](#구성요소-선택)
-4. [설치 후 설정](#설치-후-설정)
-5. [문제 해결](#문제-해결)
-6. [제거 방법](#제거-방법)
+1. [Quick Start](#quick-start)
+2. [Installation Options](#installation-options)
+3. [Component Selection](#component-selection)
+4. [Post-Installation Setup](#post-installation-setup)
+5. [Troubleshooting](#troubleshooting)
+6. [Uninstallation](#uninstallation)
 
 ---
 
-## 🚀 빠른 시작
+## 🚀 Quick Start
 
-### 기본 설치 (전역)
+### Basic Installation (Global)
 
 ```bash
-# 1. SPARK 저장소 클론
+# 1. Clone SPARK repository
 git clone https://github.com/Jaesun23/spark-claude.git
 cd spark-claude
 
-# 2. 설치 스크립트 실행
+# 2. Run installation script
 ./scripts/install.sh
 
-# 3. Claude Code 재시작
+# 3. Restart Claude Code
 ```
 
-이렇게 하면 모든 프로젝트에서 SPARK를 사용할 수 있습니다.
+This enables SPARK across all your projects.
 
 ---
 
-## 🎯 설치 옵션
+## 🎯 Installation Options
 
-### 1. 전역 설치 (~/.claude/)
+### 1. Global Installation (~/.claude/)
 
-**장점:**
-- 모든 프로젝트에서 SPARK 사용 가능
-- 한 번 설치로 계속 사용
-- 중앙 집중식 업데이트
+**Advantages:**
+- SPARK available in all projects
+- One-time installation
+- Centralized updates
 
-**단점:**
-- 프로젝트별 커스터마이징 어려움
-- 다른 전역 에이전트와 충돌 가능성
+**Disadvantages:**
+- Limited per-project customization
+- Potential conflicts with other global agents
 
-**선택 시나리오:**
+**Selection scenario:**
 ```
-=== 설치 위치 선택 ===
-1) 전역 설치 (~/.claude/)  ← 이것 선택
-```
-
-### 2. 프로젝트별 설치
-
-**장점:**
-- 프로젝트별 독립적 설정
-- 버전 관리 가능
-- 팀 공유 용이
-
-**단점:**
-- 각 프로젝트마다 설치 필요
-- 디스크 공간 중복 사용
-
-**선택 시나리오:**
-```
-=== 설치 위치 선택 ===
-2) 프로젝트별 설치 (프로젝트/.claude/)  ← 이것 선택
-프로젝트 디렉토리 경로 입력: /Users/jason/my-project
+=== Installation Location ===
+1) Global installation (~/.claude/)  ← Choose this
 ```
 
-### 3. 현재 프로젝트 설치 (./.claude/)
+### 2. Project-Specific Installation
 
-**목적:**
-- 현재 디렉토리에 직접 설치
-- 기존 SPARK 설정 덮어쓰기
-- 주로 SPARK 개발 및 테스트용
+**Advantages:**
+- Independent project settings
+- Version control friendly
+- Easy team sharing
 
-**사용 사례:**
-- SPARK 개발자의 변경사항 테스트
-- 임시 설치
+**Disadvantages:**
+- Installation needed per project
+- Duplicate disk space usage
+
+**Selection scenario:**
+```
+=== Installation Location ===
+2) Project-specific installation (project/.claude/)  ← Choose this
+Project directory path: /Users/jason/my-project
+```
+
+### 3. Current Project Installation (./.claude/)
+
+**Purpose:**
+- Direct installation in current directory
+- Overwrites existing SPARK settings
+- Primarily for SPARK development and testing
+
+**Use cases:**
+- SPARK developer testing changes
+- Temporary installation
 
 ---
 
-## 🔧 구성요소 선택
+## 🔧 Component Selection
 
-### 설치 가능한 구성요소
+### Available Components
 
-#### 1. SPARK 에이전트 (16개)
-- 16개 전문 에이전트 파일
-- Task 도구로 호출 가능
-- 필수 구성요소
+#### 1. SPARK Agents (28 total)
+- **16 Base agents**: Core functionality agents
+- **12 Team agents**: Multi-team parallel execution (team1-4)
+- Callable via Task tool
+- Essential component
 
-#### 2. 단일 에이전트 명령어
-- `/spark-implement`, `/spark-test` 등
-- 각 에이전트를 직접 호출하는 단축 명령어
-- 네임스페이스 지원 (충돌 방지)
+#### 2. Single Agent Commands
+- `/spark-implement`, `/spark-test`, etc.
+- Direct shortcuts to individual agents
+- Namespace support (conflict prevention)
 
-#### 3. 다중 에이전트 파이프라인
-- `/spark-launch` - 5개 에이전트 연속 실행
-- `/spark-optimize` - 성능 최적화 파이프라인
-- **훅과 워크플로우 자동 포함**
+#### 3. Multi-Agent Pipelines
+- `/spark-launch` - 5-agent sequential execution
+- `/spark-optimize` - Performance optimization pipeline
+- **Hooks and workflows automatically included**
 
-#### 4. 훅 스크립트
-- 페르소나 라우터
-- 품질 게이트
-- 다중 에이전트 파이프라인에 필수
+#### 4. Hook Scripts (5 hooks)
+- **spark_persona_router.py** - Agent selection logic
+- **spark_phase_manager.py** - 5-Phase execution management  
+- **spark_quality_gates.py** - Quality validation (8-step protocol)
+- **spark_core_utils.py** - Shared utilities
+- **file_lock_manager.py** - FileLockManager integration
+- Required for multi-agent pipelines
 
-#### 5. 워크플로우 설정
-- 작업 상태 관리
-- 에이전트 간 컨텍스트 공유
+#### 5. Workflow Settings
+- Task state management
+- Inter-agent context sharing
+- Team JSON template system
 
-### 선택 예시
+### Selection Example
 
 ```
-=== 설치 구성요소 선택 ===
+=== Installation Components ===
 
-1) SPARK 에이전트 (16개) 설치? (Y/n): y
-✓ 에이전트 설치 예정
+1) SPARK agents (28 total) install? (Y/n): y
+✓ Agents installation planned
 
-2) 단일 에이전트 명령어 설치? (Y/n): y
-✓ 명령어 설치 예정
+2) Single agent commands install? (Y/n): y
+✓ Commands installation planned
 
-3) 다중 에이전트 파이프라인 설치? (훅 필요) (Y/n): y
-✓ 다중 에이전트 파이프라인 설치 예정
-✓ 훅 및 워크플로우 자동 포함
+3) Multi-agent pipelines install? (requires hooks) (Y/n): y
+✓ Multi-agent pipelines installation planned
+✓ Hooks and workflows automatically included
 ```
 
 ---
 
-## ⚙️ 설치 후 설정
+## ⚙️ Post-Installation Setup
 
-### 1. Claude Code 재시작
+### 1. Restart Claude Code
 
-설치 후 반드시 Claude Code를 재시작해야 새 설정이 로드됩니다.
+After installation, Claude Code must be restarted for new settings to load.
 
-### 2. 설치 확인
+### 2. Installation Verification
 
 ```bash
-# 에이전트 확인
+# Check agents
 ls ~/.claude/agents/
 
-# 명령어 확인
+# Check commands
 ls ~/.claude/commands/
 
-# 설정 확인
+# Check settings
 cat ~/.claude/settings.json
+
+# Check hooks (should be 5 files)
+ls ~/.claude/hooks/
 ```
 
-### 3. 첫 사용
+### 3. First Use
 
 ```bash
-# 단일 에이전트 호출
+# Single agent call
 /spark-implement "create user authentication"
 
-# 다중 에이전트 파이프라인
+# Multi-agent pipeline
 /spark-launch "new dashboard feature"
+
+# Team parallel execution
+/multi-implement "API endpoint" "UI component" "Tests" "Documentation"
 ```
 
 ---
 
-## 🔍 문제 해결
+## 🔍 Troubleshooting
 
-### 1. 명령어 충돌
+### 1. Command Conflicts
 
-**문제:** "Command already exists" 오류
+**Problem:** "Command already exists" error
 
-**해결방법:**
+**Solution:**
 ```bash
-# 재설치 시 네임스페이스 사용
+# Use namespace during reinstallation
 ./scripts/install.sh
-# 전역 설치 선택 후
-네임스페이스 사용? (예: /spark:implement) (Y/n): y
-네임스페이스 접두어 입력 (기본: spark): myproject
+# Choose global installation, then
+Use namespace? (e.g., /spark:implement) (Y/n): y
+Namespace prefix (default: spark): myproject
 ```
 
-이제 `/myproject:implement` 형태로 사용
+Now use `/myproject:implement` format
 
-### 2. JSON 파일을 못 찾는 문제
+### 2. Missing JSON Files
 
-**문제:** 에이전트가 `current_task.json`을 못 찾음
+**Problem:** Agents cannot find `current_task.json`
 
-**해결방법:** 
-v3.0에서는 자동으로 fallback 경로를 체크합니다:
-1. 먼저 `~/.claude/workflows/` 확인
-2. 없으면 `.claude/workflows/` 확인
+**Solution:** 
+v3.5 automatically checks fallback paths:
+1. First checks `~/.claude/workflows/`
+2. Falls back to `.claude/workflows/`
 
-수동으로 초기화가 필요한 경우:
+Manual initialization if needed:
 ```bash
 mkdir -p ~/.claude/workflows
 echo '{}' > ~/.claude/workflows/current_task.json
 echo '{}' > ~/.claude/workflows/unified_context.json
+# Initialize team templates
+echo '{"team_id": "team1", "status": "ready"}' > ~/.claude/workflows/team1_task.json
+echo '{"team_id": "team2", "status": "ready"}' > ~/.claude/workflows/team2_task.json
+echo '{"team_id": "team3", "status": "ready"}' > ~/.claude/workflows/team3_task.json
+echo '{"team_id": "team4", "status": "ready"}' > ~/.claude/workflows/team4_task.json
 ```
 
-### 3. 훅이 실행되지 않음
+### 3. Hooks Not Executing
 
-**문제:** 다중 에이전트 파이프라인이 작동하지 않음
+**Problem:** Multi-agent pipelines not working
 
-**확인사항:**
+**Verification:**
 ```bash
-# settings.json에 훅 설정 확인
+# Check hooks in settings.json
 cat ~/.claude/settings.json | grep hooks
 
-# 훅 파일 실행 권한 확인
+# Check hook file permissions
 ls -la ~/.claude/hooks/*.py
 
-# 실행 권한 부여
+# Grant execution permissions
 chmod +x ~/.claude/hooks/*.py
+
+# Verify 5 hook files exist
+ls ~/.claude/hooks/spark_*.py ~/.claude/hooks/file_lock_manager.py
 ```
 
-### 4. 심볼릭 링크 문제
+### 4. FileLockManager Issues
 
-**문제:** `~/.claude`가 심볼릭 링크인 경우
+**Problem:** Team parallel execution conflicts
 
-**해결방법:**
-설치 스크립트가 자동으로 감지하고 처리합니다.
-수동 확인:
+**Solution:**
+FileLockManager is now integrated into StateManager. Verify:
 ```bash
-# 심볼릭 링크 확인
+# Check if FileLockManager is properly integrated
+grep -n "FileLockManager" ~/.claude/hooks/spark_core_utils.py
+```
+
+### 5. Symbolic Link Issues
+
+**Problem:** `~/.claude` is a symbolic link
+
+**Solution:**
+Installation script automatically detects and handles this.
+Manual verification:
+```bash
+# Check symbolic link
 ls -la ~/.claude
 
-# 실제 경로 확인
+# Check actual path
 readlink ~/.claude
 ```
 
 ---
 
-## 🗑️ 제거 방법
+## 🗑️ Uninstallation
 
-### 전역 설치 제거
+### Global Installation Removal
 
 ```bash
-# 백업 (선택사항)
+# Backup (optional)
 cp -r ~/.claude ~/.claude.backup
 
-# SPARK 구성요소만 제거
+# Remove SPARK components only
 rm -rf ~/.claude/agents/*-spark.md
 rm -rf ~/.claude/commands/spark-*.json
-rm -rf ~/.claude/hooks/spark_*.py
+rm -rf ~/.claude/hooks/spark_*.py ~/.claude/hooks/file_lock_manager.py
+rm -rf ~/.claude/workflows/team*_task.json
 
-# 또는 전체 제거
+# Or complete removal
 rm -rf ~/.claude
 ```
 
-### 프로젝트별 설치 제거
+### Project-Specific Removal
 
 ```bash
 cd /your/project
@@ -249,52 +280,62 @@ rm -rf .claude
 
 ---
 
-## 📊 설치 방식 비교표
+## 📊 Installation Comparison Table
 
-| 항목 | 전역 설치 | 프로젝트별 설치 |
-|------|-----------|-----------------|
-| 설치 위치 | ~/.claude/ | project/.claude/ |
-| 사용 범위 | 모든 프로젝트 | 특정 프로젝트만 |
-| 훅 경로 | $HOME/.claude/hooks/ | $CLAUDE_PROJECT_DIR/.claude/hooks/ |
-| 워크플로우 | ~/.claude/workflows/ | project/.claude/workflows/ |
-| 업데이트 | 한 번만 | 각 프로젝트마다 |
-| 팀 공유 | 어려움 | Git으로 공유 가능 |
-| 충돌 가능성 | 있음 (네임스페이스로 해결) | 없음 |
-
----
-
-## 🎯 권장 설치 구성
-
-### 개인 개발자
-- **전역 설치** + **모든 구성요소**
-- 모든 프로젝트에서 즉시 사용 가능
-
-### 팀 프로젝트
-- **프로젝트별 설치** + **선택적 구성요소**
-- Git으로 팀원과 공유
-- 프로젝트별 커스터마이징
-
-### SPARK 테스트/개발
-- **현재 프로젝트 설치**
-- 개발 및 테스트용
+| Feature | Global Installation | Project-Specific |
+|---------|-------------------|-----------------|
+| Location | ~/.claude/ | project/.claude/ |
+| Scope | All projects | Specific project only |
+| Hook path | $HOME/.claude/hooks/ | $CLAUDE_PROJECT_DIR/.claude/hooks/ |
+| Workflows | ~/.claude/workflows/ | project/.claude/workflows/ |
+| Updates | Once only | Per project |
+| Team sharing | Difficult | Git shareable |
+| Conflict risk | Yes (namespace solution) | None |
 
 ---
 
-## 📚 추가 문서
+## 🎯 Recommended Installation Configurations
 
-- [SPARK 완전 가이드](./SPARK_COMPLETE_GUIDE.md)
-- [에이전트 백과사전](./SPARK_AGENTS_ENCYCLOPEDIA.md)
-- [앤트로픽 가이드라인](./ANTHROPIC_GUIDELINES.md)
-- [오케스트레이션 원칙](./SPARK_ORCHESTRATION_PRINCIPLES.md)
+### Individual Developer
+- **Global installation** + **All components**
+- Immediate availability across all projects
+
+### Team Project
+- **Project-specific installation** + **Selective components**
+- Git-based team sharing
+- Per-project customization
+
+### SPARK Testing/Development
+- **Current project installation**
+- Development and testing purposes
 
 ---
 
-## 💬 지원
+## 🏗️ SPARK v3.5 Architecture Highlights
 
-문제가 있거나 질문이 있으시면:
+- **Lazy-loading agents**: Only load required agents (saves ~39K tokens)
+- **FileLockManager integration**: Thread-safe parallel execution
+- **5-hook system**: Streamlined from 10 hooks to 5 essential hooks
+- **Team JSON templates**: Automatic generation for parallel teams
+- **Token Safety Protocol**: 90K limit with pre-task assessment
+
+---
+
+## 📚 Additional Documentation
+
+- [SPARK Agents Guide](./SPARK_AGENTS_GUIDE.md)
+- [Multi-Implementation Guide](./MULTI_IMPLEMENT_GUIDE.md)
+- [Hook System Guide](./SPARK_HOOK_GUIDE.md)
+- [Token Management](./TOKEN_AND_RESOURCE_MANAGEMENT.md)
+
+---
+
+## 💬 Support
+
+For issues or questions:
 - GitHub Issues: [https://github.com/Jaesun23/spark-claude/issues](https://github.com/Jaesun23/spark-claude/issues)
-- 문서: [SPARK_COMPLETE_GUIDE.md](./SPARK_COMPLETE_GUIDE.md)
+- Documentation: [SPARK Agents Guide](./SPARK_AGENTS_GUIDE.md)
 
 ---
 
-*SPARK v3.0 - Jason과 AI의 협업으로 만들어진 최적화된 다중 에이전트 시스템*
+*SPARK v3.5 - Advanced multi-agent orchestration system with lazy-loading architecture and integrated FileLockManager*

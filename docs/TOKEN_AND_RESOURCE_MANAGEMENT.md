@@ -1,8 +1,48 @@
-# 📊 SPARK Token and Resource Management Guide
+# 📊 SPARK v3.5 Token and Resource Management Guide
 
 ## Executive Summary
 
-This document consolidates validated findings on token management and resource optimization for the SPARK multi-agent system, based on empirical testing and analysis of actual constraints.
+This document consolidates validated findings on token management and resource optimization for the SPARK v3.5 multi-agent system, based on empirical testing and analysis of actual constraints with FileLockManager integration and team coordination.
+
+---
+
+## 🆕 SPARK v3.5 Token Management Changes
+
+### FileLockManager Integration Impact
+- **Thread-Safe Coordination**: FileLockManager adds ~2K tokens per team agent
+- **Lock State Tracking**: Each team JSON file adds ~1K tokens to context
+- **Team Coordination Overhead**: 4 teams = ~12K additional token overhead
+- **Total v3.5 Overhead**: 15K tokens for multi-team coordination
+
+### Team Agent Token Distribution
+```yaml
+Total Available: 200K context window
+÷ 4 teams = 50K base allocation per team
+- FileLockManager overhead: 3K
+- Team JSON context: 2K  
+- Base agent context: 10K
+= 35K working capacity per team agent
+```
+
+### Token Safety Protocol (NEW in v3.5)
+All agents now include mandatory pre-task assessment:
+```yaml
+Phase 1 - Context Calculation:
+  - Agent definition: ~10K tokens
+  - User instructions: 2-5K tokens  
+  - Source code context: 5-15K tokens
+  - Team coordination: 3-5K tokens (if applicable)
+
+Phase 2 - Write Operation Estimation:  
+  - Generated content size × 2 (memory + write)
+  - Multiple files: each file × 2
+  - Documentation generation: high token cost
+
+Phase 3 - Abort Criteria:
+  - If estimated total > 90K tokens → ABORT
+  - Log to ~/.claude/workflows/task_aborted.json
+  - Recommend task splitting
+```
 
 ---
 

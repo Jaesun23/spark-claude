@@ -1,8 +1,8 @@
-# 🚀 Multi-Implement Guide - 4-Team Parallel Execution
+# 🚀 Multi-Implement Guide - SPARK v3.5 4-Team Parallel Execution
 
 ## 📋 Overview
 
-`/multi-implement` is SPARK's most powerful command that enables **4 teams to work in parallel** on independent implementation tasks. This achieves up to **3.1x faster execution** compared to sequential implementation.
+`/multi-implement` is SPARK v3.5's most powerful command that enables **4 teams to work in parallel** on independent implementation tasks. With integrated FileLockManager and automatic team JSON template generation, this achieves up to **3.1x faster execution** compared to sequential implementation.
 
 ## 🎯 When to Use Multi-Implement
 
@@ -22,19 +22,22 @@
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────┐
-│              Claude CODE (Orchestrator)              │
-│                                              │
-│  1. Parse tasks → Create team JSONs          │
-│  2. Call 4 teams SIMULTANEOUSLY              │
-│  3. Wait for ALL to complete                 │
-│  4. Coordinate shared resources              │
-└──────────────┬──────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│              Claude CODE (Orchestrator)                 │
+│                                                         │
+│  1. Parse tasks → Auto-generate team JSON templates     │
+│  2. FileLockManager ensures resource safety             │
+│  3. Call 4 teams SIMULTANEOUSLY (true parallelism)      │
+│  4. Wait for ALL to complete                            │
+│  5. Coordinate shared resources with lock management    │
+└──────────────┬─────────────────────────────────────────┘
                │
-               ├── Task → Team1 → team1_task.json
-               ├── Task → Team2 → team2_task.json
-               ├── Task → Team3 → team3_task.json
-               └── Task → Team4 → team4_task.json
+               ├── Task → team1-implementer-spark → team1_task.json
+               ├── Task → team2-implementer-spark → team2_task.json  
+               ├── Task → team3-implementer-spark → team3_task.json
+               └── Task → team4-implementer-spark → team4_task.json
+                       ↓
+               FileLockManager coordinates file access
 ```
 
 ## 📝 Command Syntax
@@ -87,9 +90,26 @@ Task("team4-tester-spark", test4)
 - Generates unified report
 - Handles any integration needs
 
-## 📊 JSON Context Structure
+## 📊 Team JSON Template System
 
-Each team works with its own JSON file for complete isolation:
+### Auto-Generated Team Templates
+
+SPARK v3.5 automatically generates team JSON templates on installation:
+
+**Template Location:** `~/.claude/workflows/team{1-4}_task.json`
+
+```json
+{
+  "team_id": "team1",
+  "status": "ready",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+### Runtime Task Structure
+
+During execution, each team's JSON is populated with task details:
 
 ```json
 {
@@ -99,7 +119,8 @@ Each team works with its own JSON file for complete isolation:
   "task_details": {
     "description": "Create user authentication endpoint",
     "files_to_modify": ["api/auth.py", "models/user.py"],
-    "requirements": ["JWT tokens", "bcrypt hashing"]
+    "requirements": ["JWT tokens", "bcrypt hashing"],
+    "estimated_complexity": 0.6
   },
   "implementation": {
     "files_created": ["api/auth.py"],
@@ -107,38 +128,61 @@ Each team works with its own JSON file for complete isolation:
     "quality_results": {
       "mypy": "passed",
       "ruff": "passed",
-      "security": "passed"
-    }
+      "security": "passed",
+      "coverage": 96.5
+    },
+    "token_usage": 15420
   },
   "testing": {
     "test_files": ["tests/test_auth.py"],
     "coverage": 96.5,
-    "results": "All tests passed"
+    "results": "All tests passed",
+    "execution_time": "3.2s"
   },
-  "locks_held": ["models/user.py"],
-  "messages": ["Waiting for lock on shared resource"]
+  "file_locks": {
+    "requested": ["models/user.py"],
+    "acquired": ["models/user.py"],
+    "released": [],
+    "lock_manager": "FileLockManager"
+  },
+  "messages": ["Lock acquired for models/user.py", "Implementation completed"],
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:05:42Z"
 }
 ```
 
-## 🔒 Resource Lock Management
+## 🔒 FileLockManager Integration
 
-For shared files (e.g., `constants.py`, `types.py`):
+### Advanced Resource Lock Management
 
-1. **Team requests lock** via JSON
-2. **Claude CODE manages allocation** (first-come-first-served)
+SPARK v3.5 integrates FileLockManager directly into the StateManager for thread-safe parallel execution:
+
+#### Lock Acquisition Process
+1. **Team requests lock** via JSON context
+2. **FileLockManager allocates** (first-come-first-served)
 3. **30-second timeout** prevents deadlocks
-4. **Automatic release** on completion
+4. **Automatic release** on task completion or timeout
+5. **Lock status tracking** in team JSON
 
-Example lock request:
+#### Lock Request Format
 ```json
 {
-  "lock_request": {
-    "file": "shared/constants.py",
-    "operation": "append",
-    "priority": "normal"
+  "file_locks": {
+    "requested": ["shared/constants.py", "models/base.py"],
+    "operation": "modify",
+    "priority": "normal",
+    "timeout_seconds": 30,
+    "reason": "Adding new constants for API endpoint"
   }
 }
 ```
+
+#### FileLockManager Features
+- **Thread-safe operation**: Multiple teams can request locks simultaneously
+- **Deadlock prevention**: Automatic timeout and release mechanisms
+- **Lock inheritance**: Child processes inherit parent locks
+- **Lock monitoring**: Real-time status tracking in team JSON files
+- **Priority handling**: Normal/high priority lock requests
 
 ## ⚡ Performance Metrics
 
@@ -216,25 +260,63 @@ The `multi_implement.py` utility provides:
 
 ### Teams not starting in parallel
 - **CRITICAL**: Must call all Tasks in ONE MESSAGE (not separate messages)
-- Verify JSON files are created correctly
+- Verify team JSON templates exist: `ls ~/.claude/workflows/team*_task.json`
+- Check template initialization: Each should contain `{"team_id": "teamX", "status": "ready"}`
 - Ensure no syntax errors in command
+- Verify FileLockManager is properly initialized
 
-### File conflicts
-- Review lock requests in team JSONs
-- Check for deadlock situations
-- Consider restructuring tasks
+### File conflicts and lock issues
+- Review `file_locks` section in team JSONs for lock status
+- Check FileLockManager logs: `grep "FileLockManager" ~/.claude/workflows/team*_task.json`
+- Verify lock timeout settings (default: 30 seconds)
+- Check for deadlock situations in lock acquisition order
+- Consider restructuring tasks to minimize shared file access
+- Manual lock release if needed: Reset team JSON `file_locks.acquired` to `[]`
 
 ### Quality gate failures
 - Each team runs independent quality checks
 - Fix issues in respective team's implementation
 - Re-run only the failed team
 
+## 🔄 Team JSON Template Lifecycle
+
+### 1. Installation Phase
+```bash
+# Auto-generated during SPARK installation
+team1_task.json: {"team_id": "team1", "status": "ready"}
+team2_task.json: {"team_id": "team2", "status": "ready"} 
+team3_task.json: {"team_id": "team3", "status": "ready"}
+team4_task.json: {"team_id": "team4", "status": "ready"}
+```
+
+### 2. Execution Phase  
+```bash
+# Populated with task details during /multi-implement
+status: "ready" → "implementing" → "testing" → "complete"
+```
+
+### 3. Cleanup Phase
+```bash
+# Reset to template state after task completion
+status: "complete" → "ready" (automatic cleanup)
+```
+
+### Manual Template Reset
+```bash
+# If templates get corrupted
+echo '{"team_id": "team1", "status": "ready"}' > ~/.claude/workflows/team1_task.json
+echo '{"team_id": "team2", "status": "ready"}' > ~/.claude/workflows/team2_task.json
+echo '{"team_id": "team3", "status": "ready"}' > ~/.claude/workflows/team3_task.json
+echo '{"team_id": "team4", "status": "ready"}' > ~/.claude/workflows/team4_task.json
+```
+
 ## 📚 Related Documentation
 
-- [SPARK Orchestration Principles](./SPARK_ORCHESTRATION_PRINCIPLES.md)
-- [Team Agent Implementation](./SPARK_AGENTS_ENCYCLOPEDIA.md#team-agents)
-- [JSON Context Relay](./SPARK_COMPLETE_GUIDE.md#json-context)
+- [SPARK Hook Guide](./SPARK_HOOK_GUIDE.md) - FileLockManager integration details
+- [SPARK Agents Guide](./SPARK_AGENTS_GUIDE.md) - Team agent specifications
+- [Token Management](./TOKEN_AND_RESOURCE_MANAGEMENT.md) - Resource optimization
+- [Installation Guide](./INSTALLATION_GUIDE.md) - Team template setup
 
 ---
 
-*Multi-Implement is SPARK's flagship feature for maximum parallel efficiency. Use it wisely for independent tasks to achieve dramatic speedups!*
+*Multi-Implement is SPARK v3.5's flagship feature for maximum parallel efficiency with FileLockManager safety. Use it for independent tasks to achieve dramatic speedups while maintaining data integrity!*

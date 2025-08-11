@@ -1,19 +1,24 @@
-# 🧠 SPARK Agents Memory Reference (Claude CODE 전용)
+# 🧠 SPARK Agents Memory Reference (Claude CODE Exclusive)
 
-> **Claude CODE 메모리 저장용 핵심 정보만 포함**
-> *복잡한 설명 제거, 즉시 활용 가능한 레퍼런스*
+> **Core information for Claude CODE memory storage only**
+> *Complex explanations removed, immediately actionable reference*
 
 ---
 
-## 🎯 16개 SPARK 에이전트 빠른 선택 가이드
+## 🎯 28 SPARK Agents Quick Selection Guide
 
-### 🔥 핵심 4대 에이전트 (최우선 사용)
-1. **implementer-spark** → 구현 (모든 페르소나 자동 활성화)
-2. **analyzer-spark** → 분석/디버깅 (다차원 분석)
-3. **tester-spark** → 테스트 (95% 커버리지)
-4. **designer-spark** → 설계 (아키텍처/UI/UX)
+### 🔥 Core 4 Agents (Highest Priority)
+1. **implementer-spark** → Implementation (all personas auto-activated)
+2. **analyzer-spark** → Analysis/debugging (multi-dimensional analysis)
+3. **tester-spark** → Testing (95% coverage)
+4. **designer-spark** → Design (architecture/UI/UX)
 
-### 📊 상황별 에이전트 매칭
+### 🎪 16 Base Agents + 12 Team Agents (28 Total)
+**Base Agents**: analyzer, implementer, tester, designer, documenter, troubleshooter, improver, cleaner, explainer, estimator, gitter, builder, spawner, indexer, tasker, loader
+
+**Team Agents**: team1-4 × (implementer, tester, documenter) = 12 specialized team agents
+
+### 📊 Situation-Based Agent Matching
 
 | Situation | Agent | Command Example |
 |------|----------|-------------|
@@ -33,21 +38,21 @@
 
 ---
 
-## ⚡ Task 동시 호출 패턴 (핵심!)
+## ⚡ Task Parallel Calling Pattern (Critical!)
 
 ```javascript
-// ✅ 올바른 패턴 - 진짜 병렬 실행
-Task Task Task Task → 시작!
+// ✅ Correct Pattern - True Parallel Execution
+Task Task Task Task → Start!
 
-// ❌ 잘못된 패턴 - 순차 실행
-Task 1 완료 → Task 2 시작 → Task 3 시작
+// ❌ Wrong Pattern - Sequential Execution
+Task 1 Complete → Task 2 Start → Task 3 Start
 ```
 
 ---
 
-## 🎭 페르소나 자동 활성화 키워드
+## 🎭 Persona Auto-Activation Keywords
 
-| 페르소나 | 트리거 키워드 |
+| Persona | Trigger Keywords |
 |----------|--------------|
 | **Backend** | API, endpoint, service, database, server |
 | **Frontend** | component, UI, responsive, style, React |
@@ -60,18 +65,18 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 
 ---
 
-## 🔧 에이전트별 필수 정보
+## 🔧 Essential Agent Information
 
-### implementer-spark (구현)
+### implementer-spark (Implementation)
 ```json
 {
-  "task": "구현할 내용",
-  "complexity": 0.1-1.0,  // 0.7+ = 아키텍처 모드
+  "task": "implementation content",
+  "complexity": 0.1-1.0,  // 0.7+ = architecture mode
   "context": "existing code patterns"
 }
 ```
 
-### analyzer-spark (분석)
+### analyzer-spark (Analysis)
 ```json
 {
   "target": "file/directory/system",
@@ -80,7 +85,7 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 }
 ```
 
-### tester-spark (테스트)
+### tester-spark (Testing)
 ```json
 {
   "coverage_target": {"unit": 95, "integration": 85},
@@ -89,93 +94,97 @@ Task 1 완료 → Task 2 시작 → Task 3 시작
 }
 ```
 
-### designer-spark (설계)
+### designer-spark (Design)
 ```json
 {
   "type": "architecture|api|ui",
-  "requirements": ["기능", "성능", "보안"],
-  "constraints": ["기술", "비즈니스", "규제"]
+  "requirements": ["functionality", "performance", "security"],
+  "constraints": ["technical", "business", "regulatory"]
 }
 ```
 
 ---
 
-## 📊 품질 게이트 (Jason's 8-Step)
+## 📊 Quality Gates (Jason's 8-Step)
 
-1. **구문 검증** → 0 errors
-2. **타입 체크** → mypy --strict (0 errors)
-3. **린팅** → ruff --strict (0 violations)
-4. **보안 분석** → OWASP + secrets scan
-5. **테스트 커버리지** → Unit 95%, Integration 85%
-6. **성능 체크** → O(n) complexity, no N+1
-7. **문서 검증** → Docstrings required
-8. **통합 테스트** → E2E scenarios pass
+1. **Syntax Validation** → 0 errors
+2. **Type Checking** → mypy --strict (0 errors)
+3. **Linting** → ruff --strict (0 violations)
+4. **Security Analysis** → OWASP + secrets scan
+5. **Test Coverage** → Unit 95%, Integration 85%
+6. **Performance Check** → O(n) complexity, no N+1
+7. **Documentation Validation** → Docstrings required
+8. **Integration Testing** → E2E scenarios pass
 
 ---
 
-## 🚀 다중 에이전트 파이프라인
+## 🚀 Multi-Agent Pipelines
 
-| 파이프라인 | 에이전트 순서 | 용도 |
+| Pipeline | Agent Sequence | Purpose |
 |------------|--------------|------|
-| **/spark-launch** | analyze → design → implement → test → document | 전체 기능 개발 |
+| **/spark-launch** | analyze → design → implement → test → document | Complete feature development |
 | **/spark-refactor** | analyze → clean → improve → test | Code improvement |
-| **/spark-audit** | analyze → troubleshoot → tester → documenter | 보안/성능 감사 |
-| **/spark-migrate** | analyze → design → implement → test → deploy | 시스템 마이그레이션 |
-| **/spark-optimize** | analyze → improve → test → build → deploy | 성능 최적화 |
+| **/spark-audit** | analyze → troubleshoot → tester → documenter | Security/performance audit |
+| **/spark-migrate** | analyze → design → implement → test → deploy | System migration |
+| **/spark-optimize** | analyze → improve → test → build → deploy | Performance optimization |
 
 ---
 
-## 🔴 중요 제약사항
+## 🔴 Critical Constraints
 
-1. **에이전트는 다른 에이전트 호출 불가** (오직 Claude CODE만 Task 사용)
-2. **병렬 실행 = 한 메시지에 여러 Task 호출** (각각 호출하면 순차 실행)
-3. **JSON 컨텍스트로만 정보 전달** (직접 대화 불가)
-4. **SubagentStop 후 품질 게이트 자동 실행**
-5. **최대 재시도 3회** (품질 실패 시)
-
----
-
-## 📁 상태 파일 위치
-
-```
-~/.claude/workflows/current_task.json      # 전역 설치
-.claude/workflows/current_task.json        # 프로젝트별
-```
-
-**Fallback 패턴**: 먼저 `~/.claude` 체크 → 없으면 `.claude` 체크
+1. **Agents cannot call other agents** (Only Claude CODE can use Task)
+2. **Parallel execution requires single message with multiple Tasks** (Sequential calls = sequential execution)
+3. **Information passed only via JSON context** (No direct communication)
+4. **Quality gates auto-execute after SubagentStop**
+5. **Maximum 3 retries** (On quality failures)
+6. **FileLockManager prevents file conflicts** (Automatic parallel execution safety)
 
 ---
 
-## 🎯 에이전트 선택 플로우
+## 📁 State File Locations
 
 ```
-1. 작업 복잡도 판단
-   → 0.7+ : Designer 먼저
-   → 0.3-0.7 : Implementer 직접
-   → 0.3- : 단순 작업
+~/.claude/workflows/current_task.json      # Global installation
+.claude/workflows/current_task.json        # Project-specific
+.claude/workflows/team1-4_current_task.json # Team-specific templates
+```
 
-2. 작업 유형 판단
-   → 버그: Troubleshooter
-   → 새 기능: Designer → Implementer
-   → 개선: Analyzer → Improver
-   → 정리: Cleaner
+**Fallback Pattern**: First check `~/.claude` → Then check `.claude`
+**FileLockManager**: Prevents concurrent file access conflicts
 
-3. 병렬 가능 판단
-   → 독립적: Task Task Task → 시작!
-   → 의존적: 순차 실행
+---
+
+## 🎯 Agent Selection Flow
+
+```
+1. Task Complexity Assessment
+   → 0.7+ : Designer first
+   → 0.3-0.7 : Implementer directly
+   → 0.3- : Simple task
+
+2. Task Type Assessment
+   → Bug: Troubleshooter
+   → New feature: Designer → Implementer
+   → Improvement: Analyzer → Improver
+   → Cleanup: Cleaner
+
+3. Parallel Capability Assessment
+   → Independent: Task Task Task → Start!
+   → Dependent: Sequential execution
 ```
 
 ---
 
 ## 💡 Pro Tips
 
-- **토큰 절약**: 필요한 에이전트만 호출 (평균 significant 절감)
-- **품질 우선**: 8단계 게이트 모두 통과 필수
-- **병렬 최대화**: 독립 작업은 동시 실행
-- **컨텍스트 유지**: JSON 파일로 상태 관리
-- **재시도 활용**: 실패 시 자동 3회 재시도
+- **Token Savings**: Call only necessary agents (significant reduction on average)
+- **Quality First**: All 8 quality gates must pass
+- **Maximize Parallel**: Execute independent tasks simultaneously
+- **Context Maintenance**: State management via JSON files
+- **Leverage Retries**: Automatic 3-attempt retry on failures
+- **File Safety**: FileLockManager prevents conflicts in parallel execution
 
 ---
 
-*이 문서는 Claude CODE의 메모리 저장용으로 최적화되었습니다.*
-*상세 정보는 `/docs/SPARK_AGENTS_GUIDE.md` 참조*
+*This document is optimized for Claude CODE memory storage.*
+*For detailed information, see `/docs/SPARK_AGENTS_GUIDE.md`*

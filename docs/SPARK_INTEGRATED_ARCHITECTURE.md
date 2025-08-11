@@ -32,15 +32,82 @@ Only Claude CODE has decision-making power. All other components follow instruct
 
 ---
 
-## 📊 Component Responsibility Matrix
+## 📊 SPARK v3.5 Component Responsibility Matrix
 
 | Component | Primary Role | What It Controls | What It Cannot Do |
 |-----------|-------------|------------------|-------------------|
-| **Claude CODE (Orchestrator)** | Decision & Control | Task assignment, Flow control, Agent selection | Direct file modification |
-| **Hooks** | Automation | Context enhancement, Quality validation | Agent selection, Task creation |
-| **JSON Files** | State Management | Information relay, Progress tracking | Decision making |
-| **Agents** | Execution | Actual work, Result generation | Calling other agents |
-| **Commands** | Workflow Definition | Execution sequence, Quality standards | Dynamic adaptation |
+| **Claude CODE (Orchestrator)** | Decision & Control | Task assignment, Flow control, Agent selection, Team coordination | Direct file modification |
+| **5 Essential Hooks** | Automation | Context enhancement, Quality validation, Team JSON generation | Agent selection, Task creation |
+| **JSON Files (Enhanced)** | State Management | Information relay, Progress tracking, Team status, Lock coordination | Decision making |
+| **16 Base Agents** | Core Execution | Actual work, Result generation, Quality validation | Calling other agents, Team coordination |
+| **12 Team Agents** | Parallel Execution | Team-specific work, Lock management, Parallel coordination | Cross-team communication |
+| **FileLockManager** | Resource Coordination | File lock acquisition/release, Deadlock prevention, Thread safety | File content modification |
+| **Commands** | Workflow Definition | Execution sequence, Quality standards, Team orchestration | Dynamic adaptation |
+
+---
+
+## 🆕 SPARK v3.5 Architecture Enhancements
+
+### Lazy-Loading Agent Architecture
+```
+Previous (v3.0): Load all 16 agents → ~39K token overhead
+Current (v3.5): Load only required agents → ~10K token overhead  
+Savings: 75% token reduction in agent loading
+```
+
+### FileLockManager Integration
+```
+┌─────────────────────────────────────────────┐
+│              FileLockManager                │
+│  ┌─────────────┐ ┌─────────────┐           │
+│  │ Lock Pool   │ │ Timeout     │           │
+│  │ Management  │ │ Prevention  │           │
+│  └─────────────┘ └─────────────┘           │
+└─────────────────────┬───────────────────────┘
+                      │
+      ┌───────────────┼───────────────┐
+      │               │               │
+┌─────▼────┐    ┌─────▼────┐    ┌─────▼────┐
+│ Team 1   │    │ Team 2   │    │ Team 3   │
+│ JSON     │    │ JSON     │    │ JSON     │  
+└──────────┘    └──────────┘    └──────────┘
+```
+
+### Team JSON Template System
+```yaml
+Auto-Generation Pattern:
+  ~/.claude/workflows/
+    ├── team1_task.json (auto-generated)
+    ├── team2_task.json (auto-generated)  
+    ├── team3_task.json (auto-generated)
+    └── team4_task.json (auto-generated)
+
+Template Structure:
+  base_template:
+    team_id: "teamN"
+    status: "ready"
+    created_at: "auto-timestamp"
+    
+  runtime_expansion:
+    task_details: {...}
+    implementation: {...}
+    file_locks: {...}
+```
+
+### Hook System Streamlining
+```
+Previous Hooks (10):       Current Hooks (5):
+├─ persona_router         ├─ spark_persona_router.py ✓
+├─ pipeline_orchestrator  ├─ spark_phase_manager.py ✓  
+├─ test_runner           ├─ spark_quality_gates.py ✓
+├─ token_validator       ├─ spark_core_utils.py ✓
+├─ unified_orchestrator  ├─ file_lock_manager.py ✓ (new)
+├─ validator             │
+├─ quality_gates         │ 
+├─ phase_manager         │
+├─ core_utils           │
+└─ [3 others removed]   │
+```
 
 ---
 
