@@ -187,7 +187,8 @@ select_components() {
         INSTALL_HOOKS=true
         INSTALL_WORKFLOWS=true
         print_success "✓ Multi-agent pipelines scheduled for installation"
-        print_success "✓ Hooks and workflows automatically included"
+        print_success "✓ Hook scripts automatically included (required for pipelines)"
+        print_success "✓ Workflow configurations automatically included"
     else
         # Hooks (only if not installing multi-agent)
         read -p "4) Install hook scripts? (y/N): " install_hooks
