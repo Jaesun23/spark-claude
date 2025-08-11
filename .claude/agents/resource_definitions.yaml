@@ -1,0 +1,135 @@
+# SPARK Agent Resource Definitions
+# Based on actual usage patterns and memory optimization needs
+
+agents:
+  implementer-spark:
+    token_budget: 25000
+    memory_weight: heavy  # Creates/modifies many files
+    parallel_safe: false  # File conflicts possible
+    max_concurrent: 1     # Only 1 implementer at a time
+    
+  analyzer-spark:
+    token_budget: 15000
+    memory_weight: medium  # Reads many files
+    parallel_safe: true    # Read-only operations
+    max_concurrent: 2      # Can run 2 analyzers
+    
+  tester-spark:
+    token_budget: 20000
+    memory_weight: heavy   # Runs tests, creates reports
+    parallel_safe: true    # Independent test runs
+    max_concurrent: 2      # 2 test suites max
+    
+  designer-spark:
+    token_budget: 15000
+    memory_weight: light   # Mostly planning/documentation
+    parallel_safe: true    # No file conflicts
+    max_concurrent: 3      # Can run multiple designs
+    
+  improver-spark:
+    token_budget: 20000
+    memory_weight: medium  # Modifies existing files
+    parallel_safe: false   # File modification conflicts
+    max_concurrent: 1      # Sequential improvements only
+    
+  troubleshooter-spark:
+    token_budget: 18000
+    memory_weight: medium  # Debugging and analysis
+    parallel_safe: true    # Investigation is safe
+    max_concurrent: 2      # 2 debugging sessions
+    
+  documenter-spark:
+    token_budget: 12000
+    memory_weight: light   # Documentation generation
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Many docs at once
+    
+  builder-spark:
+    token_budget: 22000
+    memory_weight: heavy   # Build processes
+    parallel_safe: false   # Build conflicts
+    max_concurrent: 1      # One build at a time
+    
+  cleaner-spark:
+    token_budget: 10000
+    memory_weight: light   # Cleanup operations
+    parallel_safe: false   # Deletion conflicts
+    max_concurrent: 1      # Sequential cleanup
+    
+  explainer-spark:
+    token_budget: 8000
+    memory_weight: light   # Educational content
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Multiple explanations
+    
+  estimator-spark:
+    token_budget: 10000
+    memory_weight: light   # Estimation calculations
+    parallel_safe: true    # Independent estimates
+    max_concurrent: 4      # Multiple estimates
+    
+  gitter-spark:
+    token_budget: 8000
+    memory_weight: light   # Git operations
+    parallel_safe: false   # Git conflicts
+    max_concurrent: 1      # Sequential git ops
+    
+  spawner-spark:
+    token_budget: 35000
+    memory_weight: heavy   # Orchestrates multiple agents
+    parallel_safe: false   # Complex coordination
+    max_concurrent: 1      # One spawner only
+    
+  loader-spark:
+    token_budget: 12000
+    memory_weight: medium  # Project loading
+    parallel_safe: true    # Read operations
+    max_concurrent: 2      # 2 project loads
+    
+  indexer-spark:
+    token_budget: 5000
+    memory_weight: light   # Command listing
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Multiple queries
+    
+  tasker-spark:
+    token_budget: 15000
+    memory_weight: medium  # Task management
+    parallel_safe: true    # Task tracking safe
+    max_concurrent: 2      # 2 task managers
+
+# Team agents for multi-implement
+team_agents:
+  team1-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true  # Teams are isolated
+    
+  team2-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+    
+  team3-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+    
+  team4-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+
+# Memory weight definitions
+memory_weights:
+  light: 300   # MB
+  medium: 600  # MB
+  heavy: 1000  # MB (1GB)
+
+# Parallel execution rules
+parallel_rules:
+  max_total_memory: 4000  # 4GB max for all agents
+  max_concurrent_heavy: 4  # Max 4 heavy agents
+  max_concurrent_total: 8  # Max 8 agents total
+  
+  # When to switch to wave mode
+  wave_triggers:
+    memory_usage_percent: 85  # Switch at 85% memory (더 여유있게)
+    heavy_agent_count: 5      # If 5+ heavy agents needed
+    total_agent_count: 8      # If 8+ agents needed

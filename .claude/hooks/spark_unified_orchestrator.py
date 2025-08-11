@@ -10,6 +10,8 @@ import sys
 import os
 import hashlib
 import subprocess
+import psutil
+import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
@@ -290,6 +292,100 @@ class QualityGateValidator:
         
         return results
 
+class ResourceManager:
+    """Manages agent resource allocation and monitoring"""
+    
+    def __init__(self):
+        self.resource_config_path = Path(__file__).parent.parent / "agents" / "resource_definitions.yaml"
+        self.resource_config = self._load_resource_config()
+        self.active_agents = {}
+        
+    def _load_resource_config(self) -> Dict[str, Any]:
+        """Load resource definitions from YAML"""
+        if self.resource_config_path.exists():
+            with open(self.resource_config_path, 'r') as f:
+                return yaml.safe_load(f)
+        return {}
+    
+    def get_memory_usage(self) -> float:
+        """Get current system memory usage percentage"""
+        return psutil.virtual_memory().percent
+    
+    def get_active_memory_mb(self) -> int:
+        """Calculate total memory used by active agents"""
+        total = 0
+        for agent, info in self.active_agents.items():
+            weight = info.get('memory_weight', 'medium')
+            memory_map = self.resource_config.get('memory_weights', {})
+            total += memory_map.get(weight, 600)
+        return total
+    
+    def can_launch_agent(self, agent_type: str) -> Tuple[bool, str]:
+        """Check if agent can be launched based on resources"""
+        memory_percent = self.get_memory_usage()
+        
+        # Get agent config
+        agent_config = self.resource_config.get('agents', {}).get(agent_type, {})
+        memory_weight = agent_config.get('memory_weight', 'medium')
+        max_concurrent = agent_config.get('max_concurrent', 2)
+        
+        # Check memory threshold
+        wave_triggers = self.resource_config.get('parallel_rules', {}).get('wave_triggers', {})
+        memory_threshold = wave_triggers.get('memory_usage_percent', 85)
+        
+        if memory_percent > memory_threshold:
+            return False, f"Memory usage {memory_percent}% exceeds threshold {memory_threshold}%"
+        
+        # Check concurrent limit for this agent type
+        current_count = sum(1 for a in self.active_agents if a.startswith(agent_type))
+        if current_count >= max_concurrent:
+            return False, f"Already running {current_count} instances of {agent_type} (max: {max_concurrent})"
+        
+        # Check total memory allocation
+        weights = self.resource_config.get('memory_weights', {})
+        new_memory = weights.get(memory_weight, 600)
+        total_memory = self.get_active_memory_mb() + new_memory
+        max_total = self.resource_config.get('parallel_rules', {}).get('max_total_memory', 4000)
+        
+        if total_memory > max_total:
+            return False, f"Total memory {total_memory}MB would exceed limit {max_total}MB"
+        
+        return True, "OK"
+    
+    def register_agent(self, agent_id: str, agent_type: str):
+        """Register an active agent"""
+        agent_config = self.resource_config.get('agents', {}).get(agent_type, {})
+        self.active_agents[agent_id] = {
+            'type': agent_type,
+            'memory_weight': agent_config.get('memory_weight', 'medium'),
+            'started_at': datetime.now().isoformat()
+        }
+    
+    def unregister_agent(self, agent_id: str):
+        """Unregister an agent when it completes"""
+        if agent_id in self.active_agents:
+            del self.active_agents[agent_id]
+    
+    def should_use_wave_mode(self, agent_count: int) -> bool:
+        """Determine if wave mode should be activated"""
+        memory_percent = self.get_memory_usage()
+        wave_triggers = self.resource_config.get('parallel_rules', {}).get('wave_triggers', {})
+        
+        # Check various triggers
+        if memory_percent > wave_triggers.get('memory_usage_percent', 85):
+            return True
+        
+        if agent_count >= wave_triggers.get('total_agent_count', 8):
+            return True
+        
+        # Check heavy agent count
+        heavy_count = sum(1 for a in self.active_agents.values() 
+                         if a.get('memory_weight') == 'heavy')
+        if heavy_count >= wave_triggers.get('heavy_agent_count', 5):
+            return True
+        
+        return False
+
 class UnifiedOrchestrator:
     """Main orchestrator combining best of both systems"""
     
@@ -297,6 +393,7 @@ class UnifiedOrchestrator:
         self.context_file = Path.home() / ".claude" / "workflows" / "unified_context.json"
         self.context_file.parent.mkdir(parents=True, exist_ok=True)
         self.phase_manager = PhaseTransitionManager()
+        self.resource_manager = ResourceManager()
         
     def handle_event(self, event: HookEvent, data: Dict[str, Any]) -> Dict[str, Any]:
         """Unified event handler for all hook types"""
@@ -315,8 +412,26 @@ class UnifiedOrchestrator:
         return {"continue": True}
     
     def _handle_prompt_submit(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Handle user prompt submission"""
+        """Handle user prompt submission with resource checking"""
         prompt = data.get("prompt", "")
+        
+        # Check for multi-agent scenarios and resource availability
+        if "multi-implement" in prompt.lower() or "4 team" in prompt.lower():
+            memory_usage = self.resource_manager.get_memory_usage()
+            if memory_usage > 70:
+                # Suggest wave mode
+                return {
+                    "continue": True,
+                    "output": f"""
+⚠️ Resource Alert: Current memory usage is {memory_usage:.1f}%
+
+Recommendation: Use Wave mode for multi-team execution:
+- Wave 1: Team1 + Team2
+- Wave 2: Team3 + Team4
+
+This will prevent memory overflow and ensure stable execution.
+"""
+                }
         
         # Generate unique task ID
         task_id = hashlib.md5(f"{prompt}{datetime.now()}".encode()).hexdigest()[:8]

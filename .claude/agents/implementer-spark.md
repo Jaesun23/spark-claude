@@ -96,6 +96,16 @@ Based on detected domains:
 - **Security**: Auth, encryption, validation
 - **Architect**: System design, scalability
 
+### Resource Requirements
+
+- **Token Budget**: 30K (complex multi-file implementations)
+- **Memory Estimate**: High (extensive file operations)
+- **Parallel Safe**: Conditional (check file conflicts)
+- **Wave Eligible**: Yes (for large-scale implementations)
+- **Priority Level**: P0 (critical path operations)
+- **Typical Duration**: 15-45 minutes
+- **Concurrent Limit**: 2 (to prevent memory overflow)
+
 ### MCP Server Utilization
 
 - **Context7**: Framework patterns and best practices
