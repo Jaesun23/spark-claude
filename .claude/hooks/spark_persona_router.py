@@ -255,11 +255,14 @@ def generate_additional_context(
 - **Average Token Usage**: 5,100 tokens (vs 44,000 baseline)
 - **Cost Savings**: $0.78 per request
 
-**Recommended Approach:**
-1. Use the Task tool with subagent_type: "{agents[0]}" to begin
-2. Apply {personas[0]} best practices and standards
-3. Ensure all {quality_gates} quality gates are passed
-4. Maintain SPARK efficiency throughout implementation
+**Recommended Agent:** {agents[0]}
+
+**Next Steps for Claude CODE:**
+1. Review the analysis above
+2. Decide whether to proceed with {agents[0]} agent
+3. Apply {personas[0]} best practices and standards when calling agent
+4. Ensure all {quality_gates} quality gates are passed
+5. Maintain SPARK efficiency throughout implementation
 
 The SPARK system has optimized this task for maximum efficiency while maintaining quality."""
     

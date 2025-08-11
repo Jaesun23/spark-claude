@@ -622,19 +622,19 @@ class MultiTeamOrchestrator(UnifiedOrchestrator):
 Execute {len(active_teams)} teams in parallel:
 
 1. IMPLEMENTATION PHASE:
-   Call all teams simultaneously:
+   Claude CODE should call all teams simultaneously:
    {', '.join([f'{t}_implementer' for t in active_teams])}
    
 2. QUALITY PHASE (after all implementations complete):
-   Call all teams simultaneously:
+   Claude CODE should review quality and call teams if needed:
    {', '.join([f'{t}_quality' for t in active_teams])}
    
 3. TESTING PHASE (after all quality checks pass):
-   Call all teams simultaneously:
+   Claude CODE should call testing teams simultaneously:
    {', '.join([f'{t}_tester' for t in active_teams])}
    
 4. REVIEW PHASE (after all tests complete):
-   Call single reviewer agent for all teams
+   Claude CODE should review all team results and consolidate
    
 5. REPORT PHASE:
    Generate consolidated report

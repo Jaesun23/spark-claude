@@ -51,16 +51,16 @@ Analyze tasks and allocate to teams:
 Call all assigned teams SIMULTANEOUSLY (not sequentially):
 ```
 # ALL FOUR CALLS AT ONCE - NO WAITING BETWEEN!
-Task("team1-implementer-spark", prompt_with_json_path)
-Task("team2-implementer-spark", prompt_with_json_path)
-Task("team3-implementer-spark", prompt_with_json_path)
-Task("team4-implementer-spark", prompt_with_json_path)
+Task("implementer-spark", "Team1: {task1} Read team1_current_task.json")
+Task("implementer-spark", "Team2: {task2} Read team2_current_task.json")
+Task("implementer-spark", "Team3: {task3} Read team3_current_task.json")
+Task("implementer-spark", "Team4: {task4} Read team4_current_task.json")
 ```
 
 Each implementer:
 - Reads their team JSON file for task details
 - Implements the feature
-- Updates JSON with results before exit
+- Updates their team JSON file with 'implementation' section before exit
 - Respects file locks for shared resources
 
 ### Phase 1.5: Claude CODE Implementation Review
@@ -68,10 +68,10 @@ After all implementations complete, Claude CODE reviews all team results:
 
 ```python
 # Claude CODE reviews each team's results
-1. Read team1_implementation_result.json
-2. Read team2_implementation_result.json  
-3. Read team3_implementation_result.json
-4. Read team4_implementation_result.json
+1. Read team1_current_task.json (check 'implementation' section)
+2. Read team2_current_task.json (check 'implementation' section)  
+3. Read team3_current_task.json (check 'implementation' section)
+4. Read team4_current_task.json (check 'implementation' section)
 
 # Decision for each team:
 ✅ If team results satisfactory → Proceed to Phase 2
@@ -81,26 +81,26 @@ After all implementations complete, Claude CODE reviews all team results:
 ### Phase 2: Parallel Testing
 After Claude CODE approves all implementations, call testers:
 ```
-Task("team1-tester-spark", test_prompt)
-Task("team2-tester-spark", test_prompt)
-Task("team3-tester-spark", test_prompt)
-Task("team4-tester-spark", test_prompt)
+Task("tester-spark", "Team1: Test implementation from team1_current_task.json")
+Task("tester-spark", "Team2: Test implementation from team2_current_task.json")
+Task("tester-spark", "Team3: Test implementation from team3_current_task.json")
+Task("tester-spark", "Team4: Test implementation from team4_current_task.json")
 ```
 
 Each tester:
 - Reads team JSON for implementation details
 - Creates comprehensive tests (95% coverage target)
-- Updates JSON with test results
+- Updates their team JSON file with 'testing' section
 
 ### Phase 2.5: Claude CODE Testing Review
 After all testing complete, Claude CODE reviews all test results:
 
 ```python
 # Claude CODE reviews each team's test results
-1. Read team1_test_result.json
-2. Read team2_test_result.json
-3. Read team3_test_result.json  
-4. Read team4_test_result.json
+1. Read team1_current_task.json (check 'testing' section)
+2. Read team2_current_task.json (check 'testing' section)
+3. Read team3_current_task.json (check 'testing' section)  
+4. Read team4_current_task.json (check 'testing' section)
 
 # Decision for each team:
 ✅ If test coverage ≥95% and all tests pass → Proceed to Phase 3
@@ -108,12 +108,12 @@ After all testing complete, Claude CODE reviews all test results:
 ```
 
 ### Phase 3: Parallel Documentation
-After testing complete, call documenters:
+After Claude CODE approves all testing, call documenters:
 ```
-Task("team1-documenter-spark", doc_prompt)
-Task("team2-documenter-spark", doc_prompt)
-Task("team3-documenter-spark", doc_prompt)
-Task("team4-documenter-spark", doc_prompt)
+Task("documenter-spark", "Team1: Document from team1_current_task.json")
+Task("documenter-spark", "Team2: Document from team2_current_task.json")
+Task("documenter-spark", "Team3: Document from team3_current_task.json")
+Task("documenter-spark", "Team4: Document from team4_current_task.json")
 ```
 
 ### Phase 3.5: Claude CODE Documentation Review
@@ -121,10 +121,10 @@ After all documentation complete, Claude CODE reviews all documentation results:
 
 ```python
 # Claude CODE reviews each team's documentation
-1. Read team1_documentation_result.json
-2. Read team2_documentation_result.json
-3. Read team3_documentation_result.json
-4. Read team4_documentation_result.json
+1. Read team1_current_task.json (check 'documentation' section)
+2. Read team2_current_task.json (check 'documentation' section)
+3. Read team3_current_task.json (check 'documentation' section)
+4. Read team4_current_task.json (check 'documentation' section)
 
 # Decision for each team:
 ✅ If documentation complete → Mark team as finished

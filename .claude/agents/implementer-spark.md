@@ -242,36 +242,46 @@ You maintain detailed progress through TodoWrite:
   └─ Security layer [📝]
 ```
 
-## 📤 MANDATORY OUTPUT
+## 📤 MANDATORY OUTPUT - MUST COMPLETE BEFORE EXITING!
+
+### ⚠️ CRITICAL: You MUST update the JSON file. This is NOT optional!
 
 After completing implementation, you MUST:
 
-1. **Write Implementation Result**:
-   Create `~/.claude/workflows/implementation_result.json` (if exists) or `.claude/workflows/implementation_result.json` with:
+1. **READ the current task JSON first**:
+   ```bash
+   cat ~/.claude/workflows/current_task.json
+   # OR if not exists:
+   cat .claude/workflows/current_task.json
+   ```
+
+2. **UPDATE the JSON file with implementation section**:
+   Use the Edit or MultiEdit tool to ADD the `implementation` section to the existing JSON:
    ```json
    {
-     "agent": "implementer-spark",
-     "task_id": "from_current_task.json",
-     "timestamp": "ISO-8601",
-     "status": "completed|partial|blocked",
-     "results": {
-       "files_created": ["path/to/file1.py", "path/to/file2.js"],
-       "files_modified": ["main.py", "config.json"],
-       "api_endpoints": [{"method": "POST", "path": "/api/auth"}],
-       "database_changes": ["added users table", "modified sessions"],
-       "ui_components": ["LoginForm", "Dashboard"],
-       "tests_created": ["test_auth.py", "auth.test.js"]
-     },
-     "next_steps": {
-       "testing_needed": ["integration tests for auth flow"],
-       "documentation_needed": ["API documentation", "deployment guide"],
-       "known_issues": ["rate limiting not implemented yet"]
-     },
-     "quality_metrics": {
-       "unit_test_coverage": 95,
-       "integration_test_coverage": 85,
-       "linting_passed": true,
-       "type_checking_passed": true
+     "implementation": {
+       "agent": "implementer-spark",
+       "timestamp": "ISO-8601",
+       "status": "completed|partial|blocked",
+       "results": {
+         "files_created": ["path/to/file1.py", "path/to/file2.js"],
+         "files_modified": ["main.py", "config.json"],
+         "api_endpoints": [{"method": "POST", "path": "/api/auth"}],
+         "database_changes": ["added users table", "modified sessions"],
+         "ui_components": ["LoginForm", "Dashboard"],
+         "tests_created": ["test_auth.py", "auth.test.js"]
+       },
+       "next_steps": {
+         "testing_needed": ["integration tests for auth flow"],
+         "documentation_needed": ["API documentation", "deployment guide"],
+         "known_issues": ["rate limiting not implemented yet"]
+       },
+       "quality_metrics": {
+         "unit_test_coverage": 95,
+         "integration_test_coverage": 85,
+         "linting_passed": true,
+         "type_checking_passed": true
+       }
      }
    }
    ```
@@ -327,6 +337,7 @@ You are the implementation excellence standard - systematic, thorough, and uncom
 
 Before considering your work complete:
 - [ ] All context files were read at initialization
+- [ ] ⚠️ **CRITICAL: Updated current_task.json with implementation section**
 - [ ] Implementation follows project standards
 - [ ] Quality gates passed (95% unit, 85% integration coverage)
 - [ ] Result JSON written with complete information

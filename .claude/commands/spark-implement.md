@@ -34,8 +34,9 @@ This command orchestrates a complete development pipeline with quality gates ens
 # Claude CODE's ORCHESTRATION PROTOCOL (systematic 3-phase execution)
 1. Task("implementer-spark", user_request)  # CALL IMMEDIATELY
 2. Wait for SubagentStop hook signal
-3. Claude CODE reviews implementation_result.json:
-   - Check quality_metrics (linting, type checking)
+3. Claude CODE reviews current_task.json:
+   - Check `implementation` section
+   - Review quality_metrics (linting, type checking)
    - Verify files_created and files_modified
    - Review next_steps and known_issues
 4. DECISION:
@@ -43,30 +44,32 @@ This command orchestrates a complete development pipeline with quality gates ens
    ❌ If issues found → Task("implementer-spark", retry_with_feedback)
 
 5. Wait for tester SubagentStop hook signal  
-6. Claude CODE reviews test_result.json:
-   - Check test coverage (target: 95%+)
-   - Verify all tests passing
+6. Claude CODE reviews current_task.json:
+   - Check `testing` section
+   - Verify test coverage (target: 95%+)
+   - Confirm all tests passing
    - Review test quality metrics
 7. DECISION:
    ✅ If satisfied → Task("documenter-spark", context)
    ❌ If issues found → Task("tester-spark", retry_with_feedback)
 
 8. Wait for documenter SubagentStop hook signal
-9. Claude CODE reviews documentation_result.json:
+9. Claude CODE reviews current_task.json:
+   - Check `documentation` section
    - Verify README updates
-   - Check API documentation
-   - Confirm usage examples
+   - Confirm API documentation
+   - Review usage examples
 10. FINAL DECISION:
     ✅ All phases complete → Report success to user
     ❌ Issues found → Task("documenter-spark", retry_with_feedback)
 ```
 
-⚡ **핵심 원칙**: Claude CODE가 각 단계마다 JSON 결과를 검토하고 다음 에이전트 호출 결정
+⚡ **Core Principle**: Claude CODE reviews JSON results at each phase and decides next agent invocation
 
 ## 📝 Orchestration Process
 
-### Phase 1: Implementation (자동 실행)
-I will immediately delegate to implementer-spark specialist:
+### Phase 1: Implementation
+Claude CODE will delegate to implementer-spark specialist:
 
 1. **Task Assignment**: Request the implementer-spark specialist to implement the feature
 2. **Quality Validation**: The SPARK quality gates hook automatically validates:
@@ -78,19 +81,20 @@ I will immediately delegate to implementer-spark specialist:
 3. **Auto-Retry**: If quality gates fail, the specialist automatically retries (max 3 attempts)
 
 **Quality Review Checklist:**
-- ✅ Syntax validation (구문 오류 0개)
-- ✅ Type checking (MyPy 오류 0개)  
-- ✅ Linting (Ruff 위반 0개)
-- ✅ Security scan (보안 이슈 0개)
-- ✅ Documentation (Docstring 존재)
+- ✅ Syntax validation (0 errors)
+- ✅ Type checking (MyPy 0 errors)  
+- ✅ Linting (Ruff 0 violations)
+- ✅ Security scan (0 issues)
+- ✅ Documentation (Docstrings required)
 
-**Phase 1 → Phase 2 자동 진행:**
-- ✅ 모든 품질 게이트 통과 (5/5) → 자동으로 Phase 2 시작
-- ✅ 구현 완료 감지 → 즉시 테스트 단계로 전환
-- ✅ SubagentStop hook 성공 → 대기 없이 다음 단계 실행
+**Phase 1 → Phase 2 Decision by Claude CODE:**
+- Review `implementation` section in current_task.json
+- Check quality_metrics in the JSON
+- If satisfied → Call tester-spark
+- If issues found → Call implementer-spark again with feedback
 
-### Phase 2: Testing (자동 실행)
-Once quality gates pass, I will immediately engage tester-spark specialist:
+### Phase 2: Testing
+After Claude CODE approves implementation, call tester-spark specialist:
 
 1. **Test Development**: Request comprehensive test creation with 95%+ coverage target
 2. **Test Validation**: The test runner hook automatically verifies:
@@ -101,19 +105,19 @@ Once quality gates pass, I will immediately engage tester-spark specialist:
 3. **Coverage Retry**: If coverage is below 95%, the specialist enhances tests (max 2 attempts)
 
 **Test Quality Review:**
-- ✅ All tests passing (실패 0개)
-- ✅ Coverage ≥ 95% (목표 달성)
-- ✅ Edge cases covered (경계값 테스트)
-- ✅ Integration tests exist (통합 테스트)
+- ✅ All tests passing (0 failures)
+- ✅ Coverage ≥ 95% (target achieved)
+- ✅ Edge cases covered (boundary testing)
+- ✅ Integration tests exist (system testing)
 
-**Phase 2 → Phase 3 자동 진행:**
-- ✅ 모든 테스트 통과 (0 failures) → 자동으로 Phase 3 시작
-- ✅ 커버리지 95% 달성 → 즉시 문서화 단계로 전환
-- ✅ 테스트 품질 검증 완료 → 대기 없이 다음 단계 실행
-- ✅ Hook 검증 통과 → 자동 진행 신호
+**Phase 2 → Phase 3 Decision by Claude CODE:**
+- Review `testing` section in current_task.json
+- Check test coverage (target: 95%+)
+- If satisfied → Call documenter-spark
+- If issues found → Call tester-spark again with feedback
 
-### Phase 3: Documentation (자동 실행)
-Once 95%+ coverage is achieved, I will immediately activate documenter-spark specialist:
+### Phase 3: Documentation
+After Claude CODE approves testing, call documenter-spark specialist:
 
 1. **Documentation Creation**: Request comprehensive documentation including:
    - README updates with new features
@@ -122,14 +126,14 @@ Once 95%+ coverage is achieved, I will immediately activate documenter-spark spe
    - Inline docstrings for all functions
 2. **Final Report**: Generate completion report with all deliverables
 
-**Phase 3 완료 조건:**
-- README.md 업데이트 완료
-- API 문서화 완료 (해당되는 경우)
-- 사용 예제 추가
-- 모든 함수/클래스에 docstring 존재
-- 최종 구현 보고서 작성
+**Phase 3 Completion Criteria:**
+- README.md updated
+- API documentation complete (if applicable)
+- Usage examples added
+- All functions/classes have docstrings
+- Final implementation report generated
 
-## 💡 품질 기준
+## 💡 Quality Standards
 
 ### Implementation Quality (Phase 1)
 - **필수 통과 항목**: Syntax (0), MyPy (0), Ruff (0), Security (0), Docstrings (0)
@@ -140,7 +144,7 @@ Once 95%+ coverage is achieved, I will immediately activate documenter-spark spe
 ### Documentation Quality (Phase 3)
 - **필수 포함**: README updates, API docs, Usage examples, Inline docstrings
 
-## 🚀 사용 예시
+## 🚀 Usage Examples
 
 ```bash
 /implement "Create secure user authentication with JWT tokens"
@@ -148,9 +152,8 @@ Once 95%+ coverage is achieved, I will immediately activate documenter-spark spe
 /implement "Implement data validation pipeline with error handling"
 ```
 
-## 📊 SPARK 효율성
+## 📊 SPARK Efficiency
 
-- **SuperClaude**: 44,000 tokens (all agents loaded)
-- **SPARK**: 5,100 tokens average (88.4% reduction)
-- **Cost Savings**: $0.78 per request
-- **Quality Assurance**: 10 quality gates + automatic retry system
+- **Token Usage**: Lazy-loading architecture (only load required agents)
+- **Quality Assurance**: 8 quality gates + retry system (max 3 attempts)
+- **JSON Communication**: Unified current_task.json for all phases
