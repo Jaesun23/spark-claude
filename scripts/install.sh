@@ -224,24 +224,14 @@ install_commands() {
     print_status "명령어 설치 중..."
     mkdir -p "$INSTALL_LOCATION/commands"
     
-    # Single-agent commands
+    # Single-agent commands (only existing files)
     local single_agent_commands=(
-        "spark-implement.json"
-        "spark-analyze.json"
-        "spark-test.json"
-        "spark-design.json"
-        "spark-troubleshoot.json"
-        "spark-improve.json"
-        "spark-explain.json"
-        "spark-estimate.json"
-        "spark-document.json"
-        "spark-git.json"
-        "spark-build.json"
-        "spark-spawn.json"
-        "spark-index.json"
-        "spark-task.json"
-        "spark-clean.json"
-        "spark-loader.json"
+        "spark-implement.md"
+        "spark-analyze.md"
+        "spark-test.md"
+        "spark-design.md"
+        "spark-fix.md"
+        "spark-clean.md"
     )
     
     for cmd_file in "${single_agent_commands[@]}"; do
@@ -250,10 +240,10 @@ install_commands() {
                 # Apply namespace to command
                 local new_name="${NAMESPACE_PREFIX}-${cmd_file#spark-}"
                 cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/$new_name"
-                echo "  ✓ /$NAMESPACE_PREFIX:${cmd_file#spark-*.json} (namespaced)"
+                echo "  ✓ /$NAMESPACE_PREFIX:${cmd_file#spark-*.md} (namespaced)"
             else
                 cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/"
-                echo "  ✓ /${cmd_file%.json}"
+                echo "  ✓ /${cmd_file%.md}"
             fi
         fi
     done
@@ -267,17 +257,17 @@ install_multi_agent() {
     
     # Multi-agent pipeline commands
     local multi_agent_commands=(
-        "spark-launch.json"    # 5 agents
-        "spark-refactor.json"  # 4 agents
-        "spark-audit.json"     # 4 agents
-        "spark-migrate.json"   # 5 agents
-        "spark-optimize.json"  # 5 agents
+        "spark-launch.md"    # 5 agents
+        "spark-refactor.md"  # 4 agents
+        "spark-audit.md"     # 4 agents
+        "spark-migrate.md"   # 5 agents
+        "spark-optimize.md"  # 5 agents
     )
     
     for cmd_file in "${multi_agent_commands[@]}"; do
         if [ -f ".claude/commands/$cmd_file" ]; then
             cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/"
-            echo "  ✓ /${cmd_file%.json} (pipeline)"
+            echo "  ✓ /${cmd_file%.md} (pipeline)"
         fi
     done
     
@@ -357,6 +347,14 @@ install_memory_reference() {
     fi
     
     if [ -f "$claude_md" ]; then
+        # Create backup before modifying
+        if [ ! -f "$claude_md.spark-backup" ]; then
+            cp "$claude_md" "$claude_md.spark-backup"
+            echo "  ✓ CLAUDE.md 백업 생성: CLAUDE.md.spark-backup"
+        else
+            print_warning "백업 파일이 이미 존재함: CLAUDE.md.spark-backup"
+        fi
+        
         # Check if reference already exists
         if grep -q "@SPARK_AGENTS_MEMORY_REFERENCE.md" "$claude_md"; then
             print_warning "CLAUDE.md에 이미 SPARK 레퍼런스가 있음"
@@ -367,18 +365,10 @@ install_memory_reference() {
 ---
 
 ## 🚀 SPARK Agents Reference
-<!-- SPARK-REFERENCE-START - Remove this section when uninstalling SPARK -->
+<!-- SPARK-REFERENCE-START - This section will be removed when uninstalling SPARK -->
 @SPARK_AGENTS_MEMORY_REFERENCE.md
 
-**⚠️ SPARK 제거 시 주의사항:**
-1. 이 섹션 전체를 삭제하세요 (SPARK-REFERENCE-START부터 SPARK-REFERENCE-END까지)
-2. `SPARK_AGENTS_MEMORY_REFERENCE.md` 파일도 삭제하세요
-3. 삭제 명령어: 
-   ```bash
-   # CLAUDE.md에서 SPARK 섹션 제거 (수동 편집 필요)
-   # 레퍼런스 파일 삭제
-   rm ~/.claude/SPARK_AGENTS_MEMORY_REFERENCE.md
-   ```
+**⚠️ SPARK 제거 시:** uninstall.sh가 자동으로 원본 CLAUDE.md를 복원합니다.
 <!-- SPARK-REFERENCE-END -->
 EOF
             print_success "CLAUDE.md에 SPARK 레퍼런스 추가됨"

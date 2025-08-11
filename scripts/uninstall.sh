@@ -135,24 +135,25 @@ if [ -f "$UNINSTALL_LOCATION/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
     echo "  ✓ 메모리 레퍼런스 파일 제거됨"
 fi
 
-# Clean up CLAUDE.md
-if [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ]; then
-    print_status "CLAUDE.md에서 SPARK 섹션 제거 중..."
+# Restore original CLAUDE.md from backup
+if [ -f "$UNINSTALL_LOCATION/CLAUDE.md.spark-backup" ]; then
+    print_status "CLAUDE.md 원본 복원 중..."
     
-    # Create backup
-    cp "$UNINSTALL_LOCATION/CLAUDE.md" "$UNINSTALL_LOCATION/CLAUDE.md.backup"
-    
-    # Remove SPARK section using sed
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        sed -i '' '/<!-- SPARK-REFERENCE-START/,/<!-- SPARK-REFERENCE-END/d' "$UNINSTALL_LOCATION/CLAUDE.md"
-    else
-        # Linux
-        sed -i '/<!-- SPARK-REFERENCE-START/,/<!-- SPARK-REFERENCE-END/d' "$UNINSTALL_LOCATION/CLAUDE.md"
+    # Save current file as backup just in case
+    if [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ]; then
+        cp "$UNINSTALL_LOCATION/CLAUDE.md" "$UNINSTALL_LOCATION/CLAUDE.md.uninstall-backup"
+        echo "  ✓ 현재 파일 백업: CLAUDE.md.uninstall-backup"
     fi
     
-    echo "  ✓ CLAUDE.md에서 SPARK 섹션 제거됨"
-    echo "  ✓ 백업 파일: CLAUDE.md.backup"
+    # Restore original from spark-backup
+    mv "$UNINSTALL_LOCATION/CLAUDE.md.spark-backup" "$UNINSTALL_LOCATION/CLAUDE.md"
+    echo "  ✓ CLAUDE.md 원본 복원 완료"
+    
+elif [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ]; then
+    print_warning "백업 파일이 없어 수동으로 SPARK 섹션을 제거해야 합니다"
+    echo "  CLAUDE.md 파일에서 다음 섹션을 수동으로 제거하세요:"
+    echo "  - '## 🚀 SPARK Agents Reference' 부터"
+    echo "  - '<!-- SPARK-REFERENCE-END -->' 까지"
 fi
 
 # Clean up settings.json (remove hooks section if it only contains SPARK hooks)
