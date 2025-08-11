@@ -47,8 +47,8 @@ echo -e "${NC}"
 
 # Check if we're in the right directory
 if [ ! -d ".claude" ]; then
-    print_error "This script must be run from the SPARK project root directory"
-    print_error "Make sure you're in the directory containing the .claude folder"
+    print_error "이 스크립트는 SPARK 프로젝트 루트 디렉토리에서 실행해야 합니다"
+    print_error ".claude 폴더가 있는 디렉토리에 있는지 확인하세요"
     exit 1
 fi
 
@@ -86,7 +86,7 @@ check_conflicts() {
     fi
     
     if [ ${#conflicts[@]} -gt 0 ]; then
-        print_warning "Detected potential conflicts:"
+        print_warning "잠재적 충돌이 감지되었습니다:"
         for conflict in "${conflicts[@]}"; do
             echo "  - $conflict"
         done
@@ -97,31 +97,31 @@ check_conflicts() {
 
 # Function to select installation location
 select_location() {
-    echo -e "${GREEN}=== Installation Location Selection ===${NC}"
+    echo -e "${GREEN}=== 설치 위치 선택 ===${NC}"
     echo ""
-    print_option "1) Global Installation (~/.claude/)"
-    echo "   Available for all projects"
+    print_option "1) 전역 설치 (~/.claude/)"
+    echo "   모든 프로젝트에서 사용 가능"
     echo ""
-    print_option "2) Project-specific Installation (project/.claude/)"
-    echo "   Available for specific project only"
+    print_option "2) 프로젝트별 설치 (project/.claude/)"
+    echo "   특정 프로젝트에서만 사용 가능"
     echo ""
-    print_option "3) Current Project Installation (./.claude/)"
-    echo "   Overwrite current directory"
+    print_option "3) 현재 프로젝트 설치 (./.claude/)"
+    echo "   현재 디렉토리 덮어쓰기"
     echo ""
     
-    read -p "Choice [1-3]: " location_choice
+    read -p "선택 [1-3]: " location_choice
     
     case $location_choice in
         1)
             INSTALL_LOCATION="$HOME/.claude"
-            print_status "Global installation selected: $INSTALL_LOCATION"
+            print_status "전역 설치 선택: $INSTALL_LOCATION"
             
             if [ -d "$INSTALL_LOCATION" ]; then
-                print_warning "Existing global installation detected"
+                print_warning "기존 전역 설치 발견됨"
                 if ! check_conflicts "$INSTALL_LOCATION"; then
-                    read -p "Ignore conflicts and continue? (y/N): " ignore_conflicts
+                    read -p "충돌을 무시하고 계속할까요? (y/N): " ignore_conflicts
                     if [[ ! "$ignore_conflicts" =~ ^[Yy]$ ]]; then
-                        print_error "Installation cancelled"
+                        print_error "설치 취소됨"
                         exit 1
                     fi
                     USE_NAMESPACE=true
@@ -129,20 +129,20 @@ select_location() {
             fi
             ;;
         2)
-            read -p "Enter project directory path: " project_dir
+            read -p "프로젝트 디렉토리 경로 입력: " project_dir
             if [ ! -d "$project_dir" ]; then
-                print_error "Directory does not exist: $project_dir"
+                print_error "디렉토리가 존재하지 않음: $project_dir"
                 exit 1
             fi
             INSTALL_LOCATION="$project_dir/.claude"
-            print_status "Project installation selected: $INSTALL_LOCATION"
+            print_status "프로젝트 설치 선택: $INSTALL_LOCATION"
             ;;
         3)
             INSTALL_LOCATION="./.claude"
-            print_status "Current project overwrite selected"
+            print_status "현재 프로젝트 덮어쓰기 선택"
             ;;
         *)
-            print_error "Invalid selection"
+            print_error "잘못된 선택"
             exit 1
             ;;
     esac
@@ -151,63 +151,63 @@ select_location() {
 # Function to select components
 select_components() {
     echo ""
-    echo -e "${GREEN}=== Installation Components Selection ===${NC}"
+    echo -e "${GREEN}=== 설치 구성요소 선택 ===${NC}"
     echo ""
     
-    print_option "Select components to install:"
+    print_option "설치할 구성요소를 선택하세요:"
     echo ""
     
     # Agents
-    read -p "1) Install SPARK agents (16 agents)? (Y/n): " install_agents
+    read -p "1) SPARK 에이전트 (16개) 설치? (Y/n): " install_agents
     if [[ ! "$install_agents" =~ ^[Nn]$ ]]; then
         INSTALL_AGENTS=true
-        print_success "✓ Agents scheduled for installation"
+        print_success "✓ 에이전트 설치 예정"
     fi
     
     # Commands
-    read -p "2) Install single agent commands? (Y/n): " install_commands
+    read -p "2) 단일 에이전트 명령어 설치? (Y/n): " install_commands
     if [[ ! "$install_commands" =~ ^[Nn]$ ]]; then
         INSTALL_COMMANDS=true
-        print_success "✓ Commands scheduled for installation"
+        print_success "✓ 명령어 설치 예정"
         
         if [ "$USE_NAMESPACE" = true ]; then
-            read -p "   Use namespace? (e.g., /spark:implement) (Y/n): " use_ns
+            read -p "   네임스페이스 사용? (예: /spark:implement) (Y/n): " use_ns
             if [[ ! "$use_ns" =~ ^[Nn]$ ]]; then
-                read -p "   Enter namespace prefix (default: spark): " ns_prefix
+                read -p "   네임스페이스 접두어 입력 (기본: spark): " ns_prefix
                 NAMESPACE_PREFIX="${ns_prefix:-spark}"
-                print_status "   Namespace: /$NAMESPACE_PREFIX:*"
+                print_status "   네임스페이스: /$NAMESPACE_PREFIX:*"
             fi
         fi
     fi
     
     # Multi-agent pipelines
-    read -p "3) Install multi-agent pipelines? (requires hooks) (Y/n): " install_multi
+    read -p "3) 다중 에이전트 파이프라인 설치? (훅 필요) (Y/n): " install_multi
     if [[ ! "$install_multi" =~ ^[Nn]$ ]]; then
         INSTALL_MULTI_AGENT=true
         INSTALL_HOOKS=true
         INSTALL_WORKFLOWS=true
-        print_success "✓ Multi-agent pipelines scheduled for installation"
-        print_success "✓ Hooks and workflows automatically included"
+        print_success "✓ 다중 에이전트 파이프라인 설치 예정"
+        print_success "✓ 훅 및 워크플로우 자동 포함"
     else
         # Hooks (only if not installing multi-agent)
-        read -p "4) Install hook scripts? (y/N): " install_hooks
+        read -p "4) 훅 스크립트 설치? (y/N): " install_hooks
         if [[ "$install_hooks" =~ ^[Yy]$ ]]; then
             INSTALL_HOOKS=true
-            print_success "✓ Hooks scheduled for installation"
+            print_success "✓ 훅 설치 예정"
         fi
         
         # Workflows
-        read -p "5) Install workflow settings? (y/N): " install_workflows
+        read -p "5) 워크플로우 설정 설치? (y/N): " install_workflows
         if [[ "$install_workflows" =~ ^[Yy]$ ]]; then
             INSTALL_WORKFLOWS=true
-            print_success "✓ Workflows scheduled for installation"
+            print_success "✓ 워크플로우 설치 예정"
         fi
     fi
 }
 
 # Function to install agents
 install_agents() {
-    print_status "Installing agents..."
+    print_status "에이전트 설치 중..."
     mkdir -p "$INSTALL_LOCATION/agents"
     
     for agent in .claude/agents/*.md; do
@@ -216,12 +216,12 @@ install_agents() {
         echo "  ✓ $agent_name"
     done
     
-    print_success "16 agents installation completed"
+    print_success "16개 에이전트 설치 완료"
 }
 
 # Function to install commands
 install_commands() {
-    print_status "Installing commands..."
+    print_status "명령어 설치 중..."
     mkdir -p "$INSTALL_LOCATION/commands"
     
     # Single-agent commands (only existing files)
@@ -241,7 +241,7 @@ install_commands() {
                 # Apply namespace to command
                 local new_name="${NAMESPACE_PREFIX}-${cmd_file#spark-}"
                 cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/$new_name"
-                echo "  ✓ /$NAMESPACE_PREFIX:${cmd_file#spark-*.md} (namespaced)"
+                echo "  ✓ /$NAMESPACE_PREFIX:${cmd_file#spark-*.md} (네임스페이스 적용)"
             else
                 cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/"
                 echo "  ✓ /${cmd_file%.md}"
@@ -253,15 +253,15 @@ install_commands() {
     if [ -f ".claude/commands/multi_implement.py" ]; then
         cp ".claude/commands/multi_implement.py" "$INSTALL_LOCATION/commands/"
         chmod +x "$INSTALL_LOCATION/commands/multi_implement.py"
-        echo "  ✓ multi_implement.py (utility script)"
+        echo "  ✓ multi_implement.py (유틸리티 스크립트)"
     fi
     
-    print_success "Single agent commands installation completed"
+    print_success "단일 에이전트 명령어 설치 완료"
 }
 
 # Function to install multi-agent pipelines
 install_multi_agent() {
-    print_status "Installing multi-agent pipelines..."
+    print_status "다중 에이전트 파이프라인 설치 중..."
     
     # Multi-agent pipeline commands
     local multi_agent_commands=(
@@ -275,16 +275,16 @@ install_multi_agent() {
     for cmd_file in "${multi_agent_commands[@]}"; do
         if [ -f ".claude/commands/$cmd_file" ]; then
             cp ".claude/commands/$cmd_file" "$INSTALL_LOCATION/commands/"
-            echo "  ✓ /${cmd_file%.md} (pipeline)"
+            echo "  ✓ /${cmd_file%.md} (파이프라인)"
         fi
     done
     
-    print_success "Multi-agent pipelines installation completed"
+    print_success "다중 에이전트 파이프라인 설치 완료"
 }
 
 # Function to install hooks
 install_hooks() {
-    print_status "Installing hook scripts..."
+    print_status "훅 스크립트 설치 중..."
     mkdir -p "$INSTALL_LOCATION/hooks"
     
     # Copy all Python hook scripts
@@ -297,12 +297,12 @@ install_hooks() {
         fi
     done
     
-    print_success "Hook scripts installation completed"
+    print_success "훅 스크립트 설치 완료"
 }
 
 # Function to install workflows
 install_workflows() {
-    print_status "Installing workflow settings..."
+    print_status "워크플로우 설정 설치 중..."
     mkdir -p "$INSTALL_LOCATION/workflows"
     
     # Copy workflow JSON files if they exist
@@ -319,34 +319,34 @@ install_workflows() {
     # Create empty JSON files for state management
     if [ ! -f "$INSTALL_LOCATION/workflows/current_task.json" ]; then
         echo '{}' > "$INSTALL_LOCATION/workflows/current_task.json"
-        echo "  ✓ current_task.json (initialized)"
+        echo "  ✓ current_task.json (초기화)"
     fi
     
     if [ ! -f "$INSTALL_LOCATION/workflows/unified_context.json" ]; then
         echo '{}' > "$INSTALL_LOCATION/workflows/unified_context.json"
-        echo "  ✓ unified_context.json (initialized)"
+        echo "  ✓ unified_context.json (초기화)"
     fi
     
-    print_success "Workflow settings installation completed"
+    print_success "워크플로우 설정 설치 완료"
 }
 
 # Function to install memory reference and update CLAUDE.md
 install_memory_reference() {
-    print_status "Installing memory reference and updating CLAUDE.md..."
+    print_status "메모리 레퍼런스 설치 및 CLAUDE.md 업데이트 중..."
     
     # Create backup directory if it doesn't exist
     local backup_dir="$INSTALL_LOCATION/.spark-backup"
     if [ ! -d "$backup_dir" ]; then
         mkdir -p "$backup_dir"
-        echo "  ✓ Backup directory created: .spark-backup/"
+        echo "  ✓ 백업 디렉토리 생성: .spark-backup/"
     fi
     
     # Copy SPARK_AGENTS_MEMORY_REFERENCE.md to installation location
     if [ -f "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
         cp "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" "$INSTALL_LOCATION/"
-        echo "  ✓ SPARK_AGENTS_MEMORY_REFERENCE.md copied"
+        echo "  ✓ SPARK_AGENTS_MEMORY_REFERENCE.md 복사됨"
     else
-        print_warning "SPARK_AGENTS_MEMORY_REFERENCE.md file not found"
+        print_warning "SPARK_AGENTS_MEMORY_REFERENCE.md 파일을 찾을 수 없음"
         return
     fi
     
@@ -365,14 +365,14 @@ install_memory_reference() {
         # Create backup before modifying
         if [ ! -f "$backup_dir/CLAUDE.md.original" ]; then
             cp "$claude_md" "$backup_dir/CLAUDE.md.original"
-            echo "  ✓ CLAUDE.md backup created: .spark-backup/CLAUDE.md.original"
+            echo "  ✓ CLAUDE.md 백업 생성: .spark-backup/CLAUDE.md.original"
         else
-            print_warning "Backup file already exists: .spark-backup/CLAUDE.md.original"
+            print_warning "백업 파일이 이미 존재함: .spark-backup/CLAUDE.md.original"
         fi
         
         # Check if reference already exists
         if grep -q "@SPARK_AGENTS_MEMORY_REFERENCE.md" "$claude_md"; then
-            print_warning "SPARK reference already exists in CLAUDE.md"
+            print_warning "CLAUDE.md에 이미 SPARK 레퍼런스가 있음"
         else
             # Add SPARK reference to the end of CLAUDE.md
             cat >> "$claude_md" << 'EOF'
@@ -383,23 +383,23 @@ install_memory_reference() {
 <!-- SPARK-REFERENCE-START - This section will be removed when uninstalling SPARK -->
 @SPARK_AGENTS_MEMORY_REFERENCE.md
 
-**⚠️ When uninstalling SPARK:** uninstall.sh will automatically restore the original CLAUDE.md.
+**⚠️ SPARK 제거 시:** uninstall.sh가 자동으로 원본 CLAUDE.md를 복원합니다.
 <!-- SPARK-REFERENCE-END -->
 EOF
-            print_success "SPARK reference added to CLAUDE.md"
+            print_success "CLAUDE.md에 SPARK 레퍼런스 추가됨"
         fi
     else
-        print_warning "CLAUDE.md file not found - manual addition required"
-        echo "  Add the following content to the end of your CLAUDE.md file:"
+        print_warning "CLAUDE.md 파일을 찾을 수 없음 - 수동으로 추가 필요"
+        echo "  다음 내용을 CLAUDE.md 파일 끝에 추가하세요:"
         echo "  @SPARK_AGENTS_MEMORY_REFERENCE.md"
     fi
     
-    print_success "Memory reference installation completed"
+    print_success "메모리 레퍼런스 설치 완료"
 }
 
 # Function to configure settings.json
 configure_settings() {
-    print_status "Configuring settings.json..."
+    print_status "settings.json 구성 중..."
     
     local settings_file="$INSTALL_LOCATION/settings.json"
     local backup_dir="$INSTALL_LOCATION/.spark-backup"
@@ -413,7 +413,7 @@ configure_settings() {
     if [ -f "$settings_file" ]; then
         if [ ! -f "$backup_dir/settings.json.original" ]; then
             cp "$settings_file" "$backup_dir/settings.json.original"
-            print_warning "Existing settings backed up: .spark-backup/settings.json.original"
+            print_warning "기존 설정 백업: .spark-backup/settings.json.original"
         fi
     fi
     
@@ -432,13 +432,13 @@ configure_settings() {
     "UserPromptSubmit": [
       {
         "command": "$HOOK_PATH/spark_persona_router.py",
-        "description": "SPARK Persona Router - Task analysis and optimal agent selection"
+        "description": "SPARK 페르소나 라우터 - 작업 분석 및 최적 에이전트 선택"
       }
     ],
     "SubagentStop": [
       {
         "command": "$HOOK_PATH/spark_quality_gates.py",
-        "description": "SPARK Quality Gates - Jason's 8-step strict validation"
+        "description": "SPARK 품질 게이트 - Jason의 8단계 엄격 검증"
       }
     ]
   },
@@ -459,7 +459,7 @@ configure_settings() {
   }
 }
 EOF
-        print_success "settings.json with hooks created"
+        print_success "훅이 포함된 settings.json 생성됨"
     else
         # Minimal settings without hooks
         cat > "$settings_file" << 'EOF'
@@ -471,79 +471,79 @@ EOF
   }
 }
 EOF
-        print_success "Basic settings.json created"
+        print_success "기본 settings.json 생성됨"
     fi
 }
 
 # Function to show installation summary
 show_summary() {
     echo ""
-    echo -e "${GREEN}⚡⚡⚡ Installation Complete! ⚡⚡⚡${NC}"
+    echo -e "${GREEN}⚡⚡⚡ 설치 완료! ⚡⚡⚡${NC}"
     echo ""
-    echo -e "${CYAN}Installed Components:${NC}"
+    echo -e "${CYAN}설치된 구성요소:${NC}"
     
-    [ "$INSTALL_AGENTS" = true ] && echo "  ✓ 16 SPARK agents"
-    [ "$INSTALL_COMMANDS" = true ] && echo "  ✓ Single agent commands"
-    [ "$INSTALL_MULTI_AGENT" = true ] && echo "  ✓ Multi-agent pipelines"
-    [ "$INSTALL_HOOKS" = true ] && echo "  ✓ Hook scripts"
-    [ "$INSTALL_WORKFLOWS" = true ] && echo "  ✓ Workflow settings"
+    [ "$INSTALL_AGENTS" = true ] && echo "  ✓ 16개 SPARK 에이전트"
+    [ "$INSTALL_COMMANDS" = true ] && echo "  ✓ 단일 에이전트 명령어"
+    [ "$INSTALL_MULTI_AGENT" = true ] && echo "  ✓ 다중 에이전트 파이프라인"
+    [ "$INSTALL_HOOKS" = true ] && echo "  ✓ 훅 스크립트"
+    [ "$INSTALL_WORKFLOWS" = true ] && echo "  ✓ 워크플로우 설정"
     
     echo ""
-    echo -e "${CYAN}Installation Location:${NC} $INSTALL_LOCATION"
+    echo -e "${CYAN}설치 위치:${NC} $INSTALL_LOCATION"
     
     if [ -n "$NAMESPACE_PREFIX" ]; then
-        echo -e "${CYAN}Namespace:${NC} /$NAMESPACE_PREFIX:*"
+        echo -e "${CYAN}네임스페이스:${NC} /$NAMESPACE_PREFIX:*"
     fi
     
     echo ""
-    echo -e "${GREEN}Next Steps:${NC}"
-    echo "1. Restart Claude Code to load new settings"
+    echo -e "${GREEN}다음 단계:${NC}"
+    echo "1. Claude Code 재시작하여 새 설정 로드"
     
     if [ "$INSTALL_COMMANDS" = true ]; then
-        echo "2. Try SPARK commands:"
+        echo "2. SPARK 명령어 사용해보기:"
         if [ -n "$NAMESPACE_PREFIX" ]; then
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:implement \"user authentication\"${NC}"
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:test \"create unit tests\"${NC}"
+            echo "   ${BLUE}/$NAMESPACE_PREFIX:implement \"사용자 인증\"${NC}"
+            echo "   ${BLUE}/$NAMESPACE_PREFIX:test \"유닛 테스트 생성\"${NC}"
         else
-            echo "   ${BLUE}/spark-implement \"user authentication\"${NC}"
-            echo "   ${BLUE}/spark-test \"create unit tests\"${NC}"
+            echo "   ${BLUE}/spark-implement \"사용자 인증\"${NC}"
+            echo "   ${BLUE}/spark-test \"유닛 테스트 생성\"${NC}"
         fi
     fi
     
     if [ "$INSTALL_MULTI_AGENT" = true ]; then
-        echo "3. Use multi-agent pipelines:"
-        echo "   ${BLUE}/spark-launch \"new feature\"${NC} - Full development pipeline"
-        echo "   ${BLUE}/spark-optimize \"improve performance\"${NC} - Performance optimization"
-        echo "   ${BLUE}/spark-audit \"security check\"${NC} - Security audit"
+        echo "3. 다중 에이전트 파이프라인 사용:"
+        echo "   ${BLUE}/spark-launch \"새 기능\"${NC} - 전체 개발 파이프라인"
+        echo "   ${BLUE}/spark-optimize \"성능 개선\"${NC} - 성능 최적화"
+        echo "   ${BLUE}/spark-audit \"보안 검사\"${NC} - 보안 감사"
     fi
     
     echo ""
-    echo -e "${CYAN}Key Features:${NC}"
-    echo "• 88.4% token efficiency (verified)"
-    echo "• 16 specialized agents"
-    echo "• Jason's 8-step strict quality gates"
-    echo "• Automatic persona activation"
-    echo "• Task concurrent invocation pattern"
-    echo "• Fallback path support (global/project auto-detection)"
+    echo -e "${CYAN}주요 기능:${NC}"
+    echo "• 88.4% 토큰 효율성 (검증됨)"
+    echo "• 16개 전문 에이전트"
+    echo "• Jason의 8단계 엄격 품질 게이트"
+    echo "• 자동 페르소나 활성화"
+    echo "• Task 동시 호출 패턴"
+    echo "• Fallback 경로 지원 (전역/프로젝트 자동 감지)"
     
     if [ "$INSTALL_AGENTS" = true ]; then
-        echo "• Memory reference auto-installation (CLAUDE.md updated)"
+        echo "• 메모리 레퍼런스 자동 설치 (CLAUDE.md 업데이트)"
     fi
     
     if [[ "$INSTALL_LOCATION" == "$HOME/.claude" ]]; then
         echo ""
-        echo -e "${YELLOW}Note:${NC}"
-        echo "• Globally installed agents are available for all projects"
-        echo "• Workflow files are stored in ~/.claude/workflows/"
-        echo "• Create .claude/ directory for project-specific settings when needed"
-        echo "• @SPARK_AGENTS_MEMORY_REFERENCE.md added to CLAUDE.md"
+        echo -e "${YELLOW}참고:${NC}"
+        echo "• 전역 설치된 에이전트는 모든 프로젝트에서 사용 가능"
+        echo "• 워크플로우 파일은 ~/.claude/workflows/에 저장됨"
+        echo "• 프로젝트별 설정이 필요한 경우 .claude/ 디렉토리 생성"
+        echo "• CLAUDE.md에 @SPARK_AGENTS_MEMORY_REFERENCE.md 추가됨"
     fi
     
     echo ""
-    echo -e "${BLUE}Documentation:${NC} https://github.com/Jaesun23/spark-claude"
-    echo -e "${BLUE}Guide:${NC} /Users/jason/Projects/spark-claude/docs/SPARK_COMPLETE_GUIDE.md"
+    echo -e "${BLUE}문서:${NC} https://github.com/Jaesun23/spark-claude"
+    echo -e "${BLUE}가이드:${NC} /Users/jason/Projects/spark-claude/docs/SPARK_COMPLETE_GUIDE.md"
     echo ""
-    print_success "Happy coding with SPARK! ⚡"
+    print_success "SPARK와 함께 즐거운 코딩하세요! ⚡"
 }
 
 # Main installation flow
@@ -556,24 +556,24 @@ main() {
     
     # Step 3: Confirm installation
     echo ""
-    echo -e "${YELLOW}=== Installation Confirmation ===${NC}"
-    echo "Location: $INSTALL_LOCATION"
-    echo "Components:"
-    [ "$INSTALL_AGENTS" = true ] && echo "  • Agents"
-    [ "$INSTALL_COMMANDS" = true ] && echo "  • Commands"
-    [ "$INSTALL_MULTI_AGENT" = true ] && echo "  • Multi-agent pipelines"
-    [ "$INSTALL_HOOKS" = true ] && echo "  • Hooks"
-    [ "$INSTALL_WORKFLOWS" = true ] && echo "  • Workflows"
+    echo -e "${YELLOW}=== 설치 확인 ===${NC}"
+    echo "위치: $INSTALL_LOCATION"
+    echo "구성요소:"
+    [ "$INSTALL_AGENTS" = true ] && echo "  • 에이전트"
+    [ "$INSTALL_COMMANDS" = true ] && echo "  • 명령어"
+    [ "$INSTALL_MULTI_AGENT" = true ] && echo "  • 다중 에이전트 파이프라인"
+    [ "$INSTALL_HOOKS" = true ] && echo "  • 훅"
+    [ "$INSTALL_WORKFLOWS" = true ] && echo "  • 워크플로우"
     echo ""
     
-    read -p "Proceed with installation? (y/N): " confirm
+    read -p "설치를 진행할까요? (y/N): " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        print_warning "Installation cancelled"
+        print_warning "설치 취소됨"
         exit 0
     fi
     
     # Step 4: Create directories
-    print_status "Creating directories..."
+    print_status "디렉토리 생성 중..."
     mkdir -p "$INSTALL_LOCATION"
     
     # Step 5: Install components

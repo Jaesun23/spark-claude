@@ -73,6 +73,12 @@ cd spark-claude
 /spark-optimize "optimize database queries and API response times"
 ```
 
+**4-Team Parallel Execution:**
+```bash
+/multi-implement "user auth API" "dashboard UI" "payment service" "analytics module"
+# Executes 4 independent tasks simultaneously with 3.1x speedup!
+```
+
 ### 3. **Watch the Magic**
 - SPARK automatically activates appropriate personas (Backend, Frontend, Security, etc.)
 - **SuperClaude Integration**: All agents incorporate 5-Phase methodology patterns

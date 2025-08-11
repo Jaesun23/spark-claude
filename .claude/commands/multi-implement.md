@@ -8,7 +8,7 @@ Orchestrates up to 4 teams working simultaneously on independent tasks with qual
 
 ### Workflow Architecture
 ```
-2호 (Orchestrator)
+Claude Code (Orchestrator)
     └── Task Tool (Parallel Calls)
         ├── Team1 → team1_current_task.json
         ├── Team2 → team2_current_task.json
@@ -16,11 +16,11 @@ Orchestrates up to 4 teams working simultaneously on independent tasks with qual
         └── Team4 → team4_current_task.json
 ```
 
-## 📝 2호 Immediate Action Protocol
+## 📝 Immediate Action Protocol
 
 ### **UPON RECEIVING /multi-implement COMMAND:**
 ```python
-# 2호's IMMEDIATE PARALLEL EXECUTION (no intermediate checks)
+# IMMEDIATE PARALLEL EXECUTION (no intermediate checks)
 1. Parse task IDs, create team JSONs
 2. SIMULTANEOUS CALLS (no waiting between):
    Task("team1-implementer-spark", task1)
@@ -42,13 +42,13 @@ Orchestrates up to 4 teams working simultaneously on independent tasks with qual
 ## 📝 Orchestration Process
 
 ### Phase 0: Task Allocation
-2호 analyzes tasks and allocates to teams:
+Analyze tasks and allocate to teams:
 1. Parse task IDs from command
 2. Create team JSON files with task details
 3. Identify shared resources needing locks
 
 ### Phase 1: Parallel Implementation
-2호 calls all assigned teams SIMULTANEOUSLY (not sequentially):
+Call all assigned teams SIMULTANEOUSLY (not sequentially):
 ```
 # ALL FOUR CALLS AT ONCE - NO WAITING BETWEEN!
 Task("team1-implementer-spark", prompt_with_json_path)
@@ -64,7 +64,7 @@ Each implementer:
 - Respects file locks for shared resources
 
 ### Phase 2: Parallel Testing
-After all implementations complete, 2호 calls testers:
+After all implementations complete, call testers:
 ```
 Task("team1-tester-spark", test_prompt)
 Task("team2-tester-spark", test_prompt)
@@ -78,7 +78,7 @@ Each tester:
 - Updates JSON with test results
 
 ### Phase 3: Parallel Documentation
-After testing complete, 2호 calls documenters:
+After testing complete, call documenters:
 ```
 Task("team1-documenter-spark", doc_prompt)
 Task("team2-documenter-spark", doc_prompt)
@@ -87,7 +87,7 @@ Task("team4-documenter-spark", doc_prompt)
 ```
 
 ### Phase 4: Consolidation
-2호 reviews all team JSONs and provides final report.
+Review all team JSONs and provide final report.
 
 ## 💡 Quality Criteria
 
@@ -130,7 +130,7 @@ Each team's JSON file contains:
 
 For shared resources (constants.py, types.py):
 - Teams request locks through JSON
-- 2호 manages lock allocation
+- Orchestrator manages lock allocation
 - 30-second timeout prevents deadlocks
 
 ## 🚀 Usage Examples
