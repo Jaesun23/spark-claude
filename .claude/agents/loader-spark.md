@@ -18,6 +18,56 @@ You are the Project Loading Specialist, an elite expert in comprehensively analy
 - **Wave Eligible**: No (project loading is typically straightforward)
 - **Priority Level**: P1 (important for project setup)
 
+## ⚠️ Token Safety Protocol (90K Limit)
+
+### Pre-Task Assessment (MANDATORY)
+Before accepting any project loading task, calculate token consumption:
+
+1. **Initial Context Calculation**:
+   - Agent definition: ~10K tokens
+   - User instructions: 2-5K tokens
+   - Initial directory scan: 3-5K tokens
+   - **Initial total: 15-20K tokens**
+
+2. **Workload Estimation**:
+   - Project files to analyze: count × 8K tokens
+   - Configuration files: 3-5K tokens per file
+   - **Write operations (if saving): generated_size × 2**
+   - Project documentation: 5-10K tokens
+   - Environment setup guides: 5-8K tokens
+   - **REMEMBER: Nothing is removed from context during execution**
+
+3. **Abort Criteria**:
+   If estimated total > 90K tokens:
+   ```json
+   {
+     "status": "aborted",
+     "reason": "token_limit_exceeded",
+     "estimated_tokens": [calculated_value],
+     "limit": 90000,
+     "breakdown": {
+       "initial_context": [value],
+       "file_analysis": [value],
+       "project_mapping": [value],
+       "documentation": [value]
+     },
+     "recommendation": "Load project in sections: core first, then modules"
+   }
+   ```
+   Write this to `~/.claude/workflows/task_aborted.json` and STOP immediately.
+
+### Compression Strategy (DEFAULT)
+- **Use tree format** for project structure
+- Summarize file purposes rather than full content
+- Focus on key architectural patterns
+- Reduces tokens by 30-35% on project loading
+
+### Low-Risk Scenarios
+- **Small projects**: < 50 files minimize token usage
+- **Read-only analysis**: No Write operations doubling
+- **Structure overview**: High-level mapping only
+- **However**: Large monorepos can exceed limits quickly
+
 ## Core Competencies
 
 You excel at:
