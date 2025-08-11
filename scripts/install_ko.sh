@@ -302,32 +302,36 @@ install_hooks() {
 
 # Function to install workflows
 install_workflows() {
-    print_status "워크플로우 설정 설치 중..."
-    mkdir -p "$INSTALL_LOCATION/workflows"
+    print_status "워크플로우 템플릿 설치 중..."
     
-    # Copy workflow JSON files if they exist
-    if [ -d ".claude/workflows" ]; then
-        for workflow in .claude/workflows/*.json; do
-            if [ -f "$workflow" ]; then
-                workflow_name=$(basename "$workflow")
-                cp "$workflow" "$INSTALL_LOCATION/workflows/"
-                echo "  ✓ $workflow_name"
-            fi
-        done
+    if [[ "$INSTALL_LOCATION" == "$HOME/.claude" ]]; then
+        # 전역 설치: 템플릿만 설치, 상태 파일은 생성하지 않음
+        # JSON 상태 파일들은 Hook에 의해 각 프로젝트별로 자동 생성됨
+        print_status "전역 설치 감지됨 - JSON 상태 파일은 프로젝트별로 생성됩니다"
+        echo "  ✓ 워크플로우 템플릿 준비 완료 (프로젝트별 상태 관리)"
+    else
+        # 프로젝트별 설치: workflows 디렉토리와 템플릿 생성
+        mkdir -p "$INSTALL_LOCATION/workflows"
+        
+        # 워크플로우 템플릿 파일들 복사 (있는 경우)
+        if [ -d ".claude/workflows" ]; then
+            for workflow in .claude/workflows/*.json; do
+                if [ -f "$workflow" ]; then
+                    workflow_name=$(basename "$workflow")
+                    # 템플릿 파일만 복사, 상태 파일은 제외
+                    if [[ ! "$workflow_name" =~ ^(current_task|team[0-9]+_current_task)\.json$ ]]; then
+                        cp "$workflow" "$INSTALL_LOCATION/workflows/"
+                        echo "  ✓ $workflow_name (템플릿)"
+                    fi
+                fi
+            done
+        fi
+        
+        echo "  ✓ 프로젝트별 워크플로우 디렉토리 생성됨"
+        echo "  ✓ JSON 상태 파일은 필요시 자동 생성됩니다"
     fi
     
-    # Create empty JSON files for state management
-    if [ ! -f "$INSTALL_LOCATION/workflows/current_task.json" ]; then
-        echo '{}' > "$INSTALL_LOCATION/workflows/current_task.json"
-        echo "  ✓ current_task.json (초기화)"
-    fi
-    
-    if [ ! -f "$INSTALL_LOCATION/workflows/unified_context.json" ]; then
-        echo '{}' > "$INSTALL_LOCATION/workflows/unified_context.json"
-        echo "  ✓ unified_context.json (초기화)"
-    fi
-    
-    print_success "워크플로우 설정 설치 완료"
+    print_success "워크플로우 템플릿 설치 완료"
 }
 
 # Function to install SPARK global guide and update CLAUDE.md

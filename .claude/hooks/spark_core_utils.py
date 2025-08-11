@@ -168,18 +168,21 @@ class StateManager:
     def __init__(self):
         # Find project root first
         project_root = self._find_project_root()
-        # Check for project-level workflows first, then global
+        # Always use project-level workflows (JSON files are project-specific state)
         project_workflows = project_root / ".claude/workflows"
-        global_workflows = Path.home() / ".claude" / "workflows"
         
-        if project_workflows.exists():
-            self.state_dir = project_workflows.resolve()
-        else:
-            self.state_dir = global_workflows
-            
+        # Create project workflows directory if it doesn't exist
+        project_workflows.mkdir(parents=True, exist_ok=True)
+        self.state_dir = project_workflows.resolve()
+        
         self.state_file = self.state_dir / "current_task.json"
         self._ensure_state_dir()
         self.lock_manager = FileLockManager()
+        
+        # Log for debugging
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Using project workflows directory: {self.state_dir}")
     
     def _ensure_state_dir(self):
         """Ensure state directory exists"""

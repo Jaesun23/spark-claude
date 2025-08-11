@@ -303,32 +303,36 @@ install_hooks() {
 
 # Function to install workflows
 install_workflows() {
-    print_status "Installing workflow settings..."
-    mkdir -p "$INSTALL_LOCATION/workflows"
+    print_status "Installing workflow templates..."
     
-    # Copy workflow JSON files if they exist
-    if [ -d ".claude/workflows" ]; then
-        for workflow in .claude/workflows/*.json; do
-            if [ -f "$workflow" ]; then
-                workflow_name=$(basename "$workflow")
-                cp "$workflow" "$INSTALL_LOCATION/workflows/"
-                echo "  ✓ $workflow_name"
-            fi
-        done
+    if [[ "$INSTALL_LOCATION" == "$HOME/.claude" ]]; then
+        # Global installation: Only install templates, not state files
+        # JSON state files will be created per-project by hooks automatically
+        print_status "Global installation detected - JSON state files will be created per-project"
+        echo "  ✓ Workflow templates ready (per-project state management)"
+    else
+        # Project-specific installation: Create workflows directory and templates
+        mkdir -p "$INSTALL_LOCATION/workflows"
+        
+        # Copy workflow template files if they exist
+        if [ -d ".claude/workflows" ]; then
+            for workflow in .claude/workflows/*.json; do
+                if [ -f "$workflow" ]; then
+                    workflow_name=$(basename "$workflow")
+                    # Only copy template files, not state files
+                    if [[ ! "$workflow_name" =~ ^(current_task|team[0-9]+_current_task)\.json$ ]]; then
+                        cp "$workflow" "$INSTALL_LOCATION/workflows/"
+                        echo "  ✓ $workflow_name (template)"
+                    fi
+                fi
+            done
+        fi
+        
+        echo "  ✓ Project-specific workflows directory created"
+        echo "  ✓ JSON state files will be auto-created when needed"
     fi
     
-    # Create empty JSON files for state management
-    if [ ! -f "$INSTALL_LOCATION/workflows/current_task.json" ]; then
-        echo '{}' > "$INSTALL_LOCATION/workflows/current_task.json"
-        echo "  ✓ current_task.json (initialized)"
-    fi
-    
-    if [ ! -f "$INSTALL_LOCATION/workflows/unified_context.json" ]; then
-        echo '{}' > "$INSTALL_LOCATION/workflows/unified_context.json"
-        echo "  ✓ unified_context.json (initialized)"
-    fi
-    
-    print_success "Workflow settings installation completed"
+    print_success "Workflow template installation completed"
 }
 
 # Function to install SPARK global guide and update CLAUDE.md
