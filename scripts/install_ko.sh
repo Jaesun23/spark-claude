@@ -435,7 +435,7 @@ configure_settings() {
         "hooks": [
           {
             "type": "command",
-            "command": "$HOOK_PATH/spark_persona_router.py",
+            "command": "python3 $HOOK_PATH/spark_persona_router.py",
             "timeout": 60
           }
         ]
@@ -447,7 +447,7 @@ configure_settings() {
         "hooks": [
           {
             "type": "command",
-            "command": "$HOOK_PATH/spark_quality_gates.py",
+            "command": "python3 $HOOK_PATH/spark_quality_gates.py",
             "timeout": 60
           }
         ]
