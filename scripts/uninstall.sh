@@ -89,7 +89,9 @@ echo "The following items will be removed:"
 [ -d "$UNINSTALL_LOCATION/hooks" ] && echo "  • SPARK hooks (spark_*.py)"
 [ -d "$UNINSTALL_LOCATION/workflows" ] && echo "  • SPARK workflow settings"
 [ -f "$UNINSTALL_LOCATION/SPARK_AGENTS_MEMORY_REFERENCE.md" ] && echo "  • Memory reference file"
+[ -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ] && echo "  • SPARK global guide file"
 [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ] && echo "  • SPARK section in CLAUDE.md"
+[ -f "$HOME/.claude/CLAUDE.md" ] && echo "  • SPARK references in ~/.claude/CLAUDE.md"
 
 echo ""
 read -p "Are you sure you want to remove them? (y/N): " confirm
@@ -135,22 +137,39 @@ if [ -f "$UNINSTALL_LOCATION/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
     echo "  ✓ Memory reference file removed"
 fi
 
+# Remove SPARK global guide file
+if [ -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ]; then
+    rm -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
+    echo "  ✓ SPARK global guide file removed"
+fi
+
 # Check for backup directory
 backup_dir="$UNINSTALL_LOCATION/.spark-backup"
 
 # Restore original CLAUDE.md from backup
+claude_md_locations=(
+    "$UNINSTALL_LOCATION/CLAUDE.md"
+    "$HOME/.claude/CLAUDE.md"
+)
+
+claude_md_restored=false
+
 if [ -f "$backup_dir/CLAUDE.md.original" ]; then
-    print_status "Restoring original CLAUDE.md..."
-    
-    # Restore original from backup
-    cp "$backup_dir/CLAUDE.md.original" "$UNINSTALL_LOCATION/CLAUDE.md"
-    echo "  ✓ Original CLAUDE.md restored"
-    
-elif [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ]; then
-    print_warning "No backup file found, SPARK section must be manually removed"
-    echo "  Manually remove the following section from CLAUDE.md:"
-    echo "  - From '## 🚀 SPARK Agents Reference'"
-    echo "  - To '<!-- SPARK-REFERENCE-END -->'"
+    for claude_md in "${claude_md_locations[@]}"; do
+        if [ -f "$claude_md" ] && grep -q "@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$claude_md"; then
+            print_status "Restoring original CLAUDE.md at $claude_md..."
+            cp "$backup_dir/CLAUDE.md.original" "$claude_md"
+            echo "  ✓ Original CLAUDE.md restored from backup"
+            claude_md_restored=true
+            break
+        fi
+    done
+fi
+
+if [ "$claude_md_restored" = false ]; then
+    print_warning "No backup file found or CLAUDE.md doesn't contain SPARK references"
+    echo "  If you manually added SPARK references, please remove them manually:"
+    echo "  - @SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
 fi
 
 # Restore original settings.json from backup

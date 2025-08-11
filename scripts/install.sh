@@ -331,9 +331,9 @@ install_workflows() {
     print_success "Workflow settings installation completed"
 }
 
-# Function to install memory reference and update CLAUDE.md
+# Function to install SPARK global guide and update CLAUDE.md
 install_memory_reference() {
-    print_status "Installing memory reference and updating CLAUDE.md..."
+    print_status "Installing SPARK global guide and updating CLAUDE.md..."
     
     # Create backup directory if it doesn't exist
     local backup_dir="$INSTALL_LOCATION/.spark-backup"
@@ -342,12 +342,12 @@ install_memory_reference() {
         echo "  ✓ Backup directory created: .spark-backup/"
     fi
     
-    # Copy SPARK_AGENTS_MEMORY_REFERENCE.md to installation location
-    if [ -f "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
-        cp "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" "$INSTALL_LOCATION/"
-        echo "  ✓ SPARK_AGENTS_MEMORY_REFERENCE.md copied"
+    # Copy SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md to installation location
+    if [ -f "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ]; then
+        cp "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$INSTALL_LOCATION/"
+        echo "  ✓ SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md copied"
     else
-        print_warning "SPARK_AGENTS_MEMORY_REFERENCE.md file not found"
+        print_warning "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md file not found"
         return
     fi
     
@@ -372,7 +372,7 @@ install_memory_reference() {
         fi
         
         # Check if reference already exists
-        if grep -q "@SPARK_AGENTS_MEMORY_REFERENCE.md" "$claude_md"; then
+        if grep -q "@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$claude_md"; then
             print_warning "SPARK reference already exists in CLAUDE.md"
         else
             # Add SPARK reference to the end of CLAUDE.md
@@ -380,22 +380,17 @@ install_memory_reference() {
 
 ---
 
-## 🚀 SPARK Agents Reference
-<!-- SPARK-REFERENCE-START - This section will be removed when uninstalling SPARK -->
-@SPARK_AGENTS_MEMORY_REFERENCE.md
-
-**⚠️ When uninstalling SPARK:** uninstall.sh will automatically restore the original CLAUDE.md.
-<!-- SPARK-REFERENCE-END -->
+@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md
 EOF
             print_success "SPARK reference added to CLAUDE.md"
         fi
     else
         print_warning "CLAUDE.md file not found - manual addition required"
         echo "  Add the following content to the end of your CLAUDE.md file:"
-        echo "  @SPARK_AGENTS_MEMORY_REFERENCE.md"
+        echo "  @SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
     fi
     
-    print_success "Memory reference installation completed"
+    print_success "SPARK global guide installation completed"
 }
 
 # Function to configure settings.json
@@ -515,24 +510,24 @@ show_summary() {
     if [ "$INSTALL_COMMANDS" = true ]; then
         echo "2. Try SPARK commands:"
         if [ -n "$NAMESPACE_PREFIX" ]; then
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:implement \"user authentication\"${NC}"
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:test \"create unit tests\"${NC}"
+            echo -e "   ${BLUE}/$NAMESPACE_PREFIX:implement \"user authentication\"${NC}"
+            echo -e "   ${BLUE}/$NAMESPACE_PREFIX:test \"create unit tests\"${NC}"
         else
-            echo "   ${BLUE}/spark-implement \"user authentication\"${NC}"
-            echo "   ${BLUE}/spark-test \"create unit tests\"${NC}"
+            echo -e "   ${BLUE}/spark-implement \"user authentication\"${NC}"
+            echo -e "   ${BLUE}/spark-test \"create unit tests\"${NC}"
         fi
     fi
     
     if [ "$INSTALL_MULTI_AGENT" = true ]; then
         echo "3. Use multi-agent pipelines:"
-        echo "   ${BLUE}/spark-launch \"new feature\"${NC} - Full development pipeline"
-        echo "   ${BLUE}/spark-optimize \"improve performance\"${NC} - Performance optimization"
-        echo "   ${BLUE}/spark-audit \"security check\"${NC} - Security audit"
+        echo -e "   ${BLUE}/spark-launch \"new feature\"${NC} - Full development pipeline"
+        echo -e "   ${BLUE}/spark-optimize \"improve performance\"${NC} - Performance optimization"
+        echo -e "   ${BLUE}/spark-audit \"security check\"${NC} - Security audit"
     fi
     
     echo ""
     echo -e "${CYAN}Key Features:${NC}"
-    echo "• significant token efficiency token efficiency (verified)"
+    echo "• significant token efficiency (verified)"
     echo "• 16 specialized agents"
     echo "• Jason's 8-step strict quality gates"
     echo "• Automatic persona activation"

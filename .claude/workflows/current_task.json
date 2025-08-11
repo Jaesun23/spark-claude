@@ -1,6 +1,6 @@
 {
-  "task_id": "spark_20250811_195055",
-  "prompt": "multi-team implement features",
+  "task_id": "spark_20250811_213757",
+  "prompt": "uninstall \ud588\uc744 \ub54c CLAUDE.md \ud30c\uc77c \ubc31\uc5c5\ud588\ub358\uac70 \ub418\ub3cc\ub9ac\uace0\n  /Users/jason/.claude/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md \uc774 \ud30c\uc77c\ub3c4 \uc0ad\uc81c\ud574\uc57c \ud558\ub294\ub370 \uadf8\ub300\ub85c \uc788\ub124\uc694.",
   "personas": [
     "Backend Developer"
   ],
@@ -20,6 +20,6 @@
     "completed_agents": [],
     "data_passing": {}
   },
-  "last_updated": "2025-08-11T19:50:55.621697",
+  "last_updated": "2025-08-11T21:37:57.669972",
   "version": "1.0.0"
 }

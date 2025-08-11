@@ -89,7 +89,9 @@ echo "다음 항목들이 제거됩니다:"
 [ -d "$UNINSTALL_LOCATION/hooks" ] && echo "  • SPARK 훅 (spark_*.py)"
 [ -d "$UNINSTALL_LOCATION/workflows" ] && echo "  • SPARK 워크플로우 설정"
 [ -f "$UNINSTALL_LOCATION/SPARK_AGENTS_MEMORY_REFERENCE.md" ] && echo "  • 메모리 레퍼런스 파일"
+[ -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ] && echo "  • SPARK 글로벌 가이드 파일"
 [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ] && echo "  • CLAUDE.md의 SPARK 섹션"
+[ -f "$HOME/.claude/CLAUDE.md" ] && echo "  • ~/.claude/CLAUDE.md의 SPARK 레퍼런스"
 
 echo ""
 read -p "정말로 제거하시겠습니까? (y/N): " confirm
@@ -135,22 +137,39 @@ if [ -f "$UNINSTALL_LOCATION/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
     echo "  ✓ 메모리 레퍼런스 파일 제거됨"
 fi
 
+# Remove SPARK global guide file
+if [ -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ]; then
+    rm -f "$UNINSTALL_LOCATION/SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
+    echo "  ✓ SPARK 글로벌 가이드 파일 제거됨"
+fi
+
 # 백업 디렉토리 확인
 backup_dir="$UNINSTALL_LOCATION/.spark-backup"
 
 # 백업에서 원본 CLAUDE.md 복원
+claude_md_locations=(
+    "$UNINSTALL_LOCATION/CLAUDE.md"
+    "$HOME/.claude/CLAUDE.md"
+)
+
+claude_md_restored=false
+
 if [ -f "$backup_dir/CLAUDE.md.original" ]; then
-    print_status "CLAUDE.md 원본 복원 중..."
-    
-    # 백업에서 원본 복원
-    cp "$backup_dir/CLAUDE.md.original" "$UNINSTALL_LOCATION/CLAUDE.md"
-    echo "  ✓ CLAUDE.md 원본 복원 완료"
-    
-elif [ -f "$UNINSTALL_LOCATION/CLAUDE.md" ]; then
-    print_warning "백업 파일이 없어 수동으로 SPARK 섹션을 제거해야 합니다"
-    echo "  CLAUDE.md 파일에서 다음 섹션을 수동으로 제거하세요:"
-    echo "  - '## 🚀 SPARK Agents Reference' 부터"
-    echo "  - '<!-- SPARK-REFERENCE-END -->' 까지"
+    for claude_md in "${claude_md_locations[@]}"; do
+        if [ -f "$claude_md" ] && grep -q "@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$claude_md"; then
+            print_status "$claude_md에서 CLAUDE.md 원본 복원 중..."
+            cp "$backup_dir/CLAUDE.md.original" "$claude_md"
+            echo "  ✓ 백업에서 CLAUDE.md 원본 복원 완료"
+            claude_md_restored=true
+            break
+        fi
+    done
+fi
+
+if [ "$claude_md_restored" = false ]; then
+    print_warning "백업 파일이 없거나 CLAUDE.md에 SPARK 레퍼런스가 없습니다"
+    echo "  수동으로 SPARK 레퍼런스를 추가했다면 직접 제거하세요:"
+    echo "  - @SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
 fi
 
 # 백업에서 원본 settings.json 복원

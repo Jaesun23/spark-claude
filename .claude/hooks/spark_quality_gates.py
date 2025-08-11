@@ -11,6 +11,27 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+def find_project_root() -> Path:
+    """Find project root using Claude Code environment variables or directory search"""
+    import os
+    
+    # First try Claude Code's project directory environment variable
+    claude_project_dir = os.getenv('CLAUDE_PROJECT_DIR')
+    if claude_project_dir:
+        project_path = Path(claude_project_dir)
+        if project_path.exists() and (project_path / ".claude").exists():
+            return project_path
+    
+    # Fallback: search for .claude directory from current location
+    current = Path.cwd()
+    while current != current.parent:
+        if (current / ".claude").exists():
+            return current
+        current = current.parent
+    
+    # Final fallback to current directory
+    return Path.cwd()
+
 # Add hooks directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 from spark_core_utils import (
@@ -389,9 +410,10 @@ class TestVerificationGate(QualityGate):
         }
         
         # Try to read current_task.json
+        project_root = find_project_root()
         json_paths = [
             Path.home() / ".claude/workflows/current_task.json",
-            Path(".claude/workflows/current_task.json")
+            project_root / ".claude/workflows/current_task.json"
         ]
         
         current_task = None
@@ -578,9 +600,10 @@ class ImplementationVerificationGate(QualityGate):
         }
         
         # Try to read current_task.json
+        project_root = find_project_root()
         json_paths = [
             Path.home() / ".claude/workflows/current_task.json",
-            Path(".claude/workflows/current_task.json")
+            project_root / ".claude/workflows/current_task.json"
         ]
         
         current_task = None

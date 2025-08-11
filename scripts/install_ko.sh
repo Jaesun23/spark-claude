@@ -41,7 +41,7 @@ clear
 echo -e "${MAGENTA}"
 echo "⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡"
 echo "     SPARK Universal AI Agent System Installer v3.0"
-echo "     88.4% Token Efficiency • 16 Specialized Agents"
+echo "          16 Specialized Agents"
 echo "⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡"
 echo -e "${NC}"
 
@@ -330,9 +330,9 @@ install_workflows() {
     print_success "워크플로우 설정 설치 완료"
 }
 
-# Function to install memory reference and update CLAUDE.md
+# Function to install SPARK global guide and update CLAUDE.md
 install_memory_reference() {
-    print_status "메모리 레퍼런스 설치 및 CLAUDE.md 업데이트 중..."
+    print_status "SPARK 글로벌 가이드 설치 및 CLAUDE.md 업데이트 중..."
     
     # Create backup directory if it doesn't exist
     local backup_dir="$INSTALL_LOCATION/.spark-backup"
@@ -341,12 +341,12 @@ install_memory_reference() {
         echo "  ✓ 백업 디렉토리 생성: .spark-backup/"
     fi
     
-    # Copy SPARK_AGENTS_MEMORY_REFERENCE.md to installation location
-    if [ -f "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" ]; then
-        cp "docs/SPARK_AGENTS_MEMORY_REFERENCE.md" "$INSTALL_LOCATION/"
-        echo "  ✓ SPARK_AGENTS_MEMORY_REFERENCE.md 복사됨"
+    # Copy SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md to installation location
+    if [ -f "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" ]; then
+        cp "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$INSTALL_LOCATION/"
+        echo "  ✓ SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md 복사됨"
     else
-        print_warning "SPARK_AGENTS_MEMORY_REFERENCE.md 파일을 찾을 수 없음"
+        print_warning "SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md 파일을 찾을 수 없음"
         return
     fi
     
@@ -371,7 +371,7 @@ install_memory_reference() {
         fi
         
         # Check if reference already exists
-        if grep -q "@SPARK_AGENTS_MEMORY_REFERENCE.md" "$claude_md"; then
+        if grep -q "@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md" "$claude_md"; then
             print_warning "CLAUDE.md에 이미 SPARK 레퍼런스가 있음"
         else
             # Add SPARK reference to the end of CLAUDE.md
@@ -379,22 +379,17 @@ install_memory_reference() {
 
 ---
 
-## 🚀 SPARK Agents Reference
-<!-- SPARK-REFERENCE-START - This section will be removed when uninstalling SPARK -->
-@SPARK_AGENTS_MEMORY_REFERENCE.md
-
-**⚠️ SPARK 제거 시:** uninstall.sh가 자동으로 원본 CLAUDE.md를 복원합니다.
-<!-- SPARK-REFERENCE-END -->
+@SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md
 EOF
             print_success "CLAUDE.md에 SPARK 레퍼런스 추가됨"
         fi
     else
         print_warning "CLAUDE.md 파일을 찾을 수 없음 - 수동으로 추가 필요"
         echo "  다음 내용을 CLAUDE.md 파일 끝에 추가하세요:"
-        echo "  @SPARK_AGENTS_MEMORY_REFERENCE.md"
+        echo "  @SPARK_GLOBAL_GUIDE_FOR_CLAUDE_MD.md"
     fi
     
-    print_success "메모리 레퍼런스 설치 완료"
+    print_success "SPARK 글로벌 가이드 설치 완료"
 }
 
 # Function to configure settings.json
@@ -514,19 +509,19 @@ show_summary() {
     if [ "$INSTALL_COMMANDS" = true ]; then
         echo "2. SPARK 명령어 사용해보기:"
         if [ -n "$NAMESPACE_PREFIX" ]; then
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:implement \"사용자 인증\"${NC}"
-            echo "   ${BLUE}/$NAMESPACE_PREFIX:test \"유닛 테스트 생성\"${NC}"
+            echo -e "   ${BLUE}/$NAMESPACE_PREFIX:implement \"사용자 인증\"${NC}"
+            echo -e "   ${BLUE}/$NAMESPACE_PREFIX:test \"유닛 테스트 생성\"${NC}"
         else
-            echo "   ${BLUE}/spark-implement \"사용자 인증\"${NC}"
-            echo "   ${BLUE}/spark-test \"유닛 테스트 생성\"${NC}"
+            echo -e "   ${BLUE}/spark-implement \"사용자 인증\"${NC}"
+            echo -e "   ${BLUE}/spark-test \"유닛 테스트 생성\"${NC}"
         fi
     fi
     
     if [ "$INSTALL_MULTI_AGENT" = true ]; then
         echo "3. 다중 에이전트 파이프라인 사용:"
-        echo "   ${BLUE}/spark-launch \"새 기능\"${NC} - 전체 개발 파이프라인"
-        echo "   ${BLUE}/spark-optimize \"성능 개선\"${NC} - 성능 최적화"
-        echo "   ${BLUE}/spark-audit \"보안 검사\"${NC} - 보안 감사"
+        echo -e "   ${BLUE}/spark-launch \"새 기능\"${NC} - 전체 개발 파이프라인"
+        echo -e "   ${BLUE}/spark-optimize \"성능 개선\"${NC} - 성능 최적화"
+        echo -e "   ${BLUE}/spark-audit \"보안 검사\"${NC} - 보안 감사"
     fi
     
     echo ""

@@ -144,9 +144,32 @@ class SecureCommandExecutor:
 class StateManager:
     """Manages persistent state for SPARK workflows"""
     
+    def _find_project_root(self) -> Path:
+        """Find project root using Claude Code environment variables or directory search"""
+        import os
+        
+        # First try Claude Code's project directory environment variable
+        claude_project_dir = os.getenv('CLAUDE_PROJECT_DIR')
+        if claude_project_dir:
+            project_path = Path(claude_project_dir)
+            if project_path.exists() and (project_path / ".claude").exists():
+                return project_path
+        
+        # Fallback: search for .claude directory from current location
+        current = Path.cwd()
+        while current != current.parent:
+            if (current / ".claude").exists():
+                return current
+            current = current.parent
+        
+        # Final fallback to current directory
+        return Path.cwd()
+    
     def __init__(self):
+        # Find project root first
+        project_root = self._find_project_root()
         # Check for project-level workflows first, then global
-        project_workflows = Path(".claude/workflows")
+        project_workflows = project_root / ".claude/workflows"
         global_workflows = Path.home() / ".claude" / "workflows"
         
         if project_workflows.exists():

@@ -7,10 +7,32 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
+def find_project_root() -> Path:
+    """Find project root using Claude Code environment variables or directory search"""
+    import os
+    
+    # First try Claude Code's project directory environment variable
+    claude_project_dir = os.getenv('CLAUDE_PROJECT_DIR')
+    if claude_project_dir:
+        project_path = Path(claude_project_dir)
+        if project_path.exists() and (project_path / ".claude").exists():
+            return project_path
+    
+    # Fallback: search for .claude directory from current location
+    current = Path.cwd()
+    while current != current.parent:
+        if (current / ".claude").exists():
+            return current
+        current = current.parent
+    
+    # Final fallback to current directory
+    return Path.cwd()
+
 class FileLockManager:
     """Manages file locks for parallel team execution"""
     
-    LOCK_FILE = Path(".claude/workflows/file_locks.json")
+    PROJECT_ROOT = find_project_root()
+    LOCK_FILE = PROJECT_ROOT / ".claude/workflows/file_locks.json"
     LOCK_TIMEOUT = 30  # seconds
     
     @classmethod
