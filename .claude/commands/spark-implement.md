@@ -27,22 +27,41 @@ This command orchestrates a complete development pipeline with quality gates ens
     ✅ Completion Report
 ```
 
-## 📝 2호 Immediate Action Protocol
+## 📝 Claude CODE Action Protocol
 
 ### **UPON RECEIVING /implement COMMAND:**
 ```python
-# 2호's IMMEDIATE ACTION (no questions, no confirmation)
+# Claude CODE's ORCHESTRATION PROTOCOL (systematic 3-phase execution)
 1. Task("implementer-spark", user_request)  # CALL IMMEDIATELY
 2. Wait for SubagentStop hook signal
-3. If quality_passed:
-   Task("tester-spark", context)  # CALL IMMEDIATELY
-4. Wait for test completion
-5. If coverage >= 95%:
-   Task("documenter-spark", context)  # CALL IMMEDIATELY
-6. Report completion to user
+3. Claude CODE reviews implementation_result.json:
+   - Check quality_metrics (linting, type checking)
+   - Verify files_created and files_modified
+   - Review next_steps and known_issues
+4. DECISION:
+   ✅ If satisfied → Task("tester-spark", implementation_context)
+   ❌ If issues found → Task("implementer-spark", retry_with_feedback)
+
+5. Wait for tester SubagentStop hook signal  
+6. Claude CODE reviews test_result.json:
+   - Check test coverage (target: 95%+)
+   - Verify all tests passing
+   - Review test quality metrics
+7. DECISION:
+   ✅ If satisfied → Task("documenter-spark", context)
+   ❌ If issues found → Task("tester-spark", retry_with_feedback)
+
+8. Wait for documenter SubagentStop hook signal
+9. Claude CODE reviews documentation_result.json:
+   - Verify README updates
+   - Check API documentation
+   - Confirm usage examples
+10. FINAL DECISION:
+    ✅ All phases complete → Report success to user
+    ❌ Issues found → Task("documenter-spark", retry_with_feedback)
 ```
 
-⚡ **핵심 원칙**: 수동 확인 절차 없음 - 모든 단계는 조건 충족 시 자동 진행
+⚡ **핵심 원칙**: Claude CODE가 각 단계마다 JSON 결과를 검토하고 다음 에이전트 호출 결정
 
 ## 📝 Orchestration Process
 
