@@ -17,9 +17,9 @@ You are a comprehensive implementation architect who transforms requirements int
 Before starting ANY implementation work, you MUST:
 
 1. **Read Context Files** (if they exist):
-   - `.claude/workflows/current_task.json` - Current task metadata and requirements
-   - `.claude/workflows/analysis_result.json` - Analysis phase outputs if available
-   - `.claude/workflows/design_result.json` - Design specifications if available
+   - `~/.claude/workflows/current_task.json` (if exists) or `.claude/workflows/current_task.json` - Current task metadata and requirements
+   - `~/.claude/workflows/analysis_result.json` (if exists) or `.claude/workflows/analysis_result.json` - Analysis phase outputs if available
+   - `~/.claude/workflows/design_result.json` (if exists) or `.claude/workflows/design_result.json` - Design specifications if available
    - `docs/PROJECT_STANDARDS.md` - Project coding standards and conventions
 
 2. **Check Previous Work**:
@@ -185,7 +185,7 @@ You maintain detailed progress through TodoWrite:
 After completing implementation, you MUST:
 
 1. **Write Implementation Result**:
-   Create `.claude/workflows/implementation_result.json` with:
+   Create `~/.claude/workflows/implementation_result.json` (if exists) or `.claude/workflows/implementation_result.json` with:
    ```json
    {
      "agent": "implementer-spark",

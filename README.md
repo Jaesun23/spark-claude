@@ -46,9 +46,11 @@ SPARK v3.5 Unified is the **most advanced AI agent system** for [Claude Code](ht
 git clone https://github.com/Jaesun23/spark-claude.git
 cd spark-claude
 
-# Run the installer (installs to ~/.claude/ automatically)
+# Run the interactive installer (choose global or project-specific)
 ./scripts/install.sh
 ```
+
+📖 **[Detailed Installation Guide](docs/INSTALLATION_GUIDE.md)** - Interactive options, troubleshooting, and more
 
 ### 2. **Use SPARK Commands**
 
@@ -199,11 +201,15 @@ spark-claude/
 │   ├── compare_performance.py
 │   └── benchmark_results.json
 ├── docs/                   # Project documentation
-│   ├── UNIFIED_SPARK_SYSTEM.md  # NEW: v3.0 Unified System Guide
+│   ├── INSTALLATION_GUIDE.md   # 🆕 Interactive installation guide
+│   ├── SPARK_COMPLETE_GUIDE.md # Complete 12-chapter guide
+│   ├── SPARK_AGENTS_ENCYCLOPEDIA.md # All 16 agents detailed
+│   ├── ANTHROPIC_GUIDELINES.md # Anthropic hook & agent constraints
+│   ├── SPARK_ORCHESTRATION_PRINCIPLES.md # Multi-agent coordination
+│   ├── UNIFIED_SPARK_SYSTEM.md # v3.0 Unified System Guide
 │   ├── SPARK_MANUAL.md         # Complete usage manual
 │   ├── ROADMAP.md              # Future development plans
-│   ├── FIX_DEPLOYMENT_GUIDE.md
-│   └── PR_TEMPLATE.md
+│   └── FIX_DEPLOYMENT_GUIDE.md
 ├── scripts/               # Installation and utilities
 │   └── install.sh        # Universal installer with backup support
 ├── tests/                 # Test files

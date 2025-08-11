@@ -239,7 +239,7 @@ Remember: You are the guardian of code quality and system health. Your analysis 
 After completing analysis, you MUST:
 
 1. **Write Analysis Result**:
-   Create `.claude/workflows/analysis_result.json` with:
+   Create `~/.claude/workflows/analysis_result.json` (if exists) or `.claude/workflows/analysis_result.json` with:
    ```json
    {
      "agent": "analyzer-spark",

@@ -2,33 +2,33 @@
 
 ## 📋 Overview
 
-SPARK v3.5 Hook System은 Anthropic Claude Code의 공식 Hook 이벤트를 활용하여 자동화된 워크플로우를 구현합니다.
+The SPARK v3.5 Hook System leverages official Anthropic Claude Code Hook events to implement automated workflows.
 
-## ✅ Anthropic 공식 Hook 이벤트 (8개만 존재)
+## ✅ Official Anthropic Hook Events (Only 8 Exist)
 
-| Hook Event | 용도 | SPARK 활용 |
-|------------|------|------------|
-| **UserPromptSubmit** | 사용자 프롬프트 제출 시 | Persona Router 실행 |
-| **SubagentStop** | 서브에이전트 작업 완료 시 | Quality Gates 검증 |
-| **PreToolUse** | 도구 사용 전 | 보안 검증 (선택적) |
-| **PostToolUse** | 도구 사용 후 | 로깅/모니터링 (선택적) |
-| **Stop** | Claude 응답 완료 직전 | 최종 검증 (선택적) |
-| **PreCompact** | 대화 압축 전 | 상태 저장 (선택적) |
-| **SessionStart** | 세션 시작/재개 시 | 컨텍스트 로드 (선택적) |
-| **Notification** | 알림 전송 시 | 알림 처리 (선택적) |
+| Hook Event | Purpose | SPARK Usage |
+|------------|---------|-------------|
+| **UserPromptSubmit** | When user submits prompt | Execute Persona Router |
+| **SubagentStop** | When subagent completes work | Validate Quality Gates |
+| **PreToolUse** | Before tool usage | Security validation (optional) |
+| **PostToolUse** | After tool usage | Logging/monitoring (optional) |
+| **Stop** | Just before Claude response completes | Final validation (optional) |
+| **PreCompact** | Before conversation compaction | State saving (optional) |
+| **SessionStart** | When session starts/resumes | Context loading (optional) |
+| **Notification** | When sending notifications | Notification handling (optional) |
 
-## ⚠️ 존재하지 않는 Hook 이벤트 (절대 사용 금지)
+## ⚠️ Non-Existent Hook Events (Never Use)
 
 ```python
-# ❌ 이런 이벤트들은 존재하지 않습니다!
-"subagentStart"      # ❌ 없음
-"toolUse"           # ❌ PreToolUse/PostToolUse만 존재
-"userPromptComplete" # ❌ 없음
-"assistantResponse"  # ❌ 없음
-"agentStop"         # ❌ SubagentStop이 올바른 이름
+# ❌ These events do NOT exist!
+"subagentStart"      # ❌ Does not exist
+"toolUse"           # ❌ Only PreToolUse/PostToolUse exist
+"userPromptComplete" # ❌ Does not exist
+"assistantResponse"  # ❌ Does not exist
+"agentStop"         # ❌ SubagentStop is the correct name
 ```
 
-## 📁 Hook 설정 파일 구조
+## 📁 Hook Configuration File Structure
 
 ### .claude/settings.json
 ```json
@@ -60,15 +60,15 @@ SPARK v3.5 Hook System은 Anthropic Claude Code의 공식 Hook 이벤트를 활�
 }
 ```
 
-## 📊 Hook Exit Code 의미
+## 📊 Hook Exit Code Meanings
 
-| Exit Code | 동작 | 설명 |
-|-----------|------|------|
-| **0** | 성공 | 정상 진행, stdout을 컨텍스트에 추가 |
-| **2** | 차단 | 작업 차단, stderr를 Claude에게 전달 |
-| **기타** | 에러 | 작업은 계속, stderr를 사용자에게만 표시 |
+| Exit Code | Action | Description |
+|-----------|--------|-------------|
+| **0** | Success | Continue normally, add stdout to context |
+| **2** | Block | Block operation, pass stderr to Claude |
+| **Other** | Error | Continue operation, show stderr to user only |
 
-## 📥 Hook 입력 JSON 구조
+## 📥 Hook Input JSON Structure
 
 ### UserPromptSubmit
 ```json
@@ -77,7 +77,7 @@ SPARK v3.5 Hook System은 Anthropic Claude Code의 공식 Hook 이벤트를 활�
   "transcript_path": "/path/to/conversation.jsonl",
   "cwd": "/project/path",
   "hook_event_name": "UserPromptSubmit",
-  "prompt": "사용자가 입력한 프롬프트"
+  "prompt": "User's input prompt"
 }
 ```
 
@@ -91,20 +91,20 @@ SPARK v3.5 Hook System은 Anthropic Claude Code의 공식 Hook 이벤트를 활�
 }
 ```
 
-## 📤 Hook 출력 JSON 구조
+## 📤 Hook Output JSON Structure
 
-### UserPromptSubmit 출력
+### UserPromptSubmit Output
 ```json
 {
   "continue": true,
   "hookSpecificOutput": {
     "hookEventName": "UserPromptSubmit",
-    "additionalContext": "추가할 컨텍스트 정보"
+    "additionalContext": "Additional context information to add"
   }
 }
 ```
 
-### SubagentStop 출력
+### SubagentStop Output
 ```json
 {
   "decision": "block",  // or undefined to continue
@@ -112,7 +112,7 @@ SPARK v3.5 Hook System은 Anthropic Claude Code의 공식 Hook 이벤트를 활�
 }
 ```
 
-## 🔧 SPARK Hook 구현 패턴
+## 🔧 SPARK Hook Implementation Patterns
 
 ### 1. spark_persona_router.py (UserPromptSubmit)
 ```python
@@ -122,14 +122,14 @@ import sys
 
 def main():
     try:
-        # stdin에서 입력 읽기
+        # Read input from stdin
         input_data = json.load(sys.stdin)
         prompt = input_data.get("prompt", "")
         
-        # 프롬프트 분석 및 페르소나 활성화
+        # Analyze prompt and activate personas
         personas = analyze_prompt(prompt)
         
-        # 컨텍스트 추가
+        # Add context
         output = {
             "continue": True,
             "hookSpecificOutput": {
@@ -159,20 +159,20 @@ def main():
     try:
         input_data = json.load(sys.stdin)
         
-        # 품질 검증 수행
+        # Perform quality validation
         validation_results = run_quality_gates()
         
         if not all(validation_results.values()):
-            # 품질 게이트 실패 시 차단
+            # Block on quality gate failure
             failed_gates = [k for k, v in validation_results.items() if not v]
             output = {
                 "decision": "block",
                 "reason": f"Quality gates failed: {', '.join(failed_gates)}"
             }
             print(json.dumps(output))
-            sys.exit(2)  # Exit code 2로 차단
+            sys.exit(2)  # Exit code 2 to block
         
-        # 성공
+        # Success
         print(json.dumps({"continue": True}))
         sys.exit(0)
         
@@ -184,12 +184,12 @@ if __name__ == "__main__":
     main()
 ```
 
-## 🔒 보안 고려사항
+## 🔒 Security Considerations
 
-### 필수 검증
+### Required Validation
 ```python
 def validate_command(command: str) -> bool:
-    """위험한 명령어 차단"""
+    """Block dangerous commands"""
     dangerous_patterns = [
         'rm -rf /', 'dd if=', ':(){ :|:& };:',
         '> /dev/sda', 'mkfs.', 'format ',
@@ -201,28 +201,28 @@ def validate_command(command: str) -> bool:
     return not any(pattern in command_lower for pattern in dangerous_patterns)
 ```
 
-### 경로 검증
+### Path Validation
 ```python
 def validate_path(path: str) -> bool:
-    """경로 탐색 공격 방지"""
+    """Prevent path traversal attacks"""
     return not ('..' in path or path.startswith('/'))
 ```
 
-## 📝 상태 관리
+## 📝 State Management
 
-### 상태 파일 위치
+### State File Locations
 ```
 .claude/workflows/
-├── unified_context.json      # 통합 컨텍스트
-├── current_task.json         # 현재 작업 상태
-└── team1_current_task.json   # 팀별 작업 상태
+├── unified_context.json      # Unified context
+├── current_task.json         # Current task state
+└── team1_current_task.json   # Team-specific task state
 ```
 
-### 상태 구조
+### State Structure
 ```json
 {
   "task_id": "abc123",
-  "prompt": "원본 요청",
+  "prompt": "Original request",
   "personas": ["Backend Developer", "Security Expert"],
   "quality_gates": {
     "syntax_validation": "passed",
@@ -234,43 +234,43 @@ def validate_path(path: str) -> bool:
 }
 ```
 
-## 🚀 Hook 활성화 워크플로우
+## 🚀 Hook Activation Workflow
 
 ```mermaid
 graph TD
-    A[사용자 프롬프트] --> B[UserPromptSubmit Hook]
-    B --> C[Persona Router 실행]
-    C --> D[적절한 에이전트 선택]
-    D --> E[에이전트 작업 수행]
+    A[User Prompt] --> B[UserPromptSubmit Hook]
+    B --> C[Execute Persona Router]
+    C --> D[Select Appropriate Agent]
+    D --> E[Agent Performs Work]
     E --> F[SubagentStop Hook]
-    F --> G{품질 게이트 통과?}
-    G -->|Yes| H[작업 완료]
-    G -->|No| I[재시도 or 실패]
+    F --> G{Quality Gates Pass?}
+    G -->|Yes| H[Task Complete]
+    G -->|No| I[Retry or Fail]
 ```
 
-## 🔍 디버깅
+## 🔍 Debugging
 
-### Hook 실행 확인
+### Verify Hook Execution
 ```bash
-# Hook 상태 확인
+# Check hook status
 /hooks
 
-# 디버그 모드로 실행
+# Run in debug mode
 claude --debug
 
-# Hook 로그 확인
+# Check hook logs
 tail -f ~/.claude/logs/hooks.log
 ```
 
-### 일반적인 문제 해결
+### Common Troubleshooting
 
-| 문제 | 원인 | 해결 |
-|------|------|------|
-| Hook이 실행되지 않음 | settings.json 설정 오류 | 파일 경로 및 권한 확인 |
-| Exit code 2가 작동하지 않음 | JSON 출력 형식 오류 | decision 필드 확인 |
-| 컨텍스트가 추가되지 않음 | Exit code가 0이 아님 | sys.exit(0) 확인 |
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Hook not executing | settings.json configuration error | Check file path and permissions |
+| Exit code 2 not working | JSON output format error | Verify decision field |
+| Context not being added | Exit code is not 0 | Confirm sys.exit(0) |
 
-## 📚 참고 자료
+## 📚 References
 
 - [Anthropic Hook Guide](https://docs.anthropic.com/en/docs/claude-code/hooks-guide)
 - [Hook Reference](https://docs.anthropic.com/en/docs/claude-code/hooks-reference)
@@ -278,4 +278,4 @@ tail -f ~/.claude/logs/hooks.log
 
 ---
 
-*이 가이드는 SPARK v3.5의 Hook 시스템 구현을 위한 공식 문서입니다.*
+*This guide is the official documentation for implementing the SPARK v3.5 Hook System.*
