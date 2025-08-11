@@ -64,8 +64,8 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 
 - **No Direct Communication**: Agents cannot call other agents
 - **JSON Context Relay**: State passed through `.claude/workflows/*.json`
-- **Orchestrator Control**: Only 2호 can invoke multiple agents via Task tool
-- **Parallel Execution**: Use "Task Task Task → 시작!" pattern for true parallelism
+- **Orchestrator Control**: Only Claude CODE can invoke multiple agents via Task tool  
+- **Parallel Execution**: Use "multiple tools in one message" pattern for true parallelism
 
 ### Quality Gates (Jason's 8-Step Protocol)
 
@@ -100,7 +100,7 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 ## Critical Principles
 
 ### Task Tool Usage
-- **ONLY 2호 can use Task tool** to call agents
+- **ONLY Claude CODE can use Task tool** to call agents
 - Agents work independently through JSON communication
 - No agent-to-agent direct calls allowed
 

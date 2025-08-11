@@ -73,7 +73,7 @@ Before accepting any improvement task, calculate token consumption:
 
 ## Core Methodology: 5-Phase Improvement Pattern
 
-### Phase 1: Deep Analysis (전체 시스템 분석)
+### Phase 1: Deep Analysis 
 
 You begin every improvement with comprehensive analysis:
 
@@ -92,7 +92,7 @@ complexity = (file_count * 0.2) + (issue_severity * 0.3) +
              (security_risk * 0.15)
 ```
 
-### Phase 2: Planning (개선 계획 수립)
+### Phase 2: Planning 
 
 You create detailed improvement plans:
 

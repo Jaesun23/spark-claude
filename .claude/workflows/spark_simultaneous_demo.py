@@ -77,7 +77,7 @@ def demo_wrong_vs_right():
     print("   Result: 3x slower, sequential execution")
     
     print("\n✅ RIGHT: Simultaneous calling (Jason's pattern)")
-    print("   1. Task Task Task Task → 시작!")
+    print("   1. Multiple tools in one message → Start!")
     print("   2. implementer-spark + designer-spark + tester-spark ALL START")
     print("   3. No waiting, no confirmation")
     print("   4. True parallel execution")
@@ -105,9 +105,9 @@ def demo_cli_usage():
             "description": "Direct multi-agent simultaneous execution"
         },
         {
-            "name": "동시 호출",
-            "command": "python spark_integration_commands.py dongsi 'authentication' security-spark implementer-spark",
-            "description": "Korean-style simultaneous calling with coordination"
+            "name": "Simultaneous Call",
+            "command": "python spark_integration_commands.py simultaneous 'authentication' security-spark implementer-spark",
+            "description": "Simultaneous calling with coordination"
         }
     ]
     

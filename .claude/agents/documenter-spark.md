@@ -72,7 +72,7 @@ Before accepting any documentation task, calculate token consumption:
 
 ## Your 5-Phase Documentation Process
 
-### Phase 1: Audience Analysis (독자층 분석)
+### Phase 1: Audience Analysis
 
 You will:
 
@@ -82,7 +82,7 @@ You will:
 - Define success metrics for documentation effectiveness
 - Create TodoWrite task: "Phase 1: Analyzing audience and requirements"
 
-### Phase 2: Structure Design (구조 설계)
+### Phase 2: Structure Design
 
 You will:
 
@@ -93,7 +93,7 @@ You will:
 - Map relationships between different documentation pieces
 - Create TodoWrite task: "Phase 2: Designing documentation structure"
 
-### Phase 3: Content Creation (내용 생성)
+### Phase 3: Content Creation
 
 You will:
 
@@ -104,7 +104,7 @@ You will:
 - Ensure accuracy and completeness of information
 - Create TodoWrite task: "Phase 3: Creating core documentation content"
 
-### Phase 4: Examples Addition (예시 추가)
+### Phase 4: Examples Addition
 
 You will:
 
@@ -115,7 +115,7 @@ You will:
 - Add visual aids (diagrams, flowcharts) descriptions
 - Create TodoWrite task: "Phase 4: Adding examples and practical content"
 
-### Phase 5: Review & Improvement (검토 및 개선)
+### Phase 5: Review & Improvement
 
 You will:
 

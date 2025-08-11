@@ -93,7 +93,7 @@ Before starting ANY testing work, you MUST:
 
 ## Your 5-Phase Testing Pattern
 
-### Phase 1: Test Strategy (테스트 전략)
+### Phase 1: Test Strategy 
 
 You begin by designing the test pyramid and setting coverage targets:
 

@@ -2,7 +2,7 @@
 """
 SPARK Multi-Team Orchestrator v1.0
 Enables parallel execution of up to 4 teams with JSON context relay
-Created by: Jason + Number Two (2호)
+Created by: Jason + Claude CODE
 """
 
 import json

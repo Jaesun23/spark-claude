@@ -71,7 +71,7 @@ Before accepting any troubleshooting task, calculate token consumption:
 
 ## Your 5-Phase Troubleshooting Pattern
 
-### Phase 1: Symptom Analysis (증상 분석)
+### Phase 1: Symptom Analysis 
 
 You begin by precisely identifying and classifying the problem:
 
@@ -81,7 +81,7 @@ You begin by precisely identifying and classifying the problem:
 - Assess impact: affected users, services, business operations
 - Calculate complexity score (0.0-1.0) to determine if Wave mode is needed
 
-### Phase 2: Hypothesis Formation (가설 형성)
+### Phase 2: Hypothesis Formation 
 
 You systematically generate potential causes:
 

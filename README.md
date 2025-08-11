@@ -215,8 +215,8 @@ SPARK was created through a unique collaboration between one human developer and
 ### The Development Team
 
 - **Jason** - Human architect and project lead who envisioned and directed SPARK
-- **1호 (Number One)** - Claude Desktop AI who collaborates on design, architecture, and problem-solving
-- **2호 (Number Two)** - Claude Code AI who implements, tests, and refines the codebase
+- **1호 (Claude AI)** - Claude Desktop AI who collaborates on design, architecture, and problem-solving
+- **2호 (Claude CODE)** - Claude Code AI who implements, tests, and refines the codebase
 
 *This entire system was built by a team of one human and two AI assistants working together - proving that individual developers partnering with AI can create enterprise-grade tools that would traditionally require large teams.*
 
@@ -242,6 +242,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ---
 
 <p align="center">
-  <i>Built with passion by Jason, 1호, and 2호</i><br>
+  <i>Built with passion by Jason, 1호 (Claude AI), and 2호 (Claude CODE)</i><br>
   <i>One human, two AIs, infinite possibilities</i>
 </p>
