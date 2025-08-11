@@ -2,42 +2,42 @@
 
 **Purpose**: Execute multiple implementation tasks in parallel using up to 4 teams with JSON context relay
 
-## 🚀 Parallel Multi-Team Workflow
+## 🚨 CRITICAL: ONE MESSAGE WITH MULTIPLE TOOL CALLS 🚨
 
-Orchestrates up to 4 teams working simultaneously on independent tasks with quality gates and testing.
-
-### Workflow Architecture
+### **THE GOLDEN RULE FOR PARALLEL EXECUTION:**
 ```
-Claude Code (Orchestrator)
-    └── Task Tool (Parallel Calls)
-        ├── Team1 → team1_current_task.json
-        ├── Team2 → team2_current_task.json
-        ├── Team3 → team3_current_task.json
-        └── Team4 → team4_current_task.json
+YOU MUST USE A SINGLE MESSAGE WITH MULTIPLE TASK TOOL CALLS!
+DO NOT SEND SEPARATE MESSAGES FOR EACH TASK!
 ```
 
-## 📝 Immediate Action Protocol
+## ⚡ IMMEDIATE EXECUTION PROTOCOL
 
-### **UPON RECEIVING /multi-implement COMMAND:**
+### **AS SOON AS YOU RECEIVE /multi-implement:**
+
 ```python
-# IMMEDIATE PARALLEL EXECUTION (no intermediate checks)
-1. Parse task IDs, create team JSONs
-2. SIMULTANEOUS CALLS (no waiting between):
-   Task("team1-implementer-spark", task1)
-   Task("team2-implementer-spark", task2)
-   Task("team3-implementer-spark", task3)
-   Task("team4-implementer-spark", task4)
-3. WAIT for ALL teams to complete
-4. SIMULTANEOUS TEST CALLS:
-   Task("team1-tester-spark", test1)
-   Task("team2-tester-spark", test2)
-   Task("team3-tester-spark", test3)
-   Task("team4-tester-spark", test4)
-5. WAIT for ALL tests to complete
-6. Report results
+# ✅ CORRECT - ALL IN ONE MESSAGE:
+[Single Message]
+├── Task("implementer-spark", "Team1: {task1} Read team1_current_task.json")
+├── Task("implementer-spark", "Team2: {task2} Read team2_current_task.json")  
+├── Task("implementer-spark", "Team3: {task3} Read team3_current_task.json")
+└── Task("implementer-spark", "Team4: {task4} Read team4_current_task.json")
+[Wait for all to complete]
+
+# ❌ WRONG - SEQUENTIAL MESSAGES:
+Message 1: Task("implementer-spark", "Team1...")
+Message 2: Task("implementer-spark", "Team2...")  # NO! This waits for Team1!
+Message 3: Task("implementer-spark", "Team3...")  # NO! This waits for Team2!
+Message 4: Task("implementer-spark", "Team4...")  # NO! This waits for Team3!
 ```
 
-⚠️ **CRITICAL**: Never check individual agents during parallel execution - it breaks parallelism!
+### **EXECUTION STEPS:**
+1. **PREPARE**: Create all team JSON files (team1_current_task.json, etc.)
+2. **LAUNCH ALL AT ONCE**: Single message with 4 Task tool calls
+3. **WAIT**: For all 4 teams to complete
+4. **TEST ALL AT ONCE**: Single message with 4 tester Task calls
+5. **REPORT**: Consolidate results
+
+⚠️ **REMEMBER**: If you send Task calls in separate messages, they run SEQUENTIALLY, not in PARALLEL!
 
 ## 📝 Orchestration Process
 
