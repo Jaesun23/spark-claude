@@ -1,104 +1,34 @@
 {
   "team_info": {
     "team_id": "2",
-    "team_type": "team2",
     "status": "INACTIVE",
-    "assigned_task": "",
-    "start_time": "",
-    "end_time": "",
-    "parallel_teams": []
+    "team_type": "team2",
+    "created_at": "2025-08-12T10:34:17.615052",
+    "updated_at": "2025-08-12T10:34:17.615053"
   },
-  "spark_activation": {
-    "active_personas": [],
-    "mcp_servers": [],
-    "complexity_score": 0.0,
-    "quality_gates_required": 0,
-    "activation_timestamp": "",
-    "original_prompt": "",
-    "routing_strategy": "team_specific_routing"
-  },
-  "task_assignment": {
-    "task_id": "",
-    "task_description": "",
-    "task_type": "",
-    "priority": "normal",
-    "dependencies": [],
-    "blocking_teams": [],
-    "blocked_by": []
+  "task": {
+    "id": "",
+    "description": "",
+    "status": "pending",
+    "assigned_at": ""
   },
   "implementation": {
-    "status": "pending",
-    "team_specific_section": "",
-    "files_created": [],
+    "status": "not_started",
     "files_modified": [],
-    "api_endpoints": [],
-    "database_changes": [],
-    "dependencies_added": [],
-    "configuration_changes": [],
-    "key_functions": [],
-    "implementation_notes": "",
-    "timestamp": ""
+    "files_created": [],
+    "quality_score": 0,
+    "errors": []
   },
   "testing": {
-    "status": "pending",
-    "team_specific_tests": [],
-    "test_files_created": [],
-    "test_files_modified": [],
-    "tests_added": 0,
+    "status": "not_started",
+    "coverage": 0,
     "tests_passed": 0,
-    "coverage": {
-      "unit": 0,
-      "integration": 0,
-      "e2e": 0
-    },
-    "test_framework": "",
-    "test_results": "",
-    "testing_notes": "",
-    "timestamp": ""
+    "tests_failed": 0,
+    "test_files": []
   },
   "documentation": {
-    "status": "pending",
-    "team_specific_docs": [],
-    "files_created": [],
-    "files_modified": [],
-    "api_docs_updated": false,
-    "readme_updated": false,
-    "changelog_updated": false,
-    "inline_comments_added": 0,
-    "documentation_notes": "",
-    "timestamp": ""
-  },
-  "file_locks": {
-    "acquired_locks": [],
-    "waiting_for": [],
-    "lock_conflicts": [],
-    "resolution_strategy": "wait_and_retry"
-  },
-  "coordination": {
-    "shared_resources": [],
-    "communication_log": [],
-    "handoff_points": [],
-    "merge_strategy": "",
-    "conflict_resolution": []
-  },
-  "spark_quality_results": {
-    "gates_passed": 0,
-    "total_gates": 10,
-    "violations": {},
-    "gate_results": {},
-    "spark_compliance": false,
-    "jason_dna_compliance": false,
-    "team_specific_checks": {}
-  },
-  "routing_decision": {
-    "next_action": "",
-    "reason": "",
-    "specific_instructions": "",
-    "retry_required": false,
-    "handoff_to_team": ""
-  },
-  "quality_gates_timestamp": "",
-  "quality_gates": {},
-  "enhanced_workflow": true,
-  "token_optimization": "enabled"
+    "status": "not_started",
+    "files_updated": [],
+    "completeness": 0
+  }
 }

@@ -11,13 +11,13 @@ from typing import List, Dict, Any
 from datetime import datetime
 
 def parse_command(command: str) -> List[str]:
-    """Parse /multi_implement command to extract task IDs"""
+    """Parse /multi_implement or /multi-implement command to extract task IDs"""
     parts = command.strip().split()
     
-    if not parts or parts[0] != "/multi_implement":
+    if not parts or (parts[0] != "/multi_implement" and parts[0] != "/multi-implement"):
         return []
     
-    # Extract task IDs (everything after /multi_implement)
+    # Extract task IDs (everything after command)
     task_ids = parts[1:]
     
     # Validate task ID format (basic validation)
@@ -107,7 +107,8 @@ def create_execution_plan(task_ids: List[str]) -> Dict[str, Any]:
         },
         "agents_required": generate_team_agents(num_teams),
         "estimated_time": estimate_completion_time(num_teams, task_ids),
-        "instructions": []
+        "instructions": [],
+        "initialization_required": True  # Flag to indicate team JSON reset needed
     }
     
     # Assign tasks to teams
@@ -155,6 +156,55 @@ def estimate_completion_time(num_teams: int, task_ids: List[str]) -> Dict[str, s
         "speedup": f"{sequential_time / parallel_time:.1f}x",
         "time_saved": f"{sequential_time - parallel_time} minutes"
     }
+
+def initialize_team_json_files(plan: Dict[str, Any], config_path: Path) -> None:
+    """Initialize team JSON files with task assignments"""
+    workflows_dir = config_path.parent
+    
+    for team_id, team_data in plan["teams"].items():
+        team_file = workflows_dir / f"{team_id}_current_task.json"
+        
+        # Create clean team JSON with task assignment
+        team_json = {
+            "team_info": {
+                "team_id": team_id,
+                "status": "ACTIVE",
+                "team_type": team_id,
+                "created_at": datetime.now().isoformat(),
+                "updated_at": datetime.now().isoformat()
+            },
+            "task": {
+                "id": team_data["task_id"],
+                "description": f"Task {team_data['task_id']} assigned to {team_id}",
+                "status": "assigned",
+                "assigned_at": datetime.now().isoformat()
+            },
+            "implementation": {
+                "status": "not_started",
+                "files_modified": [],
+                "files_created": [],
+                "quality_score": 0,
+                "errors": []
+            },
+            "testing": {
+                "status": "not_started",
+                "coverage": 0,
+                "tests_passed": 0,
+                "tests_failed": 0,
+                "test_files": []
+            },
+            "documentation": {
+                "status": "not_started",
+                "files_updated": [],
+                "completeness": 0
+            }
+        }
+        
+        # Write team JSON file (overwriting any existing file)
+        with open(team_file, 'w') as f:
+            json.dump(team_json, f, indent=2)
+        
+        print(f"✅ Initialized {team_file.name} with {team_data['task_id']}")
 
 def generate_orchestration_config(plan: Dict[str, Any]) -> Dict[str, Any]:
     """Generate configuration for the orchestrator"""
@@ -246,6 +296,9 @@ def main():
     config_path.parent.mkdir(parents=True, exist_ok=True)
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
+    
+    # Initialize team JSON files with task assignments
+    initialize_team_json_files(plan, config_path)
     
     print(f"\n✅ Configuration saved to {config_path}")
     print(f"🚀 Ready to execute {len(validation['task_ids'])} tasks in parallel with {plan['team_count']} teams")
