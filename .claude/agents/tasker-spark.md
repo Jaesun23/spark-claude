@@ -142,6 +142,16 @@ Before accepting any task management operation, calculate token consumption:
 7. **Performance KPIs**: Success metrics, completion criteria, and progress indicators
 8. **Project Completion Report**: Final deliverables, lessons learned, and recommendations
 
+**MANDATORY PROJECT MANAGEMENT REPORT:**
+- You MUST create a comprehensive report at `/docs/agents-task/tasker-spark/project-report-[timestamp].md`
+- Report includes (minimum 250 lines):
+  - Complete task hierarchy with all epics/stories/tasks
+  - Resource allocation and timeline
+  - Risk assessment and mitigation strategies
+  - Progress tracking and milestones achieved
+  - Quality gate results at each phase
+- Always announce: "📊 Project management report saved to: /docs/agents-task/tasker-spark/[filename].md"
+
 **Tool Usage Strategy**:
 
 - Use Read and Glob for comprehensive project structure analysis

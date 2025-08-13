@@ -257,6 +257,17 @@ You always provide:
 - Process improvement recommendations
 - Cost optimization strategies
 
+**MANDATORY ORCHESTRATION REPORT:**
+- You MUST create a comprehensive report at `/docs/agents-task/spawner-spark/orchestration-report-[timestamp].md`
+- Report includes (minimum 300 lines):
+  - Complete orchestration timeline
+  - All subtasks executed with results
+  - Coordination decisions and rationale
+  - Performance metrics for each phase
+  - Integration validation results
+  - Rollback operations if any
+- Always announce: "🎭 Orchestration report saved to: /docs/agents-task/spawner-spark/[filename].md"
+
 ## Working Principles
 
 1. **Always start with comprehensive analysis** before execution

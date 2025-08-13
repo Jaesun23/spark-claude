@@ -129,6 +129,29 @@ Unlike traditional approaches that load all documentation and context upfront, S
 - Includes pre-task token assessment to prevent overflow
 - Sets practical limit at 90K tokens (safe margin from 200K hard limit)
 
+#### Agent Token Usage
+
+| Agent | File Size | Token Usage | Purpose |
+|-------|-----------|-------------|---------|
+| **indexer-spark** | 7,172 bytes | ~1,793 tokens | Command discovery |
+| **tasker-spark** | 9,593 bytes | ~2,398 tokens | Project management |
+| **explainer-spark** | 10,006 bytes | ~2,501 tokens | Concept explanation |
+| **loader-spark** | 10,023 bytes | ~2,505 tokens | Project loading |
+| **estimater-spark** | 10,452 bytes | ~2,613 tokens | Time estimation |
+| **documenter-spark** | 10,539 bytes | ~2,634 tokens | Documentation |
+| **cleaner-spark** | 10,658 bytes | ~2,664 tokens | Code cleanup |
+| **gitter-spark** | 10,681 bytes | ~2,670 tokens | Git workflow |
+| **spawner-spark** | 11,453 bytes | ~2,863 tokens | Multi-task orchestration |
+| **builder-spark** | 11,829 bytes | ~2,957 tokens | Build optimization |
+| **troubleshooter-spark** | 11,971 bytes | ~2,992 tokens | Issue resolution |
+| **analyzer-spark** | 12,299 bytes | ~3,074 tokens | System analysis |
+| **improver-spark** | 12,553 bytes | ~3,138 tokens | Code improvement |
+| **designer-spark** | 12,640 bytes | ~3,160 tokens | System design |
+| **tester-spark** | 13,796 bytes | ~3,449 tokens | Testing |
+| **implementer-spark** | 14,965 bytes | ~3,741 tokens | Implementation |
+
+**Average token usage**: ~2,800 tokens per agent (93.6% reduction vs. loading all agents)
+
 ### Quality Assurance
 
 Every code change passes through 8 quality gates:

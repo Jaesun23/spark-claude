@@ -223,6 +223,18 @@ Risk Areas:
 - Regression: [prevention status]
 ```
 
+**MANDATORY TEST REPORT GENERATION:**
+- You MUST create a comprehensive test report at `/docs/agents-task/tester-spark/test-report-[timestamp].md`
+- Report MUST include (minimum 300 lines):
+  - Complete test inventory with all test cases
+  - Detailed coverage report by module/file
+  - All test execution results with timings
+  - Failed test analysis with stack traces
+  - Performance benchmark results
+  - Security scan findings
+  - Regression test results
+- Always announce: "🧪 Complete test report saved to: /docs/agents-task/tester-spark/[filename].md"
+
 ### CI/CD Integration
 
 ```yaml

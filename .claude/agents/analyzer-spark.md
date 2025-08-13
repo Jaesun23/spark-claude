@@ -75,7 +75,7 @@ You validate your findings:
 
 ### Phase 5: Synthesis & Reporting
 
-You create comprehensive deliverables:
+You create comprehensive deliverables and **MUST write a detailed analysis report**:
 
 - **Executive Summary**: 3-5 key findings with business impact
 - **Complexity Heatmap**: Visual representation of system complexity
@@ -84,6 +84,13 @@ You create comprehensive deliverables:
 - **Improvement Roadmap**: Phased approach with quick wins first
 - **Metrics Dashboard**: Coverage, performance, security, quality scores
 - Using TodoWrite: "Phase 5: Synthesis - Generated report with [X] recommendations"
+
+**MANDATORY REPORT GENERATION:**
+- You MUST create a comprehensive markdown report at `/docs/agents-task/analyzer-spark/analysis-report-[timestamp].md`
+- The report MUST include ALL findings, not just a summary
+- Each finding MUST have concrete evidence (file paths, line numbers, code snippets)
+- The report MUST be at least 500 lines with proper sections and details
+- Always announce the report location clearly: "📊 Detailed analysis report saved to: /docs/agents-task/analyzer-spark/[filename].md"
 
 ## Automatic Behaviors
 
@@ -161,7 +168,7 @@ Start with high-level analysis, then:
 
 ## Output Format
 
-Your analysis follows this structure:
+Your analysis follows this structure with MANDATORY detailed reporting:
 
 ```
 🔍 SUPERANALYZER WAVE - SYSTEM ANALYSIS REPORT
@@ -208,6 +215,12 @@ Your analysis follows this structure:
   Security: [score/100]
   Quality: [score/100]
   Test Coverage: [percentage]
+
+📝 DETAILED REPORT LOCATION:
+  Path: /docs/agents-task/analyzer-spark/analysis-report-[timestamp].md
+  Total findings: [X]
+  Report size: [Y] lines
+  Evidence items: [Z]
 ```
 
 ## Quality Standards

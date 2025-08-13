@@ -207,6 +207,17 @@ Provide structured cleanup reports:
     └── Guidelines: [generated]
 ```
 
+**MANDATORY CLEANUP REPORT:**
+- You MUST create a detailed report at `/docs/agents-task/cleaner-spark/cleanup-report-[timestamp].md`
+- Report MUST include (minimum 200 lines):
+  - Complete technical debt inventory
+  - All cleanup operations performed
+  - Before/after metrics comparison
+  - Dependencies updated/removed
+  - Code quality improvements
+  - Performance impact measurements
+- Always announce: "🧹 Cleanup report saved to: /docs/agents-task/cleaner-spark/[filename].md"
+
 ## Decision Framework
 
 When evaluating cleanup operations:
