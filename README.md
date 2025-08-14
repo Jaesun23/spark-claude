@@ -13,12 +13,14 @@ SPARK is a lazy-loading multi-agent system for [Claude Code](https://claude.ai/c
 
 ### Key Features
 
-- **16 Specialized Agents**: Each focused on specific tasks (implementation, testing, analysis, etc.)
-- **Lazy Loading Architecture**: Load only the agent you need, not all 16 at once
+- **28 Specialized Agents**: 16 primary agents + 12 team agents for parallel execution
+- **Lazy Loading Architecture**: Load only the agent you need, not all 28 at once
 - **Smart Routing**: Automatically selects the optimal agent based on your task
 - **Quality Gates**: 8-step validation ensuring production-ready code
 - **Parallel Execution**: Run multiple independent tasks simultaneously
 - **Token Safety Protocol**: All agents now include 90K token limit protection
+- **Mandatory Reporting System**: All agents generate detailed task completion reports
+- **Quality Gates**: 16/18 Python agents have automated quality validation
 
 ## Quick Start
 
@@ -119,7 +121,9 @@ SPARK uses a three-layer architecture:
 
 1. **Router Layer**: Analyzes your request and determines which agent to load
 2. **Orchestration Layer**: Manages agent lifecycle and coordination
-3. **Agent Layer**: 16 specialized agents, each with specific expertise
+3. **Agent Layer**: 28 specialized agents, each with specific expertise
+   - 16 primary agents for different domains (analysis, design, implementation, etc.)
+   - 12 team agents (team1-4) for parallel execution of large-scale tasks
 
 ### Token Management
 
@@ -148,9 +152,14 @@ Unlike traditional approaches that load all documentation and context upfront, S
 | **improver-spark** | 12,553 bytes | ~3,138 tokens | Code improvement |
 | **designer-spark** | 12,640 bytes | ~3,160 tokens | System design |
 | **tester-spark** | 13,796 bytes | ~3,449 tokens | Testing |
-| **implementer-spark** | 14,965 bytes | ~3,741 tokens | Implementation |
+| **implementer-spark** | 15,476 bytes | ~3,869 tokens | Implementation |
+| **team agents (12)** | 3,261-4,432 bytes | ~815-1,108 tokens | Parallel execution |
 
-**Average token usage**: ~2,800 tokens per agent (93.6% reduction vs. loading all agents)
+**Token Usage (Updated):**
+- **Total agents**: 28 (16 primary + 12 team)
+- **Average token usage**: ~2,370 tokens per agent
+- **Single agent**: 1.5-2.5% of 200K context window
+- **Token savings**: 95.5% reduction vs. loading all agents
 
 ### Quality Assurance
 
@@ -166,6 +175,8 @@ Every code change passes through 8 quality gates:
 8. Integration testing
 
 ## Available Agents
+
+### Primary Agents (16)
 
 | Agent | Purpose | Command Example |
 |-------|---------|-----------------|
@@ -185,6 +196,58 @@ Every code change passes through 8 quality gates:
 | loader-spark | Project onboarding | "analyze and load project context" |
 | indexer-spark | Command navigation | "list available commands" |
 | tasker-spark | Project management | "create task breakdown structure" |
+
+### Team Agents (12) - For Parallel Execution
+
+| Team | Agents | Purpose |
+|------|--------|---------|
+| **Team 1** | team1-implementer/tester/documenter-spark | Independent parallel implementation |
+| **Team 2** | team2-implementer/tester/documenter-spark | Independent parallel implementation |
+| **Team 3** | team3-implementer/tester/documenter-spark | Independent parallel implementation |
+| **Team 4** | team4-implementer/tester/documenter-spark | Independent parallel implementation |
+
+**Usage**: For large tasks requiring parallel execution across multiple domains simultaneously.
+
+## New Features in v3.5
+
+### 🔒 Quality Gates System
+- **16/18 Python agents** have mandatory quality validation
+- Automatic linting (ruff), type checking (mypy), and test coverage validation
+- Self-validation command: `echo '{"subagent": "[agent-name]", "self_check": true}' | python3 .claude/hooks/spark_quality_gates.py`
+- Maximum 3 retries with SubagentStop hook fallback
+
+### 📊 Mandatory Reporting System
+All agents now generate comprehensive reports after task completion:
+
+**Report Categories:**
+- **Detailed Reports** (7 analysis/design agents): 500-800+ lines with comprehensive findings
+- **Concise Reports** (21 execution agents): 150-300 lines with essential metrics
+
+**Report Location:** `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md`
+
+**Features:**
+- Evidence-based findings with file paths and line numbers
+- Quality metrics and performance impact measurements
+- Next steps and handoff documentation for team coordination
+- Template library available at `/docs/templates/agent-reports/`
+
+### ⚡ Multi-Team Parallel Execution
+Execute large-scale tasks with up to 4 teams working simultaneously:
+
+```bash
+# Example: Full-stack implementation with 4 parallel teams
+"Implement user management system across all layers"
+# Automatically delegates to:
+# Team 1: Backend API implementation
+# Team 2: Database schema and queries  
+# Team 3: Frontend components
+# Team 4: Testing and documentation
+```
+
+**Benefits:**
+- Up to 4x faster execution for complex multi-domain tasks
+- Independent team coordination via JSON state management
+- Each team includes implementer + tester + documenter for complete coverage
 
 ## Development
 
@@ -208,6 +271,9 @@ echo '{"prompt": "implement API"}' | python3 .claude/hooks/spark_persona_router.
 
 # Test quality gates
 echo '{}' | python3 .claude/hooks/spark_quality_gates.py
+
+# Test agent self-validation
+echo '{"subagent": "implementer-spark", "self_check": true}' | python3 .claude/hooks/spark_quality_gates.py
 ```
 
 ## Project Structure
@@ -215,11 +281,13 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 ```
 spark-claude/
 ├── .claude/
-│   ├── agents/          # 16 specialized agents
+│   ├── agents/          # 28 specialized agents (16 primary + 12 team)
 │   ├── hooks/           # Orchestration and routing
 │   └── workflows/       # State management
 ├── benchmarks/          # Performance tests
-├── docs/                # Documentation
+├── docs/
+│   ├── agents-task/     # Agent-generated reports
+│   └── templates/       # Report templates
 ├── scripts/             # Installation scripts
 └── tests/               # Test suite
 ```
@@ -228,8 +296,10 @@ spark-claude/
 
 - [SPARK Agents Guide](docs/SPARK_AGENTS_GUIDE.md) - Detailed agent documentation
 - [Token Management](docs/TOKEN_AND_RESOURCE_MANAGEMENT.md) - Token optimization strategies
+- [Agent Reporting Update](docs/SPARK_AGENT_REPORTING_UPDATE.md) - Mandatory reporting requirements
 - [Installation Guide](docs/INSTALLATION_GUIDE.md) - Setup instructions
 - [CLAUDE.md](CLAUDE.md) - Instructions for Claude Code instances
+- [Report Templates](docs/templates/agent-reports/) - Template library for agent reports
 
 ## About This Project
 

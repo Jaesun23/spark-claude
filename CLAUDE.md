@@ -49,7 +49,9 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 
 1. **Router Layer** (`spark_persona_router.py`): Analyzes tasks and determines optimal agent selection
 2. **Orchestration Layer** (`spark_unified_orchestrator.py`): Manages agent lifecycle through 6 hooks
-3. **Agent Layer** (16 specialized agents in `.claude/agents/`): Each implements 5-Phase methodology
+3. **Agent Layer** (28 specialized agents in `.claude/agents/`): Each implements 5-Phase methodology
+   - 16 primary agents (analyzer, designer, implementer, etc.)
+   - 12 team agents (team1-4 × implementer/tester/documenter) for parallel execution
 
 ### Token Management (Critical)
 
@@ -60,7 +62,7 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 - Practical limit is 90K to avoid hard termination at 200K
 - All agents now include Token Safety Protocol with pre-task assessment
 
-#### Agent Token Consumption Table
+#### Agent Token Consumption Table (Updated with Latest Sizes)
 
 | Agent | File Size | Token Usage | Purpose |
 |-------|-----------|-------------|---------|
@@ -79,12 +81,15 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 | **improver-spark** | 12,553 bytes | ~3,138 tokens | Code improvement |
 | **designer-spark** | 12,640 bytes | ~3,160 tokens | System design |
 | **tester-spark** | 13,796 bytes | ~3,449 tokens | Testing |
-| **implementer-spark** | 14,965 bytes | ~3,741 tokens | Implementation |
+| **implementer-spark** | 15,476 bytes | ~3,869 tokens | Implementation |
+| **team agents (12)** | 3,261-4,432 bytes | ~815-1,108 tokens | Parallel execution |
 
-**Key Metrics:**
-- Average agent size: ~2,800 tokens
-- Traditional approach (all agents): ~44,000 tokens
-- Token savings: 93.6% reduction per request
+**Key Metrics (Updated):**
+- Total agents: 28 (16 primary + 12 team)
+- Average agent size: ~2,370 tokens
+- Total system size: ~66,367 tokens
+- Single agent usage: 1.5-2.5% of 200K context
+- Token savings: 95.5% reduction per request
 
 ### Agent Communication Pattern
 
@@ -103,6 +108,11 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 6. Performance Check
 7. Documentation Validation (docstrings required)
 8. Integration Testing
+
+**Self-Validation System:**
+- 16/18 Python-writing agents have mandatory quality gates
+- Command: `echo '{"subagent": "[agent-name]", "self_check": true}' | python3 ~/.claude/hooks/spark_quality_gates.py`
+- Maximum 3 retries before SubagentStop hook intervention
 
 ### Hook System (6 Lifecycle Hooks)
 
@@ -141,16 +151,52 @@ echo '{}' | python3 .claude/hooks/spark_quality_gates.py
 - Default compression reduces tokens by 30-50%
 - Write operations always double token cost
 
+## Mandatory Agent Reporting
+
+All agents must generate detailed reports after task completion:
+
+**Report Location Pattern:** `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md`
+
+**Report Categories:**
+- **Detailed Reports** (7 analysis/design agents): 500-800+ lines with comprehensive findings
+- **Concise Reports** (21 execution agents): 150-300 lines with essential metrics
+
+**Key Features:**
+- Evidence-based findings (file paths, line numbers)
+- Quality metrics and performance impact
+- Next steps and handoff documentation
+- Template library available at `/docs/templates/agent-reports/`
+
 ## Project Structure
 ```
 spark-claude/
 ├── .claude/
-│   ├── agents/              # 16 specialized agents (lazy-loaded)
+│   ├── agents/              # 28 specialized agents (16 primary + 12 team)
 │   ├── hooks/               # Orchestration and routing
 │   └── workflows/           # JSON state management
 ├── benchmarks/              # Performance verification
-├── docs/                    # Documentation including TOKEN_AND_RESOURCE_MANAGEMENT.md
+├── docs/
+│   ├── agents-task/         # Agent-generated reports
+│   └── templates/           # Report templates
 └── pyproject.toml          # uv-compatible configuration
+```
+
+## Multi-Team Parallel Execution
+
+SPARK supports parallel execution via team agents for large-scale tasks:
+
+**Team Structure:**
+- **Team 1-4**: Independent parallel execution
+- **Each team**: implementer + tester + documenter
+- **Coordination**: Via JSON state files (`team[N]_current_task.json`)
+
+**Usage Pattern:**
+```python
+# Invoke 4 teams simultaneously
+Task("team1-implementer-spark", "Core Services implementation")
+Task("team2-implementer-spark", "API Layer implementation") 
+Task("team3-implementer-spark", "Database Layer implementation")
+Task("team4-implementer-spark", "Frontend Components implementation")
 ```
 
 ## Agent Reference
@@ -158,3 +204,5 @@ spark-claude/
 For detailed agent usage patterns and invocation guidelines, see:
 - **[SPARK Agents Guide](docs/SPARK_AGENTS_GUIDE.md)** - Complete agent documentation
 - **[Token Management](docs/TOKEN_AND_RESOURCE_MANAGEMENT.md)** - Token optimization strategies
+- **[Agent Reporting Update](docs/SPARK_AGENT_REPORTING_UPDATE.md)** - Mandatory reporting requirements
+- **[Report Templates](docs/templates/agent-reports/)** - Template library for agent reports
