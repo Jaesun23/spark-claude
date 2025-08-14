@@ -99,9 +99,9 @@ spawner-spark → calls → team1-implementer-spark // Agents cannot directly co
 
 ---
 
-## 🤖 Complete SPARK Agent List (16 agents)
+## 🤖 Complete SPARK Agent List (28 agents)
 
-### 🎯 16 Core Agents 
+### 🎯 16 Core Agents + 12 Team Agents (28 Total) 
 
 | Agent | Role | When to Use | 5-Phase Pattern |
 |-------|------|-------------|-----------------|
@@ -122,7 +122,13 @@ spawner-spark → calls → team1-implementer-spark // Agents cannot directly co
 | **explainer-spark** ⭐⭐ | Educational content creation | Concept explanation, learning material writing | Analysis → Structuring → Writing → Examples → Validation |
 | **indexer-spark** ⭐ | Command catalog navigation | SuperClaude command exploration, recommendations | Collection → Classification → Matching → Recommendation → Guide |
 
-### 🚀 Multi-Implement Command
+### 🚀 12 Team Agents (For Parallel Execution)
+
+**Team Agent Structure:** team1-4 × (implementer, tester, documenter) = 12 agents
+- `team1-implementer-spark`, `team1-tester-spark`, `team1-documenter-spark`
+- `team2-implementer-spark`, `team2-tester-spark`, `team2-documenter-spark`
+- `team3-implementer-spark`, `team3-tester-spark`, `team3-documenter-spark`
+- `team4-implementer-spark`, `team4-tester-spark`, `team4-documenter-spark`
 
 **When using multi-implement:**
 - Must call 4 team agents simultaneously in one message

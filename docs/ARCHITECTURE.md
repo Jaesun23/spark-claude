@@ -35,8 +35,8 @@ Only Claude CODE has decision-making power. All other components follow instruct
 | **Claude CODE** | Decision & Control | Task assignment, Flow control, Agent selection, Team coordination | Direct file modification |
 | **5 Essential Hooks** | Automation | Context enhancement, Quality validation, Team JSON generation | Agent selection, Task creation |
 | **JSON Files** | State Management | Information relay, Progress tracking, Team status, Lock coordination | Decision making |
-| **16 Base Agents** | Core Execution | Actual work, Result generation, Quality validation | Calling other agents, Team coordination |
-| **12 Team Agents** | Parallel Execution | Team-specific work, Lock management, Parallel coordination | Cross-team communication |
+| **16 Base Agents** | Core Execution | Actual work, Result generation, Quality validation, Mandatory reporting | Calling other agents, Team coordination |
+| **12 Team Agents** | Parallel Execution | Team-specific work, Lock management, Parallel coordination, Team reports | Cross-team communication |
 | **FileLockManager** | Resource Coordination | File lock acquisition/release, Deadlock prevention, Thread safety | File content modification |
 
 ---
@@ -45,9 +45,12 @@ Only Claude CODE has decision-making power. All other components follow instruct
 
 ### Lazy-Loading Agent System
 ```
-Previous v3.0: Load all 16 agents → ~39K token overhead
-Current v3.5: Load only required agents → ~10K token overhead
-Token Savings: 75% reduction in agent loading
+Previous v3.0: Load all 16 agents → ~44K token overhead
+Current v3.5: Load only required agents (28 total)
+  - Single agent: ~2,370 tokens (1.5-2.5% of 200K context)
+  - Team agents: ~815-1,108 tokens each
+  - Total system: ~66K tokens
+Token Savings: 95.5% reduction per request
 ```
 
 ### FileLockManager Integration
@@ -73,9 +76,13 @@ Token Savings: 75% reduction in agent loading
 Previous (10 hooks) → Current (5 hooks):
 ✓ spark_persona_router.py    - Agent selection logic
 ✓ spark_phase_manager.py     - 5-Phase execution management  
-✓ spark_quality_gates.py     - 8-step quality validation
+✓ spark_quality_gates.py     - 8-step quality validation + self-validation
 ✓ spark_core_utils.py        - Shared utilities
 ✓ file_lock_manager.py       - Thread-safe coordination (new)
+
+### Quality Gate Integration
+16/18 Python agents now have mandatory self-validation:
+echo '{"subagent": "[agent-name]", "self_check": true}' | python3 ~/.claude/hooks/spark_quality_gates.py
 ```
 
 ---
@@ -186,6 +193,11 @@ Critical: No agent can proceed until ALL parallel agents finish
 - `implementation_result.json` - Code created (Implementer → Tester)
 - `test_result.json` - Test coverage (Tester → Documenter)
 
+**Agent Report Files (New in v3.5)**
+- `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md` - Mandatory task reports
+- Detailed reports: 500-800+ lines (analysis/design agents)
+- Concise reports: 150-300 lines (execution agents)
+
 **Parallel Work Files**
 - `team_coordination.json` - Overall parallel plan (Spawner → Teams)
 - `team1-4_task.json` - Team assignments (Spawner → Each team)
@@ -218,10 +230,12 @@ DELETE: Claude CODE cleans up after completion
 
 ### SubagentStop Hook
 **CAN DO:**
-- Validate quality gates
+- Validate quality gates (8-step protocol)
+- Self-validation for Python agents (16/18)
 - Block poor quality (exit code 2)
-- Request retry with guidance
+- Request retry with guidance (max 3)
 - Verify result JSON format
+- Ensure mandatory reports generated
 
 **CANNOT DO:**
 - Choose next agent
@@ -329,14 +343,27 @@ Wave 5: Deployment (Builder)
 ### Entry Gates
 - UserPromptSubmit: Pre-validation and context preparation
 - Agent MANDATORY INITIALIZATION: Force context reading
+- Token Safety Protocol: Pre-task assessment (90K limit)
 
 ### Process Gates
 - JSON relay: Explicit state tracking
 - TodoWrite: Progress visibility
+- Self-validation: Automated quality checks (16/18 Python agents)
 
 ### Exit Gates
-- SubagentStop: Quality validation
+- SubagentStop: Quality validation with retry (max 3)
 - Agent MANDATORY OUTPUT: Force result writing
+- Agent MANDATORY REPORTING: Task completion reports
+
+### Quality Metrics Enforced
+1. Syntax validation (0 errors)
+2. MyPy --strict (0 errors)
+3. Ruff --strict (0 violations)
+4. Security analysis (OWASP + secrets)
+5. Test coverage (Unit 95%, Integration 85%)
+6. Performance check (complexity analysis)
+7. Documentation validation (docstrings)
+8. Integration testing (E2E scenarios)
 
 ---
 
@@ -374,11 +401,12 @@ Wave 5: Deployment (Builder)
 
 | Metric | Traditional | SPARK v3.5 | Improvement |
 |--------|------------|------------|-------------|
-| **Token Usage** | High baseline | Optimized lazy-loading | 75% reduction in agent loading |
+| **Token Usage** | High baseline | Optimized lazy-loading | 95.5% reduction per request |
 | **Execution Time** | Sequential only | Parallel capable | 60% faster on complex tasks |
-| **Quality Consistency** | Variable | Enforced gates | 100% compliance |
-| **State Tracking** | Implicit | Explicit JSON | Full visibility |
+| **Quality Consistency** | Variable | Enforced gates + self-validation | 100% compliance |
+| **State Tracking** | Implicit | Explicit JSON + reports | Full visibility + audit trail |
 | **Error Recovery** | Manual | Automated retry | 3x retry logic |
+| **Reporting** | None | Mandatory comprehensive | 28 agents, 2 report types |
 
 ---
 

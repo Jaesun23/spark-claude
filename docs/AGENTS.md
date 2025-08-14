@@ -13,7 +13,7 @@ Complete reference for all 28 SPARK agents with practical usage examples and sel
 ### All 28 Agents
 **16 Base Agents** + **12 Team Agents** = 28 Total
 
-**Base:** analyzer, implementer, tester, designer, documenter, troubleshooter, improver, cleaner, explainer, estimator, gitter, builder, spawner, indexer, tasker, loader
+**Base:** analyzer, implementer, tester, designer, documenter, troubleshooter, improver, cleaner, explainer, estimater, gitter, builder, spawner, indexer, tasker, loader
 
 **Team:** team1-4 × (implementer, tester, documenter) = 12 specialized parallel agents
 
@@ -32,7 +32,7 @@ Complete reference for all 28 SPARK agents with practical usage examples and sel
 | **Improve performance** | improver-spark | `/spark-improve "optimize database queries"` |
 | **Clean code** | cleaner-spark | `/spark-clean "remove dead code"` |
 | **Explain concepts** | explainer-spark | `/spark-explain "how OAuth works"` |
-| **Estimate work** | estimator-spark | `/spark-estimate "new feature timeline"` |
+| **Estimate work** | estimater-spark | `/spark-estimate "new feature timeline"` |
 | **Git operations** | gitter-spark | `/spark-git "commit and push changes"` |
 | **Build/Deploy** | builder-spark | `/spark-build "deploy to production"` |
 | **Coordinate multiple tasks** | spawner-spark | `/spark-spawn "parallel development"` |
@@ -213,7 +213,7 @@ Agents automatically activate relevant personas based on keywords:
 
 **Example:** `Task("explainer-spark", "explain microservice communication patterns for new team members")`
 
-### 📊 estimator-spark
+### 📊 estimater-spark
 **Purpose:** Work estimation and planning
 
 **Key Capabilities:**
@@ -224,7 +224,7 @@ Agents automatically activate relevant personas based on keywords:
 
 **Usage:** Provide detailed requirements and constraints.
 
-**Example:** `Task("estimator-spark", "estimate development time for mobile app integration")`
+**Example:** `Task("estimater-spark", "estimate development time for mobile app integration")`
 
 ### 🔀 gitter-spark
 **Purpose:** Git operations and version control
@@ -239,7 +239,7 @@ Agents automatically activate relevant personas based on keywords:
 
 **Example:** `Task("gitter-spark", "create feature branch and commit authentication changes")`
 
-### 🏗️ builder-spark
+### 🏗️ builder-spark (build-spark)
 **Purpose:** Build and deployment automation
 
 **Key Capabilities:**
@@ -361,9 +361,10 @@ Automatically coordinates parallel execution across teams.
 
 ---
 
-## Quality Gates
+## Quality Gates & Reporting
 
-All agents must pass these validation steps:
+### Quality Validation System
+**16/18 Python agents** have mandatory self-validation:
 
 1. **Syntax Validation** → 0 errors
 2. **Type Checking** → mypy --strict (0 errors)
@@ -374,7 +375,27 @@ All agents must pass these validation steps:
 7. **Documentation** → Required docstrings and comments
 8. **Integration Testing** → End-to-end scenario validation
 
+**Self-Validation Command:**
+```bash
+echo '{"subagent": "[agent-name]", "self_check": true}' | python3 ~/.claude/hooks/spark_quality_gates.py
+```
+
 Failed quality gates trigger automatic retry (max 3 attempts).
+
+### Mandatory Reporting System
+All agents generate detailed task completion reports:
+
+**Report Location:** `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md`
+
+**Report Categories:**
+- **Detailed Reports** (7 analysis/design agents): 500-800+ lines with comprehensive findings
+- **Concise Reports** (21 execution agents): 150-300 lines with essential metrics
+
+**Features:**
+- Evidence-based findings (file paths, line numbers)
+- Quality metrics and performance impact
+- Next steps and handoff documentation
+- Template library: `/docs/templates/agent-reports/`
 
 ---
 
