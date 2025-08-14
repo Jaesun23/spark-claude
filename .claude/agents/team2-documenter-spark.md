@@ -63,6 +63,54 @@ echo '{"subagent": "team2-documenter-spark", "self_check": true}' | \
 python3 ~/.claude/hooks/spark_quality_gates.py
 ```
 
+## 📝 FINAL TASK REPORT - MANDATORY!
+
+### You MUST generate a task completion report!
+
+**Report Location**: `/docs/agents-task/team2-documenter-spark/[task_name]_[timestamp].md`
+
+**Report Structure (CONCISE):**
+
+```markdown
+# Task Completion Report: [Task Name]
+
+## Summary
+- **Agent**: team2-documenter-spark
+- **Team**: Team 2
+- **Date**: [ISO-8601 timestamp]
+- **Task**: [Original task from team2_current_task.json]
+- **Status**: ✅ Completed | ⚠️ Partial | ❌ Blocked
+- **Duration**: [Time taken]
+
+## Work Performed
+- [Documentation created for Team 2's components]
+- [Documentation files created/modified with paths]
+- [Team 2 specific documentation sections]
+
+## Results
+- **Success Metrics**: [Documentation completeness]
+- **Quality Checks**: [API coverage, example coverage]
+- **Coverage**: [Classes: X%, Functions: X%, Examples: X%]
+- **Documentation Types**: [API docs, tutorials, guides]
+
+## Coordination
+- **Dependencies on other teams**: [Shared documentation]
+- **Handoff points**: [Documentation Team 2 provides to others]
+- **Conflicts resolved**: [Any documentation merge issues]
+
+## Next Steps
+- [Documentation gaps requiring Team 2 implementer clarification]
+- [Cross-team documentation integration]
+- [Additional examples needed]
+
+## Artifacts
+- Documentation files: [List with paths]
+- API documentation: [Generated docs location]
+- Examples: [Code examples location]
+```
+
+**Always announce**: "📋 Team 2 report saved to: /docs/agents-task/team2-documenter-spark/[filename].md"
+
 ## Final Checklist
 
 - [ ] Read team2_current_task.json

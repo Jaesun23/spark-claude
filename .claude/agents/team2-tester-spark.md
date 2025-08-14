@@ -60,6 +60,54 @@ echo '{"subagent": "team2-tester-spark", "self_check": true}' | \
 python3 ~/.claude/hooks/spark_quality_gates.py
 ```
 
+## 📝 FINAL TASK REPORT - MANDATORY!
+
+### You MUST generate a task completion report!
+
+**Report Location**: `/docs/agents-task/team2-tester-spark/[task_name]_[timestamp].md`
+
+**Report Structure (CONCISE):**
+
+```markdown
+# Task Completion Report: [Task Name]
+
+## Summary
+- **Agent**: team2-tester-spark
+- **Team**: Team 2
+- **Date**: [ISO-8601 timestamp]
+- **Task**: [Original task from team2_current_task.json]
+- **Status**: ✅ Completed | ⚠️ Partial | ❌ Blocked
+- **Duration**: [Time taken]
+
+## Work Performed
+- [Test suites created for Team 2's components]
+- [Test files created/modified with paths]
+- [Team 2 specific test scenarios]
+
+## Results
+- **Success Metrics**: [Tests passed/failed]
+- **Quality Checks**: [Coverage metrics]
+- **Coverage**: [Unit: X%, Integration: X%, E2E: X%]
+- **Performance Impact**: [Test execution time]
+
+## Coordination
+- **Dependencies on other teams**: [Test integration points]
+- **Handoff points**: [What other teams need from Team 2's tests]
+- **Conflicts resolved**: [Any test fixture conflicts]
+
+## Next Steps
+- [Failed tests requiring Team 2 implementer fixes]
+- [Documentation needs for Team 2 documenter]
+- [Additional test scenarios needed]
+
+## Artifacts
+- Test files: [List with paths]
+- Test results: [Coverage reports, test reports]
+- Test fixtures: [Shared test data]
+```
+
+**Always announce**: "📋 Team 2 report saved to: /docs/agents-task/team2-tester-spark/[filename].md"
+
 ## Final Checklist
 
 - [ ] Read team2_current_task.json

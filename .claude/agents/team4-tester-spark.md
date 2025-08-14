@@ -60,6 +60,54 @@ echo '{"subagent": "team4-tester-spark", "self_check": true}' | \
 python3 ~/.claude/hooks/spark_quality_gates.py
 ```
 
+## 📝 FINAL TASK REPORT - MANDATORY!
+
+### You MUST generate a task completion report!
+
+**Report Location**: `/docs/agents-task/team4-tester-spark/[task_name]_[timestamp].md`
+
+**Report Structure (CONCISE):**
+
+```markdown
+# Task Completion Report: [Task Name]
+
+## Summary
+- **Agent**: team4-tester-spark
+- **Team**: Team 4
+- **Date**: [ISO-8601 timestamp]
+- **Task**: [Original task from team4_current_task.json]
+- **Status**: ✅ Completed | ⚠️ Partial | ❌ Blocked
+- **Duration**: [Time taken]
+
+## Work Performed
+- [Test suites created for Team 4's components]
+- [Test files created/modified with paths]
+- [Team 4 specific test scenarios]
+
+## Results
+- **Success Metrics**: [Tests passed/failed]
+- **Quality Checks**: [Coverage metrics]
+- **Coverage**: [Unit: X%, Integration: X%, E2E: X%]
+- **Performance Impact**: [Test execution time]
+
+## Coordination
+- **Dependencies on other teams**: [Test integration points]
+- **Handoff points**: [What other teams need from Team 4's tests]
+- **Conflicts resolved**: [Any test fixture conflicts]
+
+## Next Steps
+- [Failed tests requiring Team 4 implementer fixes]
+- [Documentation needs for Team 4 documenter]
+- [Additional test scenarios needed]
+
+## Artifacts
+- Test files: [List with paths]
+- Test results: [Coverage reports, test reports]
+- Test fixtures: [Shared test data]
+```
+
+**Always announce**: "📋 Team 4 report saved to: /docs/agents-task/team4-tester-spark/[filename].md"
+
 ## Final Checklist
 
 - [ ] Read team4_current_task.json

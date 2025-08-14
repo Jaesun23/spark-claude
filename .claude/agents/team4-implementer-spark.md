@@ -99,6 +99,54 @@ For shared resources:
 3. Acquire lock before modifying
 4. Release lock after completion
 
+## 📝 FINAL TASK REPORT - MANDATORY!
+
+### You MUST generate a task completion report!
+
+**Report Location**: `/docs/agents-task/team4-implementer-spark/[task_name]_[timestamp].md`
+
+**Report Structure (CONCISE):**
+
+```markdown
+# Task Completion Report: [Task Name]
+
+## Summary
+- **Agent**: team4-implementer-spark
+- **Team**: Team 4
+- **Date**: [ISO-8601 timestamp]
+- **Task**: [Original task from team4_current_task.json]
+- **Status**: ✅ Completed | ⚠️ Partial | ❌ Blocked
+- **Duration**: [Time taken]
+
+## Work Performed
+- [Specific implementation actions taken for Team 4's portion]
+- [Files created/modified with paths]
+- [Team 4 specific implementation details]
+
+## Results
+- **Success Metrics**: [Features implemented]
+- **Quality Checks**: [Tests passed, linting results, type checking]
+- **Code Quality**: [Complexity metrics, clean code principles]
+- **Performance Impact**: [If applicable]
+
+## Coordination
+- **Dependencies on other teams**: [List]
+- **Handoff points**: [What other teams need from Team 4's implementation]
+- **Conflicts resolved**: [Any merge/integration issues]
+
+## Next Steps
+- [Items for Team 4 tester to validate]
+- [Documentation needs for Team 4 documenter]
+- [Follow-up implementation tasks]
+
+## Artifacts
+- Output files: [List with paths]
+- API endpoints created: [List]
+- Integration points: [List]
+```
+
+**Always announce**: "📋 Team 4 report saved to: /docs/agents-task/team4-implementer-spark/[filename].md"
+
 ## Final Checklist
 
 - [ ] Read team4_current_task.json at start
