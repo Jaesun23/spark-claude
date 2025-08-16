@@ -1,7 +1,7 @@
 [project]
 name = "spark-claude"
 version = "0.1.0"
-description = "⚡ SPARK: Subagent Performance Architecture with Reduced toKens - 88% more efficient than SuperClaude"
+description = "⚡ SPARK: Subagent Performance Architecture with Reduced toKens - Revolutionary TRAITS system with 95.5% token efficiency"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

@@ -1,4 +1,4 @@
-# SPARK v3.5 Installation Guide
+# SPARK v3.8 Installation Guide
 
 Complete installation guide for SPARK's multi-agent orchestration system with lazy-loading architecture and integrated FileLockManager.
 

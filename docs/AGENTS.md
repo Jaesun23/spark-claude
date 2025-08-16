@@ -1,4 +1,4 @@
-# SPARK v3.5 Agents Reference
+# SPARK v3.8 Agents Reference
 
 Complete reference for all 28 SPARK agents with practical usage examples and selection guidance.
 

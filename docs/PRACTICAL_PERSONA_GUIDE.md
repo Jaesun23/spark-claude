@@ -1,4 +1,4 @@
-# 🎭 Practical Persona Guide for SPARK v3.5
+# 🎭 Practical Persona Guide for SPARK v3.8
 *From Theory to Implementation - A Consolidated Framework*
 
 > **TL;DR**: Transform SPARK agents into domain experts using simple 3-line persona templates, with clear evolution path from basic to advanced AI companions.

@@ -1,4 +1,4 @@
-# SPARK v3.5 Development Guide
+# SPARK v3.8 Development Guide
 
 Complete development reference covering hooks, guidelines, token management, and multi-team workflows for SPARK system development and customization.
 
