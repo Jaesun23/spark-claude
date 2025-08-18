@@ -1,9 +1,9 @@
-# ⚡ SPARK v3.8: Traits-Based Multi-Agent System for Claude Code
+# ⚡ SPARK v4.1: Unified Phase-Based Multi-Agent System for Claude Code
 
 > **Subagent Performance Architecture with Reduced toKens**  
-> A revolutionary traits-based agent orchestration system that eliminates persona scanning overhead through dynamic trait activation.
+> A revolutionary traits-based agent orchestration system with unified phase structure and mandatory quality gates.
 
-[![Version](https://img.shields.io/badge/version-3.8-gold?style=for-the-badge)](docs/SPARK_AGENTS_GUIDE.md)
+[![Version](https://img.shields.io/badge/version-4.1-gold?style=for-the-badge)](docs/spark-agent-phase-structure-v4.1.md)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-blue?style=for-the-badge)](https://claude.ai/code)
 
@@ -15,6 +15,7 @@ SPARK v3.8 is an independent multi-agent system for [Claude Code](https://claude
 - **v3.0**: Initial release with lazy loading, 95.5% token reduction, workflow automation
 - **v3.5**: Stabilization update with enhanced quality gates and refined hooks
 - **v3.8**: TRAITS revolution - replacing persona scanning with instant trait activation
+- **v4.1**: Unified Phase structure with JSON state management and 8-step quality gates
 
 ### Key Features
 
@@ -228,20 +229,33 @@ Each team agent inherits the same traits as their primary counterparts but with 
 
 **Usage**: For large tasks requiring parallel execution across multiple domains simultaneously.
 
-## New Features in v3.5 - TRAITS Revolution
+## New Features in v4.1 - Unified Phase Structure
 
-### 🧬 TRAITS System (Revolutionary in v3.5)
+### 📊 Unified Phase Structure (v4.1)
+- **Phase 0**: Universal task initialization for all 28 agents
+- **Phase 1-3**: Agent-specific work phases
+- **Phase 4**: Quality validation (16 agents)
+- **Phase 5**: Two-part completion:
+  - Part A: Agent-specific completion work
+  - Part B: Universal JSON update & quality gates
+
+### 🧬 TRAITS System (from v3.8)
 - **Dynamic Trait Activation**: 3-5 traits per agent instead of 11 personas
 - **35% Cognitive Load Reduction**: No more "쫘라락~!" persona scanning
 - **Miller's 7±2 Theory**: Scientifically optimized trait count
-- **Immediate Activation**: Zero scanning overhead
-- **Korean-English Trait Names**: Cultural bridge for global understanding
 
-### 🔒 Quality Gates System
-- **16/18 Python agents** have mandatory quality validation
-- Automatic linting (ruff), type checking (mypy), and test coverage validation
-- Self-validation command: `echo '{"subagent": "[agent-name]", "self_check": true}' | python3 .claude/hooks/spark_quality_gates.py`
-- Maximum 3 retries with SubagentStop hook fallback
+### 🔒 8-Step Quality Gates System (v4.1)
+All agents execute these mandatory checks with numeric recording:
+1. **Architecture**: Import structure, circular dependencies, domain boundaries
+2. **Foundation**: Syntax validation, type checking
+3. **Standards**: Code formatting, naming conventions
+4. **Operations**: Logging, security, configuration
+5. **Quality**: Linting, complexity metrics
+6. **Testing**: Coverage targets (95% unit, 85% integration)
+7. **Documentation**: Docstrings, README files
+8. **Integration**: Final system checks
+
+**Zero tolerance**: All violations must be 0 to proceed
 
 ### 📊 Mandatory Reporting System
 All agents now generate comprehensive reports after task completion:
@@ -321,12 +335,13 @@ spark-claude/
 
 ## Documentation
 
-- [SPARK Agents Guide](docs/SPARK_AGENTS_GUIDE.md) - Detailed agent documentation
-- [Token Management](docs/TOKEN_AND_RESOURCE_MANAGEMENT.md) - Token optimization strategies
-- [Agent Reporting Update](docs/SPARK_AGENT_REPORTING_UPDATE.md) - Mandatory reporting requirements
-- [Installation Guide](docs/INSTALLATION_GUIDE.md) - Setup instructions
+- [Architecture](docs/ARCHITECTURE.md) - System design and components
+- [Phase Structure Guide](docs/spark-agent-phase-structure-v4.1.md) - Universal phase execution patterns
+- [Team Agents Guide](docs/spark-team-agents-guide-v4.1.md) - Multi-team parallel coordination
+- [Installation](docs/INSTALLATION.md) - Setup instructions
+- [Development](docs/DEVELOPMENT.md) - Development guide
+- [Agents List](docs/AGENTS.md) - All 28 agents documentation
 - [CLAUDE.md](CLAUDE.md) - Instructions for Claude Code instances
-- [Report Templates](docs/templates/agent-reports/) - Template library for agent reports
 
 ## About This Project
 

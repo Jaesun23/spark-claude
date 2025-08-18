@@ -10,6 +10,7 @@ SPARK v3.8 (Subagent Performance Architecture with Reduced toKens) is a traits-b
 - **v3.0**: Initial SPARK release with lazy loading, token optimization, and workflow automation
 - **v3.5**: Stabilization with enhanced quality gates and refined hook system
 - **v3.8**: Revolutionary TRAITS system replacing persona scanning with 3-5 instant traits
+- **v4.1**: Unified Phase structure with JSON state management and 8-step quality gates
 
 ## Core Architecture
 
@@ -40,15 +41,20 @@ pip install -e ".[full,dev,benchmark]"
 ```
 
 ### Quality Validation (8-Step Protocol)
-```bash
-# Must pass ALL checks with 0 errors/violations
-uv run mypy [file.py] --strict          # Type checking
-uv run ruff check [file.py]             # Linting
-uv run black [file.py]                  # Formatting
-uv run pytest tests/                    # Unit tests (95% coverage required)
 
-# Performance verification
-python3 benchmarks/compare_performance.py
+All agents execute these mandatory quality gates:
+1. **Architecture**: Import structure, circular dependencies, domain boundaries
+2. **Foundation**: Syntax validation, type checking  
+3. **Standards**: Code formatting, naming conventions
+4. **Operations**: Logging, security, configuration
+5. **Quality**: Linting, complexity metrics
+6. **Testing**: Coverage targets (95% unit, 85% integration)
+7. **Documentation**: Docstrings, README files
+8. **Integration**: Final system checks
+
+```bash
+# Automated verification
+python3 .claude/hooks/spark_quality_gates.py
 ```
 
 ### Testing Hooks
@@ -99,32 +105,48 @@ echo '{"prompt": "analyze codebase"}' | python3 .claude/hooks/spark_unified_orch
 ~/.claude/workflows/task_aborted.json
 ```
 
-## Quality Gates System
+## Phase Structure (v4.1)
 
-### Mandatory Validation (16/18 Python agents)
-1. **Syntax validation** (0 errors)
-2. **Type checking** (mypy --strict, 0 errors)
-3. **Linting** (ruff --strict, 0 violations)
-4. **Security analysis** (OWASP + secrets scan)
-5. **Test coverage** (Unit 95%, Integration 85%)
-6. **Performance check**
-7. **Documentation** (docstrings required)
-8. **Integration testing**
+### Universal Phase Pattern
+- **Phase 0**: Task Initialization (all agents)
+- **Phase 1-3**: Agent-specific work
+- **Phase 4**: Quality validation (some agents)
+- **Phase 5**: Task Completion
+  - Part A: Agent-specific completion
+  - Part B: JSON update & quality gates (all agents)
 
-### Self-Validation
-- Maximum 3 retry attempts
-- SubagentStop hook intervention on failure
-- Automatic quality report generation
+### Quality Gates System
 
-## Agent Reporting System
+All agents record violations as numbers (0 = pass):
+- **Zero tolerance**: All violations must be 0
+- **Script verification**: Mandatory after JSON update
+- **Maximum 3 retries**: Fix and re-validate
+- **Numeric recording**: No ambiguous pass/fail
 
-### Report Requirements
-All agents generate mandatory reports after task completion:
-- **Location**: `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md`
-- **Detailed reports** (7 agents): 500-800+ lines
-- **Concise reports** (21 agents): 150-300 lines
-- **Evidence-based**: File paths, line numbers, metrics
-- **Templates**: Available at `/docs/templates/agent-reports/`
+## JSON State Management (v4.1)
+
+### Simplified Structure
+```json
+{
+  "id": "spark_20250118_190418",
+  "version": "4.1",
+  "task": {
+    "prompt": "user request",
+    "execution_mode": "single|pipeline|parallel"
+  },
+  "state": {
+    "current_agent": "agent-name",
+    "status": "pending|running|completed|failed"
+  },
+  "quality": {
+    "step_1_architecture": {"imports": 0, "circular": 0},
+    "step_2_foundation": {"syntax": 0, "types": 0},
+    // ... 8 steps total
+    "violations_total": 0,
+    "can_proceed": true
+  }
+}
+```
 
 ## Multi-Team Parallel Execution
 
@@ -192,6 +214,8 @@ All agents follow this consistent structure:
 ## Documentation References
 
 - **README.md**: Project overview and setup
-- **pyproject.toml**: Dependencies and tool configurations
-- **benchmarks/compare_performance.py**: Token efficiency verification
-- **tests/**: Test suite and examples
+- **docs/ARCHITECTURE.md**: System design and components
+- **docs/spark-agent-phase-structure-v4.1.md**: Phase execution patterns
+- **docs/spark-team-agents-guide-v4.1.md**: Multi-team coordination
+- **pyproject.toml**: Dependencies and configurations
+- **benchmarks/**: Performance verification

@@ -1,68 +1,77 @@
 {
-  "spark_activation": {
-    "active_personas": [],
-    "mcp_servers": [],
-    "complexity_score": 0.0,
-    "quality_gates_required": 0,
-    "activation_timestamp": "",
-    "original_prompt": "",
-    "routing_strategy": "intelligent_persona_selection"
+  "id": "",
+  "version": "4.1",
+  "created_at": "",
+  "updated_at": "",
+  
+  "task": {
+    "prompt": "",
+    "complexity": 0.0,
+    "execution_mode": "single",
+    "team_id": null
   },
-  "enhanced_workflow": true,
-  "token_efficiency_target": "88.4%",
-  "implementation": {
+  
+  "state": {
+    "current_agent": "",
+    "current_phase": 0,
+    "phase_name": "",
     "status": "pending",
-    "files_created": [],
-    "files_modified": [],
-    "api_endpoints": [],
-    "database_changes": [],
-    "dependencies_added": [],
-    "configuration_changes": [],
-    "key_functions": [],
-    "implementation_notes": "",
-    "timestamp": ""
+    "pipeline": [],
+    "completed_agents": [],
+    "errors": []
   },
-  "testing": {
-    "status": "pending",
-    "test_files_created": [],
-    "test_files_modified": [],
-    "tests_added": 0,
-    "tests_passed": 0,
-    "coverage": {
+  
+  "quality": {
+    "step_1_architecture": {
+      "imports": 0,
+      "circular": 0,
+      "domain": 0
+    },
+    "step_2_foundation": {
+      "syntax": 0,
+      "types": 0
+    },
+    "step_3_standards": {
+      "formatting": 0,
+      "conventions": 0
+    },
+    "step_4_operations": {
+      "logging": 0,
+      "security": 0,
+      "config": 0
+    },
+    "step_5_quality": {
+      "linting": 0,
+      "complexity": 0
+    },
+    "step_6_testing": {
+      "coverage": -1
+    },
+    "step_7_documentation": {
+      "docstrings": 0,
+      "readme": 0
+    },
+    "step_8_integration": {
+      "final": 0
+    },
+    "violations_total": 0,
+    "can_proceed": false
+  },
+  
+  "output": {
+    "files": {
+      "created": [],
+      "modified": []
+    },
+    "tests": {
       "unit": 0,
       "integration": 0,
       "e2e": 0
     },
-    "test_framework": "",
-    "test_results": "",
-    "testing_notes": "",
-    "timestamp": ""
-  },
-  "documentation": {
-    "status": "pending",
-    "files_created": [],
-    "files_modified": [],
-    "api_docs_updated": false,
-    "readme_updated": false,
-    "changelog_updated": false,
-    "inline_comments_added": 0,
-    "documentation_notes": "",
-    "timestamp": ""
-  },
-  "spark_quality_results": {
-    "gates_passed": 0,
-    "total_gates": 10,
-    "violations": {},
-    "gate_results": {},
-    "spark_compliance": false,
-    "jason_dna_compliance": false
-  },
-  "routing_decision": {
-    "next_action": "",
-    "reason": "",
-    "specific_instructions": "",
-    "retry_required": false
-  },
-  "quality_gates_timestamp": "",
-  "quality_gates": {}
+    "docs": {
+      "api": false,
+      "readme": false,
+      "changelog": false
+    }
+  }
 }

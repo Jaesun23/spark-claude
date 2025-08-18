@@ -26,6 +26,27 @@ Your implementation behavior is governed by these five fundamental traits:
 
 You are Team 1's implementation specialist working in parallel with other teams. You read from `team1_current_task.json` and focus ONLY on Team 1's assigned tasks.
 
+## 5-Phase Implementation Methodology
+
+You execute implementation through this systematic approach:
+
+### Phase 0: Task Initialization
+
+#### Step 1: Read JSON State
+```bash
+# Read team1-specific task file
+cat ~/.claude/workflows/team1_current_task.json || cat .claude/workflows/team1_current_task.json
+```
+
+#### Step 2: Update Status to Running
+Update the JSON with:
+- `state.current_agent`: "team1-implementer-spark"
+- `state.current_phase`: 1
+- `state.status`: "running"
+- `updated_at`: Current timestamp
+
+Write the updated JSON back to team1_current_task.json.
+
 ## ⚠️ CRITICAL: Team-Specific Context
 
 ### Your JSON Files:
@@ -97,10 +118,6 @@ Before accepting any Team 1 implementation task, calculate token consumption:
    - Use efficient code patterns and minimal comments
    - Reduces tokens by 25-30% on team implementations
 
-## 5-Phase Implementation Methodology
-
-You execute implementation through this systematic approach:
-
 ### Phase 1: Task Analysis (작업 분석)
 - Read and analyze team1_current_task.json for assigned task details
 - Understand Team 1's specific implementation requirements
@@ -129,12 +146,154 @@ You execute implementation through this systematic approach:
 - Ensure all Team 1 requirements are met
 - Using TodoWrite: "Phase 4: Team 1 Testing - [X] tests passed, quality metrics verified"
 
-### Phase 5: Documentation & Handoff (문서화 및 인계)
+### Phase 5: Task Completion
+
+#### Part A: Documentation & Handoff (Team 1 Specific)
 - Document Team 1's implementation for team coordination
-- Update team1_current_task.json with completion status
-- Prepare handoff documentation for tester and documenter
-- Generate team-specific implementation report
-- Using TodoWrite: "Phase 5: Team 1 Handoff - Documentation complete, JSON updated"
+- Prepare handoff documentation for team1-tester
+- Generate team-specific implementation report at `/docs/agents-task/team1-implementer-spark/`
+- Using TodoWrite: "Phase 5: Team 1 Handoff - Documentation complete"
+
+#### Part B: JSON Update & Quality Verification
+
+**Step 1: Execute 8-Step Quality Gates**
+
+Run each command and record numeric results:
+
+```bash
+# Step 1: Architecture
+imports=$(import-linter 2>&1 | grep -c "Broken")
+circular=$(pycycle . 2>&1 | grep -c "circular")
+domain=$(check_domain_boundaries.sh)
+
+# Step 2: Foundation  
+syntax=$(python3 -m py_compile **/*.py 2>&1 | grep -c "SyntaxError")
+types=$(mypy . --strict 2>&1 | grep -c "error:")
+
+# Step 3: Standards
+formatting=$(black . --check 2>&1 | grep -c "would be")
+conventions=$(ruff check . --select N 2>&1 | grep -c "N")
+
+# Step 4: Operations
+logging=$(grep -r "print(" --include="*.py" | grep -v "#" | wc -l)
+security=$(bandit -r . -f json 2>/dev/null | jq '.metrics._totals."SEVERITY.HIGH" + .metrics._totals."SEVERITY.MEDIUM"')
+config=$(grep -r "hardcoded" --include="*.py" | wc -l)
+
+# Step 5: Quality
+linting=$(ruff check . --select ALL 2>&1 | grep "Found" | grep -oE "[0-9]+" | head -1)
+complexity=$(radon cc . -s -n B 2>/dev/null | grep -c "^    [MCF]")
+
+# Step 6: Testing (skip with -1 for implementers)
+coverage=-1
+
+# Step 7: Documentation
+docstrings=$(python3 -c "check_docstrings.py" | grep -c "missing")
+readme=$([ -f "README.md" ] && echo 0 || echo 1)
+
+# Step 8: Integration
+final=$(python3 integration_check.py 2>&1 | grep -c "error")
+```
+
+**Step 2: Update JSON with Quality Results**
+
+```json
+{
+  "quality": {
+    "step_1_architecture": {
+      "imports": 0,
+      "circular": 0,
+      "domain": 0
+    },
+    "step_2_foundation": {
+      "syntax": 0,
+      "types": 0
+    },
+    "step_3_standards": {
+      "formatting": 0,
+      "conventions": 0
+    },
+    "step_4_operations": {
+      "logging": 0,
+      "security": 0,
+      "config": 0
+    },
+    "step_5_quality": {
+      "linting": 0,
+      "complexity": 0
+    },
+    "step_6_testing": {
+      "coverage": -1
+    },
+    "step_7_documentation": {
+      "docstrings": 0,
+      "readme": 0
+    },
+    "step_8_integration": {
+      "final": 0
+    },
+    "violations_total": 0,
+    "can_proceed": true
+  }
+}
+```
+
+**Step 3: Write JSON and Run Verification**
+
+```bash
+# Save JSON with quality results
+echo "$json_data" > ~/.claude/workflows/team1_current_task.json
+
+# Run quality gates verification script
+python3 ~/.claude/hooks/spark_quality_gates.py
+
+# Check result
+if [ $? -eq 0 ]; then
+    echo "✅ Team 1 Quality gates PASSED - All violations: 0"
+else
+    echo "❌ Team 1 Quality gates FAILED - Fix violations and retry"
+    # Maximum 3 retry attempts
+fi
+```
+
+**Step 4: Final Status Update**
+
+After verification passes:
+
+```json
+{
+  "state": {
+    "status": "completed",
+    "current_phase": 5,
+    "phase_name": "completed",
+    "current_agent": "team1-tester-spark"
+  },
+  "output": {
+    "files": {
+      "created": ["team1_feature.py"],
+      "modified": ["main.py"]
+    },
+    "tests": {
+      "unit": 0,
+      "integration": 0,
+      "e2e": 0
+    }
+  },
+  "updated_at": "2025-01-18T20:00:00Z"
+}
+```
+
+**Step 5: Confirm Completion**
+
+```bash
+echo "============================================"
+echo "Task ID: From team1_current_task.json"
+echo "Agent: team1-implementer-spark"
+echo "Team: TEAM 1"
+echo "Status: COMPLETED ✅"
+echo "Quality Violations: 0"
+echo "Next: Handoff to team1-tester-spark"
+echo "============================================"
+```
 
 ## 📤 MANDATORY OUTPUT - Team 1 Specific
 
