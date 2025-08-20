@@ -744,102 +744,478 @@ class ImplementationVerificationGate(QualityGate):
         return len(issues) == 0, issues
 
 
+class V41QualityVerifier:
+    """Verifies agent's claimed quality results against actual measurements"""
+    
+    def __init__(self):
+        self.executor = SecureCommandExecutor()
+        self.project_root = find_project_root()
+    
+    def verify_step_1_architecture(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 1: Architecture - imports, circular, domain"""
+        actual = {"imports": 0, "circular": 0, "domain": 0}
+        issues = []
+        
+        # Check import violations
+        success, stdout, stderr = self.executor.run_command(
+            ["python3", "-c", "import sys; sys.path.insert(0, '.'); from check_imports import check; print(check())"],
+            timeout=10
+        )
+        if not success:
+            actual["imports"] = 1  # Assume violation if check fails
+        
+        # Check circular dependencies
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        for file_path in python_files[:10]:
+            try:
+                content = file_path.read_text()
+                # Simple circular import detection
+                if "from . import" in content and "import ." in content:
+                    actual["circular"] += 1
+            except:
+                pass
+        
+        # Check domain boundaries
+        # Simplified check - real implementation would be more sophisticated
+        if Path("src").exists():
+            cross_domain = 0
+            # Check if src/domain_a imports from src/domain_b directly
+            for py_file in Path("src").rglob("*.py"):
+                try:
+                    content = py_file.read_text()
+                    if "from src." in content:
+                        # Simple heuristic for cross-domain imports
+                        cross_domain += content.count("from src.")
+                except:
+                    pass
+            actual["domain"] = min(cross_domain, 10)  # Cap at 10
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Architecture {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_2_foundation(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 2: Foundation - syntax, types"""
+        actual = {"syntax": 0, "types": 0}
+        issues = []
+        
+        # Check syntax errors
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        for file_path in python_files[:20]:
+            success, stdout, stderr = self.executor.run_command(
+                ["python3", "-m", "py_compile", str(file_path)],
+                timeout=5
+            )
+            if not success:
+                actual["syntax"] += 1
+        
+        # Check type errors with mypy --strict
+        success, stdout, stderr = self.executor.run_command(
+            ["mypy", ".", "--strict", "--no-error-summary"],
+            timeout=30
+        )
+        if stdout or stderr:
+            actual["types"] = stdout.count("error:") + stderr.count("error:")
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Foundation {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_3_standards(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 3: Standards - formatting, conventions"""
+        actual = {"formatting": 0, "conventions": 0}
+        issues = []
+        
+        # Check formatting with black
+        success, stdout, stderr = self.executor.run_command(
+            ["black", ".", "--check", "--quiet"],
+            timeout=20
+        )
+        if not success:
+            # Count unformatted files
+            if "would be reformatted" in stdout:
+                actual["formatting"] = int(stdout.split()[0]) if stdout.split()[0].isdigit() else 1
+        
+        # Check naming conventions with ruff
+        success, stdout, stderr = self.executor.run_command(
+            ["ruff", "check", ".", "--select", "N", "--quiet"],
+            timeout=20
+        )
+        if stdout:
+            actual["conventions"] = len(stdout.strip().split('\n'))
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Standards {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_4_operations(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 4: Operations - logging, security, config"""
+        actual = {"logging": 0, "security": 0, "config": 0}
+        issues = []
+        
+        # Check for print statements (should use logging)
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        for file_path in python_files[:30]:
+            try:
+                content = file_path.read_text()
+                # Count print statements not in comments
+                lines = content.split('\n')
+                for line in lines:
+                    if 'print(' in line and not line.strip().startswith('#'):
+                        actual["logging"] += 1
+            except:
+                pass
+        
+        # Check security with bandit
+        success, stdout, stderr = self.executor.run_command(
+            ["bandit", "-r", ".", "-f", "json", "-q"],
+            timeout=30
+        )
+        if success and stdout:
+            try:
+                import json
+                results = json.loads(stdout)
+                metrics = results.get("metrics", {}).get("_totals", {})
+                actual["security"] = metrics.get("SEVERITY.HIGH", 0) + metrics.get("SEVERITY.MEDIUM", 0)
+            except:
+                pass
+        
+        # Check for hardcoded configs
+        for file_path in python_files[:20]:
+            try:
+                content = file_path.read_text()
+                # Check for hardcoded passwords, keys, etc.
+                if any(pattern in content for pattern in [
+                    "password=", "api_key=", "secret=", 
+                    "localhost:", "127.0.0.1:", "0.0.0.0:"
+                ]):
+                    actual["config"] += 1
+            except:
+                pass
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Operations {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_5_quality(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 5: Quality - linting, complexity"""
+        actual = {"linting": 0, "complexity": 0}
+        issues = []
+        
+        # Check linting with ruff (all rules)
+        success, stdout, stderr = self.executor.run_command(
+            ["ruff", "check", ".", "--select", "ALL", "--quiet"],
+            timeout=30
+        )
+        if stdout:
+            actual["linting"] = len(stdout.strip().split('\n'))
+        
+        # Check complexity with radon
+        success, stdout, stderr = self.executor.run_command(
+            ["radon", "cc", ".", "-s", "-n", "B"],
+            timeout=20
+        )
+        if success and stdout:
+            # Count functions with complexity > B (McCabe > 10)
+            actual["complexity"] = stdout.count(" - ") if " - " in stdout else 0
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Quality {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_6_testing(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 6: Testing - coverage"""
+        actual = {"coverage": -1}
+        issues = []
+        
+        # Only verify if testing was claimed
+        if claimed.get("coverage", -1) >= 0:
+            # Run coverage
+            success, stdout, stderr = self.executor.run_command(
+                ["pytest", "--cov=.", "--cov-report=term", "-q"],
+                timeout=60
+            )
+            
+            if success:
+                import re
+                match = re.search(r'TOTAL.*?(\d+)%', stdout)
+                if match:
+                    actual["coverage"] = int(match.group(1))
+                    
+                    # Check if claimed coverage matches actual (with 5% tolerance)
+                    if abs(claimed.get("coverage", 0) - actual["coverage"]) > 5:
+                        issues.append(f"Testing coverage: claimed {claimed.get('coverage', 0)}%, actual {actual['coverage']}%")
+        
+        return actual, issues
+    
+    def verify_step_7_documentation(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 7: Documentation - docstrings, readme"""
+        actual = {"docstrings": 0, "readme": 0}
+        issues = []
+        
+        # Check docstrings
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        missing_docstrings = 0
+        
+        for file_path in python_files[:20]:
+            try:
+                content = file_path.read_text()
+                import re
+                # Count functions without docstrings
+                functions = re.findall(r'def\s+\w+\([^)]*\):', content)
+                docstrings = re.findall(r'def\s+\w+\([^)]*\):\s*\n\s*["\'\'\'\"]', content)
+                missing_docstrings += max(0, len(functions) - len(docstrings))
+            except:
+                pass
+        
+        actual["docstrings"] = missing_docstrings
+        
+        # Check README
+        if not any(Path(".").glob("README*")):
+            actual["readme"] = 1
+        
+        # Compare claimed vs actual
+        for key in actual:
+            if claimed.get(key, 0) != actual[key]:
+                issues.append(f"Documentation {key}: claimed {claimed.get(key, 0)}, actual {actual[key]}")
+        
+        return actual, issues
+    
+    def verify_step_8_integration(self, claimed: Dict) -> Tuple[Dict, List[str]]:
+        """Step 8: Integration - final checks"""
+        actual = {"final": 0}
+        issues = []
+        
+        # Run final integration checks
+        integration_issues = 0
+        
+        # Check for dependency conflicts
+        if Path("requirements.txt").exists():
+            success, stdout, stderr = self.executor.run_command(
+                ["pip", "check"],
+                timeout=10
+            )
+            if not success or "incompatible" in stdout.lower():
+                integration_issues += 1
+        
+        # Check for broken imports
+        python_files = self.executor.find_files("*.py", exclude_dirs=[".venv", "__pycache__"])
+        for file_path in python_files[:10]:
+            success, stdout, stderr = self.executor.run_command(
+                ["python3", "-c", f"import ast; ast.parse(open('{file_path}').read())"],
+                timeout=5
+            )
+            if not success:
+                integration_issues += 1
+        
+        actual["final"] = integration_issues
+        
+        # Compare claimed vs actual
+        if claimed.get("final", 0) != actual["final"]:
+            issues.append(f"Integration final: claimed {claimed.get('final', 0)}, actual {actual['final']}")
+        
+        return actual, issues
+
+
 class QualityGateRunner:
-    """Jason's 8-Step Strict Quality Gate Runner - Zero tolerance approach"""
+    """Jason's 8-Step Quality Gate Runner - Compares agent claims vs reality"""
     
     def __init__(self, claude_code_mode: bool = True):
         self.claude_code_mode = claude_code_mode
+        self.verifier = V41QualityVerifier()
         
-        # Jason's 10-Step Strict Quality Gates (with Implementation & Test Verification)
-        self.gates = [
-            ImplementationVerificationGate(), # Step 0: Verify implementation claims FIRST
-            TestVerificationGate(),          # Step 0.5: Verify test claims (if testing phase)
-            SyntaxValidationGate(),          # Step 1: Syntax Validation (0 errors)
-            MyPyStrictGate(),               # Step 2: MyPy --strict (0 errors)
-            RuffStrictGate(),               # Step 3: Ruff --strict (0 violations)
-            SecurityEnhancedGate(),         # Step 4: Security Analysis (OWASP + enhanced)
-            TestCoverage95Gate(),           # Step 5: Test Coverage 95%+
-            PerformanceGate(),              # Step 6: Performance Check
-            DocumentationValidationGate(),   # Step 7: Documentation Validation
-            IntegrationTestingGate()        # Step 8: Integration Testing
+        # Additional verification gates (not part of 8-step structure)
+        self.extra_gates = [
+            ImplementationVerificationGate(),  # Verify implementation claims
+            TestVerificationGate()             # Verify test claims
         ]
         
         self.state_manager = StateManager()
         self.chain_manager = AgentChainManager()
     
     def run_gates(self, required_gates: Optional[int] = None) -> Dict:
-        """Run quality gates and return results"""
+        """Compare agent's claimed quality results against actual measurements"""
         
-        # Get required gates from state if not provided
-        if required_gates is None:
-            state = self.state_manager.read_state()
-            required_gates = state.get("quality_gates", {}).get("required", 8)
+        # First, read current_task.json to get agent's claims
+        project_root = find_project_root()
+        json_paths = [
+            Path.home() / ".claude/workflows/current_task.json",
+            project_root / ".claude/workflows/current_task.json"
+        ]
         
+        current_task = None
+        for json_path in json_paths:
+            if json_path.exists():
+                try:
+                    with open(json_path, 'r') as f:
+                        current_task = json.load(f)
+                    break
+                except Exception as e:
+                    logger.error(f"Failed to read {json_path}: {e}")
+        
+        if not current_task:
+            logger.warning("No current_task.json found - cannot verify agent claims")
+            return {
+                "passed_count": 0,
+                "total_gates": 0,
+                "required_gates": 8,
+                "pass_rate": 0,
+                "passed": False,
+                "failed_gates": ["No JSON to verify"],
+                "all_issues": ["current_task.json not found"],
+                "results": {}
+            }
+        
+        # Get claimed quality results from JSON
+        claimed_quality = current_task.get("quality", {})
+        
+        # Initialize results
         results = {}
-        passed_count = 0
-        failed_gates = []
         all_issues = []
+        verification_results = {}
+        actual_quality = {}
         
-        # Run only the required number of gates
-        gates_to_run = self.gates[:required_gates]
-        
-        # Fast-fail mode for Claude Code (stop on first critical failure)
-        fast_fail = self.claude_code_mode and len(gates_to_run) > 2
-        
-        for gate in gates_to_run:
+        # Run extra verification gates first (implementation & test verification)
+        for gate in self.extra_gates:
             try:
-                logger.info(f"Running gate: {gate.name}")
                 passed, issues = gate.check()
+                if not passed:
+                    all_issues.extend(issues)
+                results[gate.name] = {"passed": passed, "issues": issues}
+            except Exception as e:
+                logger.error(f"Extra gate {gate.name} failed: {e}")
+        
+        # Verify each of the 8 quality steps
+        step_verifiers = [
+            ("step_1_architecture", self.verifier.verify_step_1_architecture),
+            ("step_2_foundation", self.verifier.verify_step_2_foundation),
+            ("step_3_standards", self.verifier.verify_step_3_standards),
+            ("step_4_operations", self.verifier.verify_step_4_operations),
+            ("step_5_quality", self.verifier.verify_step_5_quality),
+            ("step_6_testing", self.verifier.verify_step_6_testing),
+            ("step_7_documentation", self.verifier.verify_step_7_documentation),
+            ("step_8_integration", self.verifier.verify_step_8_integration)
+        ]
+        
+        violations_total = 0
+        failed_steps = []
+        
+        for step_name, verifier_func in step_verifiers:
+            claimed_step = claimed_quality.get(step_name, {})
+            
+            try:
+                logger.info(f"Verifying {step_name}...")
+                actual_step, issues = verifier_func(claimed_step)
                 
-                results[gate.name] = {
-                    "passed": passed,
+                # Store actual results
+                actual_quality[step_name] = actual_step
+                
+                # Check if there are discrepancies
+                if issues:
+                    all_issues.extend(issues)
+                    failed_steps.append(step_name)
+                    logger.info(f"  ❌ {step_name}: MISMATCH - {len(issues)} discrepancies")
+                    for issue in issues:
+                        logger.info(f"     - {issue}")
+                else:
+                    # Check if all values are actually 0 (except coverage which can be -1)
+                    step_violations = sum(v for k, v in actual_step.items() if k != "coverage" and v > 0)
+                    if step_violations > 0:
+                        violations_total += step_violations
+                        failed_steps.append(step_name)
+                        logger.info(f"  ❌ {step_name}: Has {step_violations} violations")
+                    else:
+                        logger.info(f"  ✅ {step_name}: VERIFIED (all clean)")
+                
+                results[step_name] = {
+                    "claimed": claimed_step,
+                    "actual": actual_step,
                     "issues": issues
                 }
                 
-                if passed:
-                    passed_count += 1
-                    logger.info(f"  ✅ {gate.name}: PASSED")
-                else:
-                    failed_gates.append(gate.name)
-                    all_issues.extend(issues)
-                    logger.info(f"  ❌ {gate.name}: FAILED - {len(issues)} issues")
-                    for issue in issues[:2]:  # Log first 2 issues for Claude Code
-                        logger.info(f"     - {issue}")
-                    
-                    # Fast-fail for critical gates (syntax, security)
-                    if fast_fail and gate.name in ["Syntax Validation", "Security Analysis"]:
-                        logger.info("💨 Fast-fail activated - stopping quality gates")
-                        break
-                        
             except Exception as e:
-                logger.error(f"  ⚠️ {gate.name}: ERROR - {e}")
-                results[gate.name] = {
-                    "passed": False,
-                    "issues": [f"Gate execution failed: {str(e)}"]
-                }
-                failed_gates.append(gate.name)
-                all_issues.append(f"{gate.name} execution failed")
+                logger.error(f"  ⚠️ {step_name}: ERROR - {e}")
+                all_issues.append(f"{step_name} verification failed: {str(e)}")
+                failed_steps.append(step_name)
         
-        # Calculate pass rate
-        total_gates = len(gates_to_run)
-        pass_rate = (passed_count / total_gates * 100) if total_gates > 0 else 0
+        # DO NOT modify the JSON file - it's a fixed format!
+        # Log and display verification results for agent to see
+        logger.info(f"Verification complete - total issues found: {len(all_issues)}")
         
-        # Update state with results
+        # Print results to stdout so agent can see them directly
+        print("\n" + "="*60)
+        print("🔍 QUALITY GATES VERIFICATION")
+        print("="*60)
+        
+        # Collect all errors (both discrepancies and actual violations)
+        error_summary = {}
+        
+        # Check each step for actual violations (not just discrepancies)
+        for step_name in actual_quality:
+            actual = actual_quality[step_name]
+            for key, value in actual.items():
+                # Skip coverage=-1 (not measured) and 0 values
+                if key == "coverage" and value == -1:
+                    continue
+                if value > 0:
+                    error_name = f"{step_name.replace('step_', '').replace('_', ' ').title()} - {key}"
+                    error_summary[error_name] = value
+        
+        # If there are any errors, display them
+        if error_summary:
+            print("\n❌ 오류 발견!\n")
+            for error_name, count in error_summary.items():
+                print(f"  • {error_name}: {count}")
+            print("\n🚫 품질게이트를 통과하지 못했습니다. 다시 오류수정하세요!!")
+            print("   모든 오류가 0이 아니면 작업종료 불가능합니다.")
+        else:
+            print("\n✅ 품질게이트를 통과하였습니다.")
+            print("   작업을 정리하고 종료하시기 바랍니다.")
+        
+        print("="*60 + "\n")
+        
+        # Calculate pass/fail
+        # Pass if: 1) No discrepancies between claimed and actual, 2) All violations are 0
+        passed = len(all_issues) == 0 and violations_total == 0
+        passed_steps = 8 - len(failed_steps)
+        pass_rate = (passed_steps / 8 * 100)
+        
+        # Update state
         state = self.state_manager.read_state()
-        state["quality_gates"]["passed"] = passed_count
-        state["quality_gates"]["results"] = results
-        state["quality_gates"]["last_run"] = datetime.now().isoformat()
+        state["quality_gates"] = {
+            "passed": passed_steps,
+            "total": 8,
+            "results": results,
+            "last_run": datetime.now().isoformat(),
+            "violations_total": violations_total
+        }
         self.state_manager.write_state(state)
         
         return {
-            "passed_count": passed_count,
-            "total_gates": total_gates,
-            "required_gates": required_gates,
+            "passed_count": passed_steps,
+            "total_gates": 8,
+            "required_gates": 8,
             "pass_rate": round(pass_rate, 1),
-            "passed": passed_count >= required_gates,
-            "failed_gates": failed_gates,
+            "passed": passed,
+            "failed_gates": failed_steps,
             "all_issues": all_issues,
-            "results": results
+            "results": results,
+            "violations_total": violations_total
         }
 
 
