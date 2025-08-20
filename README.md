@@ -9,7 +9,7 @@
 
 ## What is SPARK?
 
-SPARK v3.8 is an independent multi-agent system for [Claude Code](https://claude.ai/code), inspired by SuperClaude's persona system but built from scratch with revolutionary improvements. Through its TRAITS system, each agent instantly activates 3-5 specific traits instead of scanning 11 personas, achieving 35% cognitive load reduction while maintaining lazy-loading efficiency.
+SPARK v4.1 is an independent multi-agent system for [Claude Code](https://claude.ai/code), inspired by SuperClaude's persona system but built from scratch with revolutionary improvements. Through its TRAITS system, each agent instantly activates 3-5 specific traits instead of scanning 11 personas, achieving 35% cognitive load reduction while maintaining lazy-loading efficiency.
 
 ### Project Evolution
 - **v3.0**: Initial release with lazy loading, 95.5% token reduction, workflow automation
@@ -23,7 +23,7 @@ SPARK v3.8 is an independent multi-agent system for [Claude Code](https://claude
 - **28 Specialized Agents**: 16 primary agents + 12 team agents using 3-5 traits each
 - **Lazy Loading Architecture**: Load only the agent you need, not all 28 at once
 - **Smart Routing**: Automatically selects the optimal agent based on your task
-- **Quality Gates**: 8-step validation ensuring production-ready code
+- **Quality Gates**: 8-step validation comparing agent claims vs actual measurements
 - **Parallel Execution**: Run multiple independent tasks simultaneously
 - **Token Safety Protocol**: All agents include 90K token limit protection
 - **Mandatory Reporting System**: All agents generate detailed task completion reports
@@ -94,6 +94,37 @@ class QualityGateHook:
         if not self.validate_quality(result):
             return self.retry_with_guidance(result)
         return self.proceed_to_next_phase()
+```
+
+### Multi-Team Parallel Execution
+
+Execute up to 4 tasks simultaneously with team agents:
+
+```bash
+# Initialize multi-team execution
+/multi_implement TASK-001 TASK-002 TASK-003 TASK-004
+
+# Each team works independently with:
+- Dedicated JSON files (team1_current_task.json)
+- No cross-team communication
+- Parallel execution for 3.1x speedup
+```
+
+### Quality Gates Verification
+
+All agents must pass 8-step quality validation:
+
+```bash
+# Agent self-validation
+echo '{"subagent": "implementer-spark", "self_check": true}' | \
+python3 ~/.claude/hooks/spark_quality_gates.py
+
+# Success message:
+# ✅ 품질게이트를 통과하였습니다. 작업을 정리하고 종료하시기 바랍니다.
+
+# Failure message:
+# 🚫 품질게이트를 통과하지 못했습니다. 다시 오류수정하세요!!
+#    모든 오류가 0이 아니면 작업종료 불가능합니다.
 ```
 
 ### Chaining Subagents
@@ -323,8 +354,9 @@ echo '{"subagent": "implementer-spark", "self_check": true}' | python3 .claude/h
 spark-claude/
 ├── .claude/
 │   ├── agents/          # 28 specialized agents (16 primary + 12 team)
-│   ├── hooks/           # Orchestration and routing
-│   └── workflows/       # State management
+│   ├── commands/        # Multi-team execution commands
+│   ├── hooks/           # Quality gates and routing
+│   └── workflows/       # JSON state management
 ├── benchmarks/          # Performance tests
 ├── docs/
 │   ├── agents-task/     # Agent-generated reports

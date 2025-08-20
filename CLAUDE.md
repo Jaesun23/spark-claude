@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SPARK v3.8 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system for Claude Code. Inspired by SuperClaude's persona system but developed as an independent project, SPARK achieves 95.5% token reduction by loading only the required agent on-demand rather than all 28 agents simultaneously.
+SPARK v4.1 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system for Claude Code. Inspired by SuperClaude's persona system but developed as an independent project, SPARK achieves 95.5% token reduction by loading only the required agent on-demand rather than all 28 agents simultaneously.
 
 ### Evolution History
 - **v3.0**: Initial SPARK release with lazy loading, token optimization, and workflow automation
@@ -16,7 +16,7 @@ SPARK v3.8 (Subagent Performance Architecture with Reduced toKens) is a traits-b
 
 ### Three-Layer System
 1. **Router Layer** (`.claude/hooks/spark_persona_router.py`): Analyzes tasks and selects optimal agent
-2. **Orchestration Layer** (`.claude/hooks/spark_unified_orchestrator.py`): Manages agent lifecycle via 6 hooks
+2. **Quality Gates Layer** (`.claude/hooks/spark_quality_gates.py`): Compares agent claims vs actual measurements
 3. **Agent Layer** (`.claude/agents/`): 28 specialized agents using TRAITS methodology
    - 16 primary agents: analyzer, designer, implementer, tester, documenter, improver, troubleshooter, cleaner, explainer, builder, estimater, gitter, spawner, loader, indexer, tasker
    - 12 team agents: team1-4 × (implementer/tester/documenter) for parallel execution
@@ -42,19 +42,25 @@ pip install -e ".[full,dev,benchmark]"
 
 ### Quality Validation (8-Step Protocol)
 
-All agents execute these mandatory quality gates:
-1. **Architecture**: Import structure, circular dependencies, domain boundaries
-2. **Foundation**: Syntax validation, type checking  
-3. **Standards**: Code formatting, naming conventions
-4. **Operations**: Logging, security, configuration
-5. **Quality**: Linting, complexity metrics
-6. **Testing**: Coverage targets (95% unit, 85% integration)
-7. **Documentation**: Docstrings, README files
-8. **Integration**: Final system checks
+All agents must update the quality section in Phase 5B with actual measurements:
+1. **Architecture**: imports=0, circular=0, domain=0
+2. **Foundation**: syntax=0, types=0  
+3. **Standards**: formatting=0, conventions=0
+4. **Operations**: logging=0, security=0, config=0
+5. **Quality**: linting=0, complexity=0
+6. **Testing**: coverage≥95% (or -1 if not applicable)
+7. **Documentation**: docstrings=0, readme=0
+8. **Integration**: final=0
 
 ```bash
-# Automated verification
-python3 .claude/hooks/spark_quality_gates.py
+# Agent self-validation (compares claims vs reality)
+echo '{"subagent": "implementer-spark", "self_check": true}' | 
+python3 ~/.claude/hooks/spark_quality_gates.py
+
+# Result messages:
+# ✅ 품질게이트를 통과하였습니다. 작업을 정리하고 종료하시기 바랍니다.
+# 🚫 품질게이트를 통과하지 못했습니다. 다시 오류수정하세요!!
+#    모든 오류가 0이 아니면 작업종료 불가능합니다.
 ```
 
 ### Testing Hooks
@@ -150,6 +156,12 @@ All agents record violations as numbers (0 = pass):
 
 ## Multi-Team Parallel Execution
 
+### Command Usage
+```bash
+# Initialize multi-team execution
+/multi_implement TASK-001 TASK-002 TASK-003 TASK-004
+```
+
 ### Usage Pattern
 ```python
 # Invoke 4 teams simultaneously (MUST be in one message)
@@ -210,6 +222,20 @@ All agents follow this consistent structure:
 - Skipping quality gate validation
 - Not updating team JSON files in parallel execution
 - Attempting agent-to-agent direct calls
+
+## Key v4.1 Updates
+
+### Quality Gates System Enhancement
+- **Purpose**: Verify agent honesty by comparing claimed vs actual measurements
+- **Enforcement**: All violations must be 0 to proceed
+- **Self-validation**: Agents run quality checks before completion
+- **No JSON modification**: Quality gates only read and verify, never modify JSON files
+
+### Multi-Team Implementation Updates
+- **Agent names**: Fixed to match SPARK convention (team1-implementer-spark)
+- **JSON structure**: Aligned with v4.1 template
+- **Phase structure**: Matches 5-phase methodology with Phase 5B quality gates
+- **Korean messages**: Clear pass/fail instructions
 
 ## Documentation References
 
