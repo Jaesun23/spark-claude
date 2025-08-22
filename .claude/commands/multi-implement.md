@@ -2,6 +2,17 @@
 
 **Purpose**: Execute multiple implementation tasks in parallel using up to 4 teams with JSON context relay
 
+## 🤖 AVAILABLE TEAM AGENTS
+
+**THESE ARE THE ONLY AGENTS FOR MULTI-IMPLEMENT:**
+```
+Team 1: team1-implementer-spark, team1-tester-spark, team1-documenter-spark
+Team 2: team2-implementer-spark, team2-tester-spark, team2-documenter-spark
+Team 3: team3-implementer-spark, team3-tester-spark, team3-documenter-spark
+Team 4: team4-implementer-spark, team4-tester-spark, team4-documenter-spark
+```
+**DO NOT USE:** `implementer-spark`, `tester-spark`, `documenter-spark` (these are for single tasks)
+
 ## 🚨 CRITICAL: ONE MESSAGE WITH MULTIPLE TOOL CALLS 🚨
 
 ### **THE GOLDEN RULE FOR PARALLEL EXECUTION:**
@@ -10,24 +21,37 @@ YOU MUST USE A SINGLE MESSAGE WITH MULTIPLE TASK TOOL CALLS!
 DO NOT SEND SEPARATE MESSAGES FOR EACH TASK!
 ```
 
+## ⚠️ PRE-EXECUTION CHECKLIST (MUST READ!)
+
+Before executing /multi-implement, verify:
+- [ ] ✅ Using `team1-implementer-spark`, NOT `implementer-spark`
+- [ ] ✅ Using `team2-implementer-spark`, NOT `implementer-spark`  
+- [ ] ✅ Using `team3-implementer-spark`, NOT `implementer-spark`
+- [ ] ✅ Using `team4-implementer-spark`, NOT `implementer-spark`
+- [ ] ✅ NO "Team1:" prefix in task description (agent knows its team)
+- [ ] ✅ All 4 Task calls in ONE message
+- [ ] ✅ Team JSON files created first
+
 ## ⚡ IMMEDIATE EXECUTION PROTOCOL
 
 ### **AS SOON AS YOU RECEIVE /multi-implement:**
 
 ```python
-# ✅ CORRECT - ALL IN ONE MESSAGE:
+# ✅ CORRECT - ALL IN ONE MESSAGE WITH TEAM-SPECIFIC AGENTS:
 [Single Message]
-├── Task("implementer-spark", "Team1: {task1} Read team1_current_task.json")
-├── Task("implementer-spark", "Team2: {task2} Read team2_current_task.json")  
-├── Task("implementer-spark", "Team3: {task3} Read team3_current_task.json")
-└── Task("implementer-spark", "Team4: {task4} Read team4_current_task.json")
+├── Task("team1-implementer-spark", "{task1}")  # Uses team1_current_task.json
+├── Task("team2-implementer-spark", "{task2}")  # Uses team2_current_task.json
+├── Task("team3-implementer-spark", "{task3}")  # Uses team3_current_task.json
+└── Task("team4-implementer-spark", "{task4}")  # Uses team4_current_task.json
 [Wait for all to complete]
 
-# ❌ WRONG - SEQUENTIAL MESSAGES:
-Message 1: Task("implementer-spark", "Team1...")
-Message 2: Task("implementer-spark", "Team2...")  # NO! This waits for Team1!
-Message 3: Task("implementer-spark", "Team3...")  # NO! This waits for Team2!
-Message 4: Task("implementer-spark", "Team4...")  # NO! This waits for Team3!
+# ❌ WRONG #1 - USING GENERIC AGENT:
+Task("implementer-spark", "Team1: ...")  # NO! Use team1-implementer-spark!
+Task("implementer-spark", "Team2: ...")  # NO! Use team2-implementer-spark!
+
+# ❌ WRONG #2 - SEQUENTIAL MESSAGES:
+Message 1: Task("team1-implementer-spark", ...)
+Message 2: Task("team2-implementer-spark", ...)  # NO! This waits for Team1!
 ```
 
 ### **EXECUTION STEPS:**
@@ -38,6 +62,31 @@ Message 4: Task("implementer-spark", "Team4...")  # NO! This waits for Team3!
 5. **REPORT**: Consolidate results
 
 ⚠️ **REMEMBER**: If you send Task calls in separate messages, they run SEQUENTIALLY, not in PARALLEL!
+
+## 🎯 COMMON MISTAKES TO AVOID
+
+### ❌ Mistake 1: Using generic implementer-spark
+```python
+# WRONG - This breaks parallelism!
+Task("implementer-spark", "Team 1: Implement API")
+Task("implementer-spark", "Team 2: Implement Database")
+```
+
+### ❌ Mistake 2: Adding team prefix to task
+```python
+# WRONG - Agent already knows its team!
+Task("team1-implementer-spark", "Team 1: Implement API")
+# CORRECT - No prefix needed
+Task("team1-implementer-spark", "Implement API")
+```
+
+### ❌ Mistake 3: Sequential messages
+```python
+# WRONG - Waits for each to finish!
+Message 1: Task("team1-implementer-spark", ...)
+[Wait for result]
+Message 2: Task("team2-implementer-spark", ...)
+```
 
 ## 📝 Orchestration Process
 
