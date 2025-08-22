@@ -2,9 +2,29 @@
 
 **Purpose**: Multi-dimensional code and system analysis with evidence-based investigation
 
-## Execution Instructions
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-When this command is called, I will delegate the analysis to the analyzer-spark specialist:
+### **WHEN RECEIVING /spark-analyze COMMAND:**
+
+```python
+1. IMMEDIATELY CALL:
+   Task("analyzer-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL CONDITIONS MET → Report analysis results to user
+   ❌ ANY CONDITION FAILED → Task("analyzer-spark", """
+      Previous analysis incomplete or failed quality checks.
+      Please complete the analysis and fix issues: {violations}
+      """)
+```
 
 The analyzer-spark specialist will:
 - Conduct comprehensive multi-perspective analysis

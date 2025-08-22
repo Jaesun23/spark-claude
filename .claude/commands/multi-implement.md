@@ -32,18 +32,65 @@ Before executing /multi-implement, verify:
 - [ ] ✅ All 4 Task calls in ONE message
 - [ ] ✅ Team JSON files created first
 
-## ⚡ IMMEDIATE EXECUTION PROTOCOL
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-### **AS SOON AS YOU RECEIVE /multi-implement:**
+### **WHEN RECEIVING /multi-implement COMMAND:**
 
 ```python
-# ✅ CORRECT - ALL IN ONE MESSAGE WITH TEAM-SPECIFIC AGENTS:
-[Single Message]
-├── Task("team1-implementer-spark", "{task1}")  # Uses team1_current_task.json
-├── Task("team2-implementer-spark", "{task2}")  # Uses team2_current_task.json
-├── Task("team3-implementer-spark", "{task3}")  # Uses team3_current_task.json
-└── Task("team4-implementer-spark", "{task4}")  # Uses team4_current_task.json
-[Wait for all to complete]
+# PHASE 1: Implementation (PARALLEL)
+1. SINGLE MESSAGE WITH ALL FOUR TASKS:
+   Task("team1-implementer-spark", task1)
+   Task("team2-implementer-spark", task2)
+   Task("team3-implementer-spark", task3)
+   Task("team4-implementer-spark", task4)
+
+2. WAIT for ALL teams to complete
+
+3. CHECK each team#_current_task.json:
+   FOR EACH TEAM (1-4):
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL TEAMS PASS → Proceed to Phase 2
+   ❌ ANY TEAM FAILED → Retry only failed teams
+
+# PHASE 2: Testing (PARALLEL)
+5. SINGLE MESSAGE WITH ALL FOUR TESTERS:
+   Task("team1-tester-spark", "Test team1 implementation")
+   Task("team2-tester-spark", "Test team2 implementation")
+   Task("team3-tester-spark", "Test team3 implementation")
+   Task("team4-tester-spark", "Test team4 implementation")
+
+6. WAIT for ALL teams to complete
+
+7. CHECK each team#_current_task.json:
+   FOR EACH TEAM:
+   - quality.step_6_testing.coverage >= 95
+   - quality.can_proceed == true
+
+8. DECISION:
+   ✅ ALL TEAMS PASS → Proceed to Phase 3
+   ❌ ANY TEAM FAILED → Retry only failed teams
+
+# PHASE 3: Documentation (PARALLEL)
+9. SINGLE MESSAGE WITH ALL FOUR DOCUMENTERS:
+   Task("team1-documenter-spark", "Document team1 feature")
+   Task("team2-documenter-spark", "Document team2 feature")
+   Task("team3-documenter-spark", "Document team3 feature")
+   Task("team4-documenter-spark", "Document team4 feature")
+
+10. WAIT for ALL teams to complete
+
+11. CHECK each team#_current_task.json:
+    FOR EACH TEAM:
+    - output.docs.readme == true
+    - quality.can_proceed == true
+
+12. FINAL DECISION:
+    ✅ ALL TEAMS COMPLETE → Report: "All 4 tasks implemented, tested, and documented"
+    ❌ ANY TEAM FAILED → Retry only failed teams
 
 # ❌ WRONG #1 - USING GENERIC AGENT:
 Task("implementer-spark", "Team1: ...")  # NO! Use team1-implementer-spark!

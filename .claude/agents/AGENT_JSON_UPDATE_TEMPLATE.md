@@ -4,7 +4,6 @@
 
 Replace existing Phase 0 with:
 
-```markdown
 ### Phase 0: Task Initialization (작업 초기화)
 
 **Step 1: Determine Project Context**
@@ -23,6 +22,7 @@ echo "Workflow directory: ${WORKFLOW_DIR}"
 ```
 
 **Step 2: Check for Parallel Execution**
+
 ```bash
 # For team agents - use fixed naming
 TASK_FILE="${WORKFLOW_DIR}/active/team{N}_current_task.json"
@@ -52,13 +52,10 @@ else
     cp "${WORKFLOW_DIR}/templates/current_task_template.json" "${TASK_FILE}"
 fi
 ```
-```
-
 ## Phase 5B: JSON Update & Quality Verification Update
 
 Replace existing Phase 5B Step 3 with:
 
-```markdown
 **Step 3: Update JSON and Verify**
 
 ```bash
@@ -97,13 +94,11 @@ if [ $? -eq 0 ]; then
     fi
 fi
 ```
-```
 
 ## File Lock Management Addition
 
 Add to Phase 1 (Planning):
 
-```markdown
 **Step 2.5: Acquire File Locks**
 
 ```bash
@@ -156,7 +151,6 @@ with open(lock_file, 'w') as f:
 
 print(f"✅ Acquired locks for {len(files_to_lock)} files")
 EOF
-```
 ```
 
 ## Critical Changes Summary

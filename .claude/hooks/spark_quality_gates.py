@@ -1178,14 +1178,14 @@ class QualityGateRunner:
         
         # If there are any errors, display them
         if error_summary:
-            print("\n❌ 오류 발견!\n")
+            print("\n❌ Errors Found!\n")
             for error_name, count in error_summary.items():
                 print(f"  • {error_name}: {count}")
-            print("\n🚫 품질게이트를 통과하지 못했습니다. 다시 오류수정하세요!!")
-            print("   모든 오류가 0이 아니면 작업종료 불가능합니다.")
+            print("\n🚫 Quality gates FAILED. Please fix violations and retry.")
+            print("   All violations must be 0 to complete the task.")
         else:
-            print("\n✅ 품질게이트를 통과하였습니다.")
-            print("   작업을 정리하고 종료하시기 바랍니다.")
+            print("\n✅ Quality gates PASSED.")
+            print("   Task completed successfully. You may now exit.")
         
         print("="*60 + "\n")
         
@@ -1220,7 +1220,7 @@ class QualityGateRunner:
 
 
 def main():
-    """Main hook execution with Phase Manager integration"""
+    """Main hook execution"""
     try:
         # Read input from stdin
         input_data = json.load(sys.stdin)
@@ -1270,10 +1270,6 @@ def main():
                     except Exception:
                         pass  # If parsing fails, continue with validation
         
-        # Import Phase Manager for progression checking
-        from spark_phase_manager import SPARKPhaseManager
-        phase_manager = SPARKPhaseManager()
-        
         # Get required gates from state
         state = state_manager.read_state()
         required_gates = state.get("quality_gates", {}).get("required", 8)
@@ -1281,7 +1277,7 @@ def main():
         # Run quality gates
         results = runner.run_gates(required_gates)
         
-        # Update state with quality results for Phase Manager
+        # Update state with quality results
         state["spark_quality_results"] = {
             "gates_passed": results["passed_count"],
             "total_gates": results["total_gates"], 
@@ -1304,36 +1300,14 @@ def main():
             state["self_validated_at"] = datetime.now().isoformat()
             state["self_validated_by"] = subagent_name
         
-        # Update state with quality results and check phase progression
+        # Update state with quality results
         state_manager.write_state(state)
         
-        # Check phase progression with Phase Manager
-        progression_check = phase_manager.check_phase_progression()
-        
-        # Prepare response based on results and phase progression
+        # Prepare response based on results
         if results["passed"]:
-            # Gates passed - check phase progression
+            # Gates passed
             decision = "continue"
             reason = f"Quality gates passed: {results['passed_count']}/{results['total_gates']} gates passed ({results['pass_rate']}% pass rate)"
-            
-            # Add phase progression information
-            if progression_check.get("can_progress"):
-                if progression_check.get("workflow_complete"):
-                    reason += f"\n\n✅ Workflow Complete! All phases finished successfully."
-                elif progression_check.get("next_phase"):
-                    reason += f"\n\n🔄 Phase Progression: Moving to '{progression_check['next_phase']}' phase."
-                    # Update routing decision for next phase
-                    state["routing_decision"] = {
-                        "next_action": "proceed_to_next_phase",
-                        "next_phase": progression_check["next_phase"],
-                        "reason": "Quality gates passed, progressing to next workflow phase",
-                        "retry_required": False
-                    }
-                    state_manager.write_state(state)
-            elif progression_check.get("hanging_detected"):
-                reason += f"\n\n⚠️ Hanging Detection: {progression_check['reason']}"
-                if progression_check.get("resolution_strategy") == "force_progression":
-                    reason += f"\nAutomatically resolved by force progression."
             
             # Pass quality results to next agent if in pipeline
             chain_status = chain_manager.get_chain_status()
@@ -1342,8 +1316,7 @@ def main():
                     from_agent=subagent_name,
                     to_agent="next",
                     data={
-                        "quality_results": results,
-                        "phase_progression": progression_check
+                        "quality_results": results
                     }
                 )
             
