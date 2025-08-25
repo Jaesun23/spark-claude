@@ -2,9 +2,26 @@
 
 **Purpose**: Comprehensive project cleanup and technical debt reduction with SPARK intelligence
 
-## Execution Instructions
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-When this command is called, I will activate the cleaner-spark optimization specialist:
+### **WHEN RECEIVING /spark-clean COMMAND:**
+
+```python
+1. IMMEDIATELY CALL:
+   Task("cleaner-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL CONDITIONS MET → Report cleanup results to user
+   ❌ ANY CONDITION FAILED → Task("cleaner-spark", "Fix remaining issues: {violations}")
+```
 
 The cleaner-spark specialist will:
 - Perform comprehensive analysis of project structure and code quality

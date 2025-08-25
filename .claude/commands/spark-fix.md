@@ -2,9 +2,27 @@
 
 **Purpose**: Problem investigation, debugging, and root cause analysis with SPARK intelligence
 
-## Execution Instructions
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-When this command is called, I will engage the troubleshooter-spark debugging specialist:
+### **WHEN RECEIVING /spark-fix COMMAND:**
+
+```python
+1. IMMEDIATELY CALL:
+   Task("troubleshooter-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - output.files.modified is not empty
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL CONDITIONS MET → Report fix complete to user
+   ❌ ANY CONDITION FAILED → Task("troubleshooter-spark", "Complete the fix: {issues}")
+```
 
 The troubleshooter-spark specialist will:
 - Systematically investigate the reported issue

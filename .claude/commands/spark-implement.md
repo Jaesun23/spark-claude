@@ -27,41 +27,75 @@ This command orchestrates a complete development pipeline with quality gates ens
     ✅ Completion Report
 ```
 
-## 📝 Claude CODE Action Protocol
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-### **UPON RECEIVING /implement COMMAND:**
+### **WHEN RECEIVING /spark-implement COMMAND:**
+
 ```python
-# Claude CODE's ORCHESTRATION PROTOCOL (systematic 3-phase execution)
-1. Task("implementer-spark", user_request)  # CALL IMMEDIATELY
-2. Wait for SubagentStop hook signal
-3. Claude CODE reviews current_task.json:
-   - Check `implementation` section
-   - Review quality_metrics (linting, type checking)
-   - Verify files_created and files_modified
-   - Review next_steps and known_issues
+# PHASE 1: Implementation
+1. IMMEDIATELY CALL:
+   Task("implementer-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - output.files.created is not empty
+   - state.status == "completed"
+
 4. DECISION:
-   ✅ If satisfied → Task("tester-spark", implementation_context)
-   ❌ If issues found → Task("implementer-spark", retry_with_feedback)
+   ✅ ALL CONDITIONS MET → Proceed to Phase 2
+   ❌ ANY CONDITION FAILED → Task("implementer-spark", """
+      Previous attempt failed quality checks:
+      - Violations found: {specific violations}
+      Please fix these issues and retry.
+      """)
 
-5. Wait for tester SubagentStop hook signal  
-6. Claude CODE reviews current_task.json:
-   - Check `testing` section
-   - Verify test coverage (target: 95%+)
-   - Confirm all tests passing
-   - Review test quality metrics
-7. DECISION:
-   ✅ If satisfied → Task("documenter-spark", context)
-   ❌ If issues found → Task("tester-spark", retry_with_feedback)
+# PHASE 2: Testing
+5. CALL:
+   Task("tester-spark", "Create comprehensive tests for the implementation")
 
-8. Wait for documenter SubagentStop hook signal
-9. Claude CODE reviews current_task.json:
-   - Check `documentation` section
-   - Verify README updates
-   - Confirm API documentation
-   - Review usage examples
-10. FINAL DECISION:
-    ✅ All phases complete → Report success to user
-    ❌ Issues found → Task("documenter-spark", retry_with_feedback)
+6. WAIT for agent completion
+
+7. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.step_6_testing.coverage >= 95
+   - output.tests.unit > 0
+   - quality.can_proceed == true
+   - state.status == "completed"
+
+8. DECISION:
+   ✅ ALL CONDITIONS MET → Proceed to Phase 3
+   ❌ ANY CONDITION FAILED → Task("tester-spark", """
+      Testing requirements not met:
+      - Current coverage: {coverage}%
+      - Target: 95%
+      Please improve test coverage.
+      """)
+
+# PHASE 3: Documentation
+9. CALL:
+   Task("documenter-spark", "Document the feature comprehensively")
+
+10. WAIT for agent completion
+
+11. CHECK ~/.claude/workflows/current_task.json:
+    REQUIRED CONDITIONS:
+    - output.docs.readme == true
+    - output.docs.api == true
+    - quality.can_proceed == true
+    - state.status == "completed"
+
+12. FINAL DECISION:
+    ✅ ALL CONDITIONS MET → Report to user: "Implementation complete with tests and documentation"
+    ❌ ANY CONDITION FAILED → Task("documenter-spark", """
+       Documentation incomplete:
+       - README: {status}
+       - API docs: {status}
+       Please complete all documentation.
+       """)
 ```
 
 ⚡ **Core Principle**: Claude CODE reviews JSON results at each phase and decides next agent invocation

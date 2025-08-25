@@ -1,133 +1,88 @@
-# 🚀 SPARK v3.8 Documentation
+# 📚 SPARK v4.1 Documentation
 
-> **Subagent Performance Architecture with Reduced toKens**  
-> *The most efficient multi-agent orchestration system for Claude Code*
+## Quick Navigation
 
-## 📚 Documentation Structure
+| Document | Description | Purpose |
+|----------|-------------|---------|
+| **[SPARK_COMPLETE_GUIDE.md](SPARK_COMPLETE_GUIDE.md)** | 🎯 **Start Here** - Complete system guide | Full reference for commands, agents, and workflows |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System architecture and design | Technical details and system components |
+| **[INSTALLATION.md](INSTALLATION.md)** | Installation and setup guide | Getting started with SPARK |
+| **[PHASE_STRUCTURE.md](PHASE_STRUCTURE.md)** | Agent phase structure details | Deep dive into 5-phase methodology |
+| **[TEAM_AGENTS.md](TEAM_AGENTS.md)** | Multi-team parallel execution | Guide for parallel agent coordination |
 
-| Document | Description |
-|----------|-------------|
-| **[README.md](README.md)** | This file - Overview and quick start |
-| **[INSTALLATION.md](INSTALLATION.md)** | Installation, setup, and troubleshooting |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System design and component details |
-| **[AGENTS.md](AGENTS.md)** | Complete agent reference (28 agents) |
-| **[DEVELOPMENT.md](DEVELOPMENT.md)** | Development guide, hooks, and advanced features |
-
-## 🎯 What is SPARK?
-
-SPARK is an advanced multi-agent orchestration system that achieves **significant token efficiency** through intelligent lazy-loading and parallel execution. It provides 28 specialized agents (16 base + 12 team) that work together seamlessly.
-
-### Key Features
-
-- **🔥 Lazy Loading**: Only loads required agents on-demand
-- **⚡ Parallel Execution**: Up to 4 teams working simultaneously
-- **🔒 FileLockManager**: Safe concurrent file access
-- **📊 Quality Gates**: 8-step validation with automatic retry
-- **🤖 28 Specialized Agents**: Each optimized for specific tasks
-
-## ⚡ Quick Start
-
-### 1. Install SPARK
+## 🚀 Quick Start
 
 ```bash
-# Global installation (recommended)
-curl -sSL https://raw.githubusercontent.com/Jaesun23/spark-claude/main/scripts/install.sh | bash
-
-# Or clone and install locally
-git clone https://github.com/Jaesun23/spark-claude.git
-cd spark-claude
+# 1. Install SPARK
+cd /path/to/project
+git clone <spark-repo>
 ./scripts/install.sh
+
+# 2. Basic Usage
+/spark-implement "new feature"     # Single agent
+/spark "complex task"              # Full pipeline
+/multi-implement t1,t2,t3,t4      # Parallel execution
 ```
 
-### 2. Basic Usage
+## 📊 System Overview
 
-```bash
-# Single agent
-/implement "create user authentication API"
+- **28 Specialized Agents**: Expert agents for every task
+- **95.5% Token Reduction**: Efficient on-demand loading
+- **8-Step Quality Gates**: Zero-tolerance verification
+- **Parallel Execution**: 4x speedup with team agents
 
-# Multi-team parallel execution
-/multi-implement "task1: API endpoints, task2: database schema, task3: tests"
+## 🎯 Most Common Commands
 
-# Get help
-/spark-help
-```
+### For Development
+- `/spark-implement` - Build new features
+- `/spark-test` - Create comprehensive tests
+- `/spark-document` - Generate documentation
 
-### 3. Available Commands
+### For Maintenance
+- `/spark-analyze` - System analysis
+- `/spark-refactor` - Code improvement
+- `/spark-clean` - Remove technical debt
 
-| Command | Agent | Purpose |
-|---------|-------|---------|
-| `/implement` | implementer-spark | Build features |
-| `/test` | tester-spark | Create tests |
-| `/analyze` | analyzer-spark | Analyze code |
-| `/improve` | improver-spark | Optimize code |
-| `/document` | documenter-spark | Write docs |
-| `/troubleshoot` | troubleshooter-spark | Fix issues |
-| `/design` | designer-spark | System design |
-| `/clean` | cleaner-spark | Remove tech debt |
+### For Complex Tasks
+- `/spark` - Full development pipeline
+- `/multi-implement` - Parallel execution
+- `/spark-launch` - Complete feature launch
 
-## 🏗️ System Overview
+## 📖 Documentation Structure
 
 ```
-┌─────────────────────────────────────┐
-│         Claude CODE (You)           │
-├─────────────────────────────────────┤
-│          SPARK Router               │
-│   (Analyzes task → Activates agents)│
-├─────────────────────────────────────┤
-│        28 Specialized Agents        │
-│    ┌─────────┐     ┌─────────┐     │
-│    │ Base×16 │     │ Team×12 │     │
-│    └─────────┘     └─────────┘     │
-├─────────────────────────────────────┤
-│         Quality Gates (8)           │
-│    (Validates all agent output)     │
-└─────────────────────────────────────┘
+docs/
+├── README.md                 # This file - Overview
+├── SPARK_COMPLETE_GUIDE.md   # Complete reference
+├── ARCHITECTURE.md           # System design
+├── INSTALLATION.md           # Setup guide
+├── PHASE_STRUCTURE.md        # Agent phases
+├── TEAM_AGENTS.md            # Parallel execution
+└── templates/                # Report templates
+    └── agent-reports/        # Agent report formats
 ```
 
-## 📈 Performance Metrics
+## 💡 Key Concepts
 
-- **Token Usage**: Optimized through lazy-loading architecture
-- **Parallel Teams**: Up to 4 simultaneous
-- **Quality Gates**: 8-step validation
-- **Success Rate**: 99.2% first-pass
-- **Agent Count**: 28 specialized agents
+### Quality Gates
+All agents must pass 8-step verification with zero violations.
 
-## 🔧 Configuration
+### Phase Structure
+Every agent follows Phase 0-5, with mandatory Phase 5B quality gates.
 
-SPARK uses two configuration levels:
+### Token Management
+90K token safety limit with automatic compression strategies.
 
-1. **Global**: `~/.claude/`
-2. **Project**: `.claude/` (takes precedence)
+### Parallel Execution
+Team agents enable 4x parallel processing for complex tasks.
 
-Key files:
-- `settings.json` - Hook configuration
-- `workflows/` - Task state and templates
-- `agents/` - Agent definitions
+## 🔗 Related Resources
 
-## 🤝 Contributing
-
-SPARK is open source! Contributions welcome:
-
-1. Fork the repository
-2. Create your feature branch
-3. Follow the development guidelines
-4. Submit a pull request
-
-## 📖 Learn More
-
-- **[Installation Guide](INSTALLATION.md)** - Detailed setup instructions
-- **[Architecture Deep Dive](ARCHITECTURE.md)** - How SPARK works
-- **[Agent Reference](AGENTS.md)** - All 28 agents explained
-- **[Development Guide](DEVELOPMENT.md)** - Build with SPARK
-
-## 📝 License
-
-MIT License - See [LICENSE](../LICENSE) file
-
-## 🙏 Credits
-
-Created by Jason + Claude CODE (1호 & 2호)
+- **Agent Definitions**: `.claude/agents/`
+- **Command Files**: `.claude/commands/`
+- **Quality Gates**: `.claude/hooks/spark_quality_gates.py`
+- **JSON States**: `.claude/workflows/`
 
 ---
 
-*SPARK v3.5 - Transforming how AI agents collaborate*
+*SPARK v4.1 - Production Ready*

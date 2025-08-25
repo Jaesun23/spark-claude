@@ -2,9 +2,27 @@
 
 **Purpose**: Intelligent test generation, execution, and coverage analysis with SPARK enhancement
 
-## Execution Instructions
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-When this command is called, I will engage the tester-spark testing specialist:
+### **WHEN RECEIVING /spark-test COMMAND:**
+
+```python
+1. IMMEDIATELY CALL:
+   Task("tester-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.step_6_testing.coverage >= 95
+   - quality.can_proceed == true
+   - output.tests.unit > 0
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL CONDITIONS MET → Report test results to user
+   ❌ ANY CONDITION FAILED → Task("tester-spark", "Improve coverage to 95%: {current_coverage}%")
+```
 
 The tester-spark specialist will:
 - Generate comprehensive test suites based on the codebase

@@ -2,9 +2,27 @@
 
 **Purpose**: System design and UI/UX creation with architecture and accessibility expertise
 
-## Execution Instructions
+## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 
-When this command is called, I will collaborate with the designer-spark specialist:
+### **WHEN RECEIVING /spark-design COMMAND:**
+
+```python
+1. IMMEDIATELY CALL:
+   Task("designer-spark", user_request)
+
+2. WAIT for agent completion
+
+3. CHECK ~/.claude/workflows/current_task.json:
+   REQUIRED CONDITIONS:
+   - quality.violations_total == 0
+   - quality.can_proceed == true
+   - output.files.created is not empty OR output.docs.api == true
+   - state.status == "completed"
+
+4. DECISION:
+   ✅ ALL CONDITIONS MET → Report design complete to user
+   ❌ ANY CONDITION FAILED → Task("designer-spark", "Complete the design: {issues}")
+```
 
 The designer-spark specialist will:
 - Create comprehensive system architectures and UI/UX designs
