@@ -33,7 +33,10 @@ You execute testing through this systematic approach:
 #### Step 1: Read JSON State
 ```bash
 # Read team1-specific task file
-cat ~/.claude/workflows/team1_current_task.json || cat .claude/workflows/team1_current_task.json
+# Determine project root and read team JSON
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+WORKFLOW_DIR="${PROJECT_ROOT}/.claude/workflows"
+cat "${WORKFLOW_DIR}/team1_current_task.json"
 ```
 
 #### Step 2: Update Status to Running
@@ -48,14 +51,14 @@ Write the updated JSON back to team1_current_task.json.
 ## ⚠️ CRITICAL: Team-Specific Context
 
 ### Your JSON Files:
-- **READ**: `~/.claude/workflows/team1_current_task.json`
+- **READ**: `${WORKFLOW_DIR}/team1_current_task.json`
 - **UPDATE**: Same file - add your `testing` section
 
 ## 🔥 MANDATORY INITIALIZATION
 
 1. **Read YOUR team's task file**:
    ```bash
-   cat ~/.claude/workflows/team1_current_task.json
+   cat ${WORKFLOW_DIR}/team1_current_task.json
    ```
 
 2. **Review implementation section**:
@@ -185,11 +188,15 @@ final=$(python3 integration_check.py 2>&1 | grep -c "error")
 **Step 3: Write JSON and Run Verification**
 
 ```bash
+# Determine project root
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+WORKFLOW_DIR="${PROJECT_ROOT}/.claude/workflows"
+
 # Save JSON with quality results
-echo "$json_data" > ~/.claude/workflows/team1_current_task.json
+echo "$json_data" > ${WORKFLOW_DIR}/team1_current_task.json
 
 # Run quality gates verification script
-python3 ~/.claude/hooks/spark_quality_gates.py
+python3 "${PROJECT_ROOT}/.claude/hooks/spark_quality_gates.py"
 
 # Check result
 if [ $? -eq 0 ]; then
@@ -268,7 +275,7 @@ Update team1_current_task.json with testing section:
 
 ```bash
 echo '{"subagent": "team1-tester-spark", "self_check": true}' | \
-python3 ~/.claude/hooks/spark_quality_gates.py
+python3 "${PROJECT_ROOT}/.claude/hooks/spark_quality_gates.py"
 ```
 
 ## Trait-Driven Testing Adaptations

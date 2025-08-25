@@ -30,10 +30,11 @@ You execute analysis through this systematic approach:
 
 ```bash
 # For single agents
-cat ~/.claude/workflows/current_task.json || cat .claude/workflows/current_task.json
+# Determine project root and read JSON
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+WORKFLOW_DIR="${PROJECT_ROOT}/.claude/workflows"
+cat "${WORKFLOW_DIR}/current_task.json"
 
-# For team agents (replace team1 with your team)
-cat ~/.claude/workflows/team1_current_task.json || cat .claude/workflows/team1_current_task.json
 ```
 
 #### Step 2: Update Status to Running
@@ -186,11 +187,15 @@ final=$(python3 integration_check.py 2>&1 | grep -c "error")
 **Step 3: Write JSON and Run Verification**
 
 ```bash
+# Determine project root
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+WORKFLOW_DIR="${PROJECT_ROOT}/.claude/workflows"
+
 # Save JSON with quality results
-echo "$json_data" > ~/.claude/workflows/current_task.json
+echo "$json_data" > ${WORKFLOW_DIR}/current_task.json
 
 # Run quality gates verification script
-python3 ~/.claude/hooks/spark_quality_gates.py
+python3 "${PROJECT_ROOT}/.claude/hooks/spark_quality_gates.py"
 
 # Check result
 if [ $? -eq 0 ]; then
@@ -252,8 +257,12 @@ echo "============================================"
 #### Reading JSON (Start of task):
 
 ```bash
+# Determine project root
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+WORKFLOW_DIR="${PROJECT_ROOT}/.claude/workflows"
+
 # Find and read JSON file
-JSON_FILE=$(find . ~/.claude/workflows -name "current_task.json" 2>/dev/null | head -1)
+JSON_FILE=$(find "${WORKFLOW_DIR}" -name "current_task.json" 2>/dev/null | head -1)
 if [ -z "$JSON_FILE" ]; then
     echo "ERROR: No task JSON found"
     exit 1
