@@ -1,6 +1,86 @@
-# /spark-clean - SPARK Project Cleanup Command  
+---
+name: spark-clean
+description: Comprehensive project cleanup and technical debt reduction with intelligent code organization
+type: command
+requires: cleaner-spark
+---
 
-**Purpose**: Comprehensive project cleanup and technical debt reduction with SPARK intelligence
+# /spark-clean - Intelligent Project Cleanup Command  
+
+**Purpose**: Cleaning is both an act of removal and an act of clarification, creating space for quality to flourish by eliminating what obscures and preserving what illuminates.
+
+## Philosophy (Natural Language Inspiration)
+
+Cleaning code is like organizing a workshop - every tool should have its place, every component should serve a purpose. We approach cleanup with:
+
+- **Ruthless elimination** of what adds no value
+- **Gentle preservation** of what works well
+- **Systematic organization** that reveals intent
+- **Quality enhancement** through simplification
+
+The cleanest code is often the most elegant - not because it's minimal, but because everything present has earned its place.
+
+## Behavior Protocol (Code-Based Execution)
+
+```python
+class SparkCleanCommand:
+    """Intelligent cleanup with systematic technical debt reduction.
+    
+    This protocol ensures thorough cleaning while the philosophy above
+    guides what to keep versus what to remove. Balance is key.
+    """
+    
+    # Cleanup categories - COMPREHENSIVE SWEEP
+    CLEANUP_AREAS = {
+        "dead_code": ["unused_functions", "unreachable_branches", "commented_code"],
+        "dependencies": ["unused_imports", "outdated_packages", "conflicting_versions"],
+        "structure": ["empty_directories", "misnamed_files", "circular_imports"],
+        "quality": ["linting_violations", "formatting_inconsistencies", "missing_docstrings"],
+        "duplication": ["repeated_logic", "copy_paste_code", "redundant_configurations"]
+    }
+    
+    # Safety requirements - NON-NEGOTIABLE
+    SAFETY_CHECKS = {
+        "tests_still_pass": True,
+        "functionality_preserved": True,
+        "dependencies_satisfied": True,
+        "build_still_works": True
+    }
+    
+    def clean_project(self, scope: str) -> dict:
+        """Main cleanup orchestration with safety-first approach."""
+        cleanup_plan = self.analyze_cleanup_needs(scope)
+        
+        # Create backup before major changes
+        backup_id = self.create_safety_backup()
+        
+        try:
+            results = self.execute_cleanup_phases(cleanup_plan)
+            
+            # Validate all safety checks pass
+            if not self.validate_safety_checks():
+                self.restore_from_backup(backup_id)
+                raise CleanupSafetyError("Safety checks failed, restored backup")
+            
+            return self.generate_cleanup_report(results)
+            
+        except Exception as e:
+            self.restore_from_backup(backup_id)
+            raise CleanupError(f"Cleanup failed: {e}")
+    
+    def balance_thoroughness_with_safety(self, context: dict) -> str:
+        """Balance aggressive cleanup with system stability.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - knowing when to clean
+        aggressively versus when to be conservative.
+        """
+        if context["system_stability"] == "critical":
+            return "conservative_cleanup"
+        elif context["technical_debt"] == "high":
+            return "aggressive_cleanup"
+        else:
+            return "balanced_cleanup"
+```
 
 ## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 

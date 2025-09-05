@@ -384,7 +384,19 @@ def phase_5b_quality_gates():
         return True
     else:
         print("❌ Quality gates FAILED - Improving test suite...")
-        improve_test_quality(result.stdout)
+        print("⚠️ CRITICAL WARNING: NO AUTOMATED FIXES ALLOWED!")
+        print("   FORBIDDEN: sed, awk, perl, --fix, bulk operations")
+        print("   REQUIRED: Fix each issue manually and individually")
+        
+        # Parse issues but NEVER use automated fixes
+        issues = parse_test_quality_issues(result.stdout)
+        
+        # Fix each issue INDIVIDUALLY and MANUALLY
+        for issue in issues:
+            print(f"  Manual fix required: {issue}")
+            fix_single_test_issue_manually(issue)
+            # ABSOLUTELY NO BATCH PROCESSING
+        
         return phase_5b_quality_gates()  # Retry
 ```
 

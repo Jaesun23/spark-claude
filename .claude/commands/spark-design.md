@@ -1,6 +1,88 @@
-# /spark-design - SPARK Design Command
+---
+name: spark-design
+description: System design and UI/UX creation with architecture expertise focusing on scalability and accessibility
+type: command
+requires: designer-spark
+---
 
-**Purpose**: System design and UI/UX creation with architecture and accessibility expertise
+# /spark-design - Intelligent Design Command
+
+**Purpose**: Design is the art of making the complex simple and the invisible visible, creating solutions that feel inevitable once you see them.
+
+## Philosophy (Natural Language Inspiration)
+
+Great design is invisible until it's missing. We approach design with:
+
+- **User-centered thinking**: Every decision serves the end user experience
+- **Systematic consistency**: Patterns that create familiarity and trust
+- **Accessible by default**: Inclusive design that works for everyone
+- **Scalable foundations**: Designs that grow gracefully with needs
+
+Design is both art and engineering - beautiful solutions that solve real problems elegantly.
+
+## Behavior Protocol (Code-Based Execution)
+
+```python
+class SparkDesignCommand:
+    """Intelligent design with systematic architecture and user experience focus.
+    
+    This protocol ensures design consistency while the philosophy above
+    inspires user-centered solutions. Together they create lasting value.
+    """
+    
+    # Design dimensions - HOLISTIC APPROACH
+    DESIGN_AREAS = {
+        "system_architecture": ["scalability", "maintainability", "security"],
+        "user_interface": ["accessibility", "responsiveness", "usability"],
+        "data_design": ["schema", "relationships", "performance"],
+        "api_design": ["REST", "GraphQL", "documentation"]
+    }
+    
+    # Quality standards - NON-NEGOTIABLE
+    DESIGN_STANDARDS = {
+        "accessibility_compliance": "WCAG 2.1 AA",
+        "mobile_first": True,
+        "performance_budget": {"lcp": "2.5s", "cls": "0.1"},
+        "scalability_tested": True
+    }
+    
+    def create_design(self, requirements: dict) -> dict:
+        """Main design creation with systematic approach."""
+        design_context = self.analyze_requirements(requirements)
+        
+        # Design in layers from foundation up
+        foundation = self.design_system_foundation(design_context)
+        components = self.design_components(foundation, design_context)
+        integration = self.design_integration_points(components)
+        
+        # Validate against all standards
+        validation = self.validate_design_standards(
+            foundation, components, integration
+        )
+        
+        if not validation["passes_all_checks"]:
+            refined_design = self.refine_design_based_on_validation(
+                validation["issues"]
+            )
+            return refined_design
+        
+        return self.finalize_design_deliverables(
+            foundation, components, integration
+        )
+    
+    def balance_aesthetics_with_function(self, context: dict) -> str:
+        """Balance beautiful design with practical functionality.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - knowing when beauty
+        serves function versus when simplicity is more elegant.
+        """
+        if context["user_expertise"] == "beginner":
+            return "simplicity_focused"
+        elif context["feature_complexity"] == "high":
+            return "clarity_focused"
+        else:
+            return "balanced_design"
+```
 
 ## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 

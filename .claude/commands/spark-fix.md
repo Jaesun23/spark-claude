@@ -1,66 +1,87 @@
-# /spark-fix - SPARK Troubleshooting Command
+---
+name: spark-fix
+description: Systematic troubleshooting and issue resolution with root cause analysis
+type: command
+requires: troubleshooter-spark
+---
 
-**Purpose**: Problem investigation, debugging, and root cause analysis with SPARK intelligence
+# /spark-fix - Intelligent Troubleshooting Command
 
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
+**Purpose**: Troubleshooting is detective work where every clue matters, systematically uncovering root causes and crafting solutions that prevent recurrence.
 
-### **WHEN RECEIVING /spark-fix COMMAND:**
+## Philosophy (Natural Language Inspiration)
+
+Great troubleshooting goes beyond fixing symptoms to understand why problems occur. We approach issues with:
+
+- **Systematic investigation**: Follow evidence, not assumptions
+- **Root cause focus**: Fix the source, not just the symptom  
+- **Prevention mindset**: Solutions that prevent future occurrences
+- **Clear documentation**: Share knowledge to help others
+
+Every bug is a teacher - listen to what it's trying to tell you about the system.
+
+## Behavior Protocol (Code-Based Execution)
 
 ```python
-1. IMMEDIATELY CALL:
-   Task("troubleshooter-spark", user_request)
-
-2. WAIT for agent completion
-
-3. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - output.files.modified is not empty
-   - state.status == "completed"
-
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Report fix complete to user
-   ❌ ANY CONDITION FAILED → Task("troubleshooter-spark", "Complete the fix: {issues}")
+class SparkFixCommand:
+    """Systematic troubleshooting with evidence-based resolution.
+    
+    This protocol ensures thorough investigation while the philosophy above
+    guides interpretation and solution design. Together they solve problems.
+    """
+    
+    # Investigation phases - SYSTEMATIC APPROACH
+    INVESTIGATION_PHASES = [
+        "symptom_analysis",
+        "reproduction",
+        "root_cause_analysis", 
+        "solution_design",
+        "validation"
+    ]
+    
+    # Evidence requirements - DATA-DRIVEN
+    EVIDENCE_STANDARDS = {
+        "reproduction_steps": True,
+        "error_logs_captured": True,
+        "environment_documented": True,
+        "fix_tested": True
+    }
+    
+    def troubleshoot_issue(self, problem_description: str) -> dict:
+        """Main troubleshooting flow with systematic investigation."""
+        investigation = {
+            "symptoms": self.analyze_symptoms(problem_description),
+            "reproduction": self.reproduce_issue(problem_description),
+            "root_cause": None,
+            "solution": None
+        }
+        
+        # Follow evidence trail to root cause
+        investigation["root_cause"] = self.find_root_cause(
+            investigation["symptoms"],
+            investigation["reproduction"]
+        )
+        
+        # Design targeted solution
+        investigation["solution"] = self.design_solution(
+            investigation["root_cause"]
+        )
+        
+        # Validate fix works and doesn't break anything else
+        validation = self.validate_solution(investigation["solution"])
+        
+        return self.document_resolution(investigation, validation)
+    
+    def balance_speed_with_thoroughness(self, context: dict) -> str:
+        """Balance quick fixes with comprehensive solutions.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - knowing when to patch
+        quickly versus when to investigate thoroughly.
+        """
+        if context["severity"] == "critical":
+            return "rapid_mitigation_then_thorough_fix"
+        elif context["recurring_issue"] == True:
+            return "deep_root_cause_analysis"
+        else:
+            return "balanced_investigation"
 ```
-
-The troubleshooter-spark specialist will:
-- Systematically investigate the reported issue
-- Analyze error patterns, logs, and stack traces
-- Apply scientific debugging methods to isolate root causes
-- Develop targeted fixes with minimal side effects
-- Verify solutions thoroughly to prevent regressions
-
-## Usage Examples
-
-```bash
-/spark-fix "API endpoints returning 500 errors intermittently"
-/spark-fix "memory leak in the data processing pipeline"
-/spark-fix "tests failing after dependency update" 
-/spark-fix "performance degradation in search functionality"
-/spark-fix "authentication system not working in production"
-```
-
-## Troubleshooting Capabilities
-
-- **Error Investigation**: Systematic analysis of logs, stack traces, and error patterns
-- **Performance Debugging**: Profiling, bottleneck identification, optimization
-- **Integration Issues**: API failures, database connectivity, service communication
-- **Environment Problems**: Configuration, deployment, dependency conflicts
-- **Code Logic Bugs**: Logic errors, edge cases, race conditions
-
-## Debugging Process
-
-SPARK troubleshooting follows systematic approach:
-1. **Problem Reproduction**: Isolate and reproduce the issue consistently
-2. **Root Cause Analysis**: Trace the issue to its underlying cause
-3. **Solution Development**: Create targeted fix with minimal side effects
-4. **Verification**: Test fix thoroughly and ensure no regressions
-5. **Prevention**: Suggest improvements to prevent similar issues
-
-## SPARK Intelligence Integration
-
-- 🎭 **Debugger Persona**: Activates systematic problem-solving patterns
-- 🔍 **Evidence-Based**: All conclusions backed by logs, metrics, and testing
-- 🧪 **Hypothesis Testing**: Scientific approach to isolating issues
-- 🚀 **Optimized Token Usage**: Focused debugging without information overload

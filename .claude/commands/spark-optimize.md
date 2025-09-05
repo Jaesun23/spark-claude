@@ -1,61 +1,83 @@
-# /spark-optimize - SPARK Performance Optimization Pipeline
+---
+name: spark-optimize
+description: Performance optimization pipeline with analysis, improvement, and testing phases
+type: command
+requires: analyzer-spark, improver-spark, tester-spark
+---
 
-**Purpose**: Comprehensive performance optimization with analysis, implementation, and validation
+# /spark-optimize - Intelligent Optimization Command
 
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
+**Purpose**: Optimization is the art of doing more with less, finding efficiency without sacrificing clarity, speed without compromising reliability.
 
-### **WHEN RECEIVING /spark-optimize COMMAND:**
+## Philosophy (Natural Language Inspiration)
+
+True optimization improves the experience for everyone - developers, users, and systems alike. We approach optimization with:
+
+- **Measurement-driven decisions**: Optimize what matters, measure what improves
+- **Holistic thinking**: Consider performance, maintainability, and user experience together
+- **Sustainable improvements**: Changes that compound over time
+- **Evidence-based validation**: Every optimization proves its worth
+
+The best optimizations make systems feel more responsive and code more elegant simultaneously.
+
+## Behavior Protocol (Code-Based Execution)
 
 ```python
-# PHASE 1: Analysis
-1. IMMEDIATELY CALL:
-   Task("analyzer-spark", user_request + " - performance analysis")
-
-2. WAIT for agent completion
-
-3. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - state.status == "completed"
-
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 2
-   ❌ ANY CONDITION FAILED → Task("analyzer-spark", "Complete performance analysis")
-
-# PHASE 2: Optimization
-5. CALL:
-   Task("improver-spark", "Optimize based on analysis")
-
-6. WAIT for agent completion
-
-7. CHECK current_task.json:
-   - output.files.modified is not empty
-
-8. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 3
-   ❌ ANY CONDITION FAILED → Task("improver-spark", "Complete optimization")
-
-# PHASE 3: Testing
-9. CALL:
-   Task("tester-spark", "Test optimized code")
-
-10. WAIT for agent completion
-
-11. CHECK current_task.json:
-    - quality.step_6_testing.coverage >= 95
-
-12. FINAL DECISION:
-    ✅ ALL CONDITIONS MET → Report: "Optimization complete"
-    ❌ ANY CONDITION FAILED → Task("tester-spark", "Improve test coverage")
+class SparkOptimizeCommand:
+    """Intelligent optimization with evidence-based improvement.
+    
+    This protocol ensures measurable gains while the philosophy above
+    guides sustainable decisions. Performance with purpose.
+    """
+    
+    # Optimization phases - SYSTEMATIC IMPROVEMENT
+    OPTIMIZATION_PHASES = [
+        "analysis",     # Identify bottlenecks
+        "improvement",  # Apply optimizations
+        "testing"       # Validate improvements
+    ]
+    
+    # Performance targets - MEASURABLE GAINS
+    PERFORMANCE_TARGETS = {
+        "response_time_improvement": "> 25%",
+        "memory_usage_reduction": "> 15%",
+        "throughput_increase": "> 20%",
+        "code_quality_maintained": True
+    }
+    
+    def optimize_system(self, focus_area: str) -> dict:
+        """Main optimization orchestration with validation."""
+        optimization_state = {
+            "baseline_metrics": self.establish_performance_baseline(),
+            "improvements_applied": [],
+            "final_metrics": {},
+            "validation_results": {}
+        }
+        
+        for phase in self.OPTIMIZATION_PHASES:
+            result = self.execute_optimization_phase(
+                phase, focus_area, optimization_state
+            )
+            
+            # Validate improvements meet targets
+            if phase == "improvement":
+                if not self.meets_performance_targets(result["metrics"]):
+                    result = self.refine_optimizations(result)
+            
+            optimization_state[f"{phase}_result"] = result
+        
+        return self.finalize_optimization_report(optimization_state)
+    
+    def balance_speed_with_maintainability(self, context: dict) -> str:
+        """Balance performance gains with code clarity.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - fast code that's
+        impossible to maintain is ultimately slower.
+        """
+        if context["performance_critical"] == "extreme":
+            return "performance_first_with_documentation"
+        elif context["team_size"] == "large":
+            return "maintainability_focused_optimization"
+        else:
+            return "balanced_optimization"
 ```
-
-
-## Usage Examples
-
-```bash
-/spark-optimize "optimize API response times and database query performance"
-/spark-optimize "improve frontend loading speed and bundle size optimization"
-/spark-optimize "optimize memory usage and garbage collection in data processing"  
-/spark-optimize "enhance search functionality performance with indexing strategies"
-/spark-optimize "optimize image processing pipeline for faster throughput"

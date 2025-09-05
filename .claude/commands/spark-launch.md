@@ -1,106 +1,90 @@
-# /spark-launch - SPARK Full-Stack Feature Launch Pipeline
+---
+name: spark-launch
+description: Complete feature launch pipeline with design, implementation, testing, documentation, and deployment
+type: command
+requires: designer-spark, implementer-spark, tester-spark, documenter-spark, builder-spark
+---
 
-**Purpose**: Complete feature development from design to deployment with quality assurance
+# /spark-launch - Complete Feature Launch Pipeline
 
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
+**Purpose**: Launching is the moment when vision becomes reality, orchestrating every aspect from conception to delivery with the precision of a symphony and the care of a craftsperson.
 
-### **WHEN RECEIVING /spark-launch COMMAND:**
+## Philosophy (Natural Language Inspiration)
 
-## 🚀 5-Phase Development Pipeline
+A successful launch touches every aspect of the development lifecycle. We approach launches with:
 
-This command executes a comprehensive development workflow with multiple specialists:
+- **End-to-end thinking**: Every component working in harmony
+- **Quality at every stage**: No shortcuts that compromise the whole
+- **User-centered delivery**: Features that solve real problems elegantly
+- **Sustainable practices**: Launches that set the foundation for future growth
+
+Great launches feel effortless to users precisely because of the care taken behind the scenes.
+
+## Behavior Protocol (Code-Based Execution)
 
 ```python
-# PHASE 1: Design
-1. IMMEDIATELY CALL:
-   Task("designer-spark", user_request + " - design architecture")
-
-2. WAIT for agent completion
-
-3. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - state.status == "completed"
-
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 2
-   ❌ ANY CONDITION FAILED → Task("designer-spark", "Complete design")
-- Create system architecture and UI/UX designs
-- Define technical requirements and specifications
-- Establish design patterns and component structures
-
-# PHASE 2: Implementation
-5. CALL:
-   Task("implementer-spark", "Implement the designed feature")
-
-6. WAIT for agent completion
-
-7. CHECK current_task.json:
-   - output.files.created is not empty
-
-8. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 3
-   ❌ ANY CONDITION FAILED → Task("implementer-spark", "Fix issues")
-- Implement the core functionality based on design
-- Follow established patterns and architecture
-- Ensure code quality through SPARK quality gates
-
-# PHASE 3: Testing
-9. CALL:
-   Task("tester-spark", "Create comprehensive tests")
-
-10. WAIT for agent completion
-
-11. CHECK current_task.json:
-    - quality.step_6_testing.coverage >= 95
-
-12. DECISION:
-    ✅ ALL CONDITIONS MET → Proceed to Phase 4
-    ❌ ANY CONDITION FAILED → Task("tester-spark", "Improve coverage")
-- Create unit, integration, and end-to-end tests
-- Achieve 95%+ code coverage
-- Validate all functionality works as designed
-
-# PHASE 4: Documentation
-13. CALL:
-    Task("documenter-spark", "Create comprehensive documentation")
-
-14. WAIT for agent completion
-
-15. CHECK current_task.json:
-    - output.docs.readme == true
-    - output.docs.api == true
-
-16. DECISION:
-    ✅ ALL CONDITIONS MET → Proceed to Phase 5
-    ❌ ANY CONDITION FAILED → Task("documenter-spark", "Complete docs")
-- Create comprehensive API documentation
-- Write user guides and examples
-- Update project README and architecture docs
-
-# PHASE 5: Git Integration
-17. CALL:
-    Task("gitter-spark", "Prepare for deployment")
-
-18. WAIT for agent completion
-
-19. CHECK current_task.json
-
-20. FINAL DECISION:
-    ✅ ALL CONDITIONS MET → Report: "Launch complete - ready for deployment"
-    ❌ ANY CONDITION FAILED → Task("gitter-spark", "Complete git setup")
+class SparkLaunchCommand:
+    """Complete feature launch with systematic multi-phase execution.
+    
+    This protocol ensures comprehensive delivery while the philosophy above
+    guides the vision and user experience. Excellence in every detail.
+    """
+    
+    # Launch phases - COMPLETE PIPELINE
+    LAUNCH_PHASES = [
+        "design",
+        "implementation", 
+        "testing",
+        "documentation",
+        "deployment"
+    ]
+    
+    # Quality gates per phase - NON-NEGOTIABLE
+    PHASE_GATES = {
+        "design": {"user_stories_complete": True, "accessibility_validated": True},
+        "implementation": {"quality_violations": 0, "functionality_complete": True},
+        "testing": {"coverage_target": 0.95, "all_tests_passing": True},
+        "documentation": {"user_guide_complete": True, "api_docs_complete": True},
+        "deployment": {"build_successful": True, "health_checks_passing": True}
+    }
+    
+    def launch_feature(self, feature_spec: str) -> dict:
+        """Complete launch orchestration with quality gates."""
+        launch_state = {
+            "current_phase": "design",
+            "phases_completed": [],
+            "quality_metrics": {},
+            "deliverables": {}
+        }
+        
+        for phase in self.LAUNCH_PHASES:
+            launch_state["current_phase"] = phase
+            
+            # Execute phase with appropriate specialist
+            result = self.execute_launch_phase(phase, feature_spec)
+            
+            # Validate phase gates
+            if not self.validate_phase_gates(phase, result):
+                result = self.retry_phase_with_improvements(phase, result)
+                if not self.validate_phase_gates(phase, result):
+                    return self.abort_launch_safely(launch_state, phase)
+            
+            # Update state and continue
+            launch_state["phases_completed"].append(phase)
+            launch_state["deliverables"][phase] = result["deliverables"]
+            
+        return self.finalize_successful_launch(launch_state)
+    
+    def balance_completeness_with_timeline(self, context: dict) -> str:
+        """Balance comprehensive launch with delivery timeline.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - knowing what can be
+        deferred versus what must be perfect for launch.
+        """
+        if context["market_window"] == "critical":
+            return "mvp_launch_with_roadmap"
+        elif context["feature_complexity"] == "high":
+            return "phased_launch_approach"
+        else:
+            return "complete_launch"
 ```
-- Review all changes and create meaningful commits
-- Prepare deployment-ready code
-- Generate release notes and version updates
-
-
-## Usage Examples
-
-```bash
-/spark-launch "user notification system with email and SMS support"
-/spark-launch "real-time chat feature with file sharing capabilities"
-/spark-launch "advanced search functionality with filters and sorting"
-/spark-launch "user dashboard with analytics and reporting"
-/spark-launch "payment processing system with multiple gateways"

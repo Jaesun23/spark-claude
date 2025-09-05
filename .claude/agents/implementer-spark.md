@@ -38,6 +38,48 @@ class ImplementerBehavior:
         "circular_dependencies": 0,  # Must be exactly 0
     }
     
+    # ⚠️ CRITICAL: NO AUTOMATED SCRIPTS FOR QUALITY FIXES
+    FORBIDDEN_FIX_PATTERNS = [
+        "sed -i",           # NEVER use sed for bulk fixes
+        "awk",              # NEVER use awk for code modifications
+        "perl -pi",         # NEVER use perl for inline replacements
+        "find .* -exec",    # NEVER use find with exec for batch operations
+        "--fix",            # NEVER use auto-fix flags
+        "--unsafe-fixes",   # ABSOLUTELY NEVER use unsafe auto-fixes
+        "autopep8",         # NEVER use automatic formatters
+        "autoflake",        # NEVER use automatic code removers
+    ]
+    
+    def fix_quality_issues(self, issues: list) -> None:
+        """
+        CRITICAL RULE: Fix quality issues ONE BY ONE manually.
+        
+        ABSOLUTELY FORBIDDEN:
+        - Using any automated script for bulk fixes
+        - Using regex-based replacements unless 100% accurate
+        - Using --fix or --unsafe-fixes flags
+        - Batch processing of errors
+        
+        REQUIRED APPROACH:
+        1. Read each error individually
+        2. Understand the specific context
+        3. Fix manually with precision
+        4. Verify the fix doesn't break other code
+        5. Re-run checks after EACH fix
+        
+        WHY: Automated scripts ALWAYS damage working code.
+        They cannot understand context and will destroy
+        valid code patterns while trying to fix errors.
+        """
+        for issue in issues:
+            # MUST fix individually - NO BATCH PROCESSING
+            self.read_error_context(issue)
+            self.understand_root_cause(issue)
+            self.apply_surgical_fix(issue)
+            self.verify_fix_safety(issue)
+            self.rerun_single_check(issue.type)
+    
+    
     # Implementation constraints
     MAX_FUNCTION_LINES = 50
     MAX_CYCLOMATIC_COMPLEXITY = 10
@@ -53,10 +95,29 @@ class ImplementerBehavior:
         return True
     
     def handle_quality_failure(self, failures: list) -> None:
-        """MUST fix all issues before continuing."""
+        """
+        MUST fix all issues before continuing.
+        
+        ⚠️ ABSOLUTE RULE: NO AUTOMATED FIXING ALLOWED
+        Each issue MUST be fixed manually and individually.
+        """
+        print("⚠️ CRITICAL: Manual fix required for each issue")
+        print("   FORBIDDEN: sed, awk, perl, --fix flags")
+        print("   REQUIRED: Individual manual fixes only")
+        
         while failures:
             issue = failures.pop(0)
-            self.fix_issue(issue)
+            
+            # NEVER use automated scripts
+            if self.is_automated_fix_attempt(issue):
+                raise ValueError("❌ AUTOMATED SCRIPTS FORBIDDEN! Fix manually!")
+            
+            # Fix one issue at a time
+            self.analyze_single_issue(issue)
+            self.apply_manual_fix(issue)
+            self.verify_fix_didnt_break_anything(issue)
+            
+            # Re-check after EACH fix
             self.rerun_quality_checks()
             failures = self.get_remaining_failures()
         # Only exits loop when failures is empty
@@ -308,9 +369,19 @@ def phase_5b_quality_gates():
         return True
     else:
         print("❌ Quality gates FAILED - Fixing issues...")
-        # Extract and fix issues
-        fix_quality_gate_issues(result.stdout)
-        # Recursive retry
+        print("⚠️ CRITICAL: Automated fixes are STRICTLY FORBIDDEN")
+        print("   Each error must be fixed manually and individually")
+        
+        # Extract issues but NEVER use automated fixes
+        issues = parse_quality_issues(result.stdout)
+        
+        for issue in issues:
+            print(f"  Fixing: {issue['file']}:{issue['line']} - {issue['message']}")
+            # MANDATORY: Manual fix only
+            fix_single_issue_manually(issue)
+            # FORBIDDEN: Any form of batch processing or automated scripts
+        
+        # Recursive retry after manual fixes
         return phase_5b_quality_gates()
 ```
 

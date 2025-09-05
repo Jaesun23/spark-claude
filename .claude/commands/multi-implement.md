@@ -1,338 +1,88 @@
-# /multi-implement - SPARK Parallel Multi-Team Implementation
+---
+name: multi-implement
+description: Parallel implementation across multiple teams with coordination and integration management
+type: command
+requires: team1-implementer-spark, team2-implementer-spark, team3-implementer-spark, team4-implementer-spark
+---
 
-**Purpose**: Execute multiple implementation tasks in parallel using up to 4 teams with JSON context relay
+# /multi-implement - Parallel Team Implementation Command
 
-## 🤖 AVAILABLE TEAM AGENTS
+**Purpose**: Parallel implementation is the art of orchestrating multiple teams to work in harmony, like conducting a symphony where every section contributes to a unified masterpiece.
 
-**THESE ARE THE ONLY AGENTS FOR MULTI-IMPLEMENT:**
-```
-Team 1: team1-implementer-spark, team1-tester-spark, team1-documenter-spark
-Team 2: team2-implementer-spark, team2-tester-spark, team2-documenter-spark
-Team 3: team3-implementer-spark, team3-tester-spark, team3-documenter-spark
-Team 4: team4-implementer-spark, team4-tester-spark, team4-documenter-spark
-```
-**DO NOT USE:** `implementer-spark`, `tester-spark`, `documenter-spark` (these are for single tasks)
+## Philosophy (Natural Language Inspiration)
 
-## 🚨 CRITICAL: ONE MESSAGE WITH MULTIPLE TOOL CALLS 🚨
+Great parallel work requires both independence and coordination. We approach multi-team implementation with:
 
-### **THE GOLDEN RULE FOR PARALLEL EXECUTION:**
-```
-YOU MUST USE A SINGLE MESSAGE WITH MULTIPLE TASK TOOL CALLS!
-DO NOT SEND SEPARATE MESSAGES FOR EACH TASK!
-```
+- **Autonomous teams**: Each team has clear ownership and decision-making power
+- **Shared vision**: All teams work toward the same quality and user experience goals
+- **Smart coordination**: Minimal overhead, maximum value from team interactions
+- **Collective responsibility**: Success is measured by the whole, not individual parts
 
-## ⚠️ PRE-EXECUTION CHECKLIST (MUST READ!)
+The best parallel implementation feels like natural teamwork - coordinated but not micromanaged.
 
-Before executing /multi-implement, verify:
-- [ ] ✅ Using `team1-implementer-spark`, NOT `implementer-spark`
-- [ ] ✅ Using `team2-implementer-spark`, NOT `implementer-spark`  
-- [ ] ✅ Using `team3-implementer-spark`, NOT `implementer-spark`
-- [ ] ✅ Using `team4-implementer-spark`, NOT `implementer-spark`
-- [ ] ✅ NO "Team1:" prefix in task description (agent knows its team)
-- [ ] ✅ All 4 Task calls in ONE message
-- [ ] ✅ Team JSON files created first
-
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
-
-### **WHEN RECEIVING /multi-implement COMMAND:**
+## Behavior Protocol (Code-Based Execution)
 
 ```python
-# PHASE 1: Implementation (PARALLEL)
-1. SINGLE MESSAGE WITH ALL FOUR TASKS:
-   Task("team1-implementer-spark", task1)
-   Task("team2-implementer-spark", task2)
-   Task("team3-implementer-spark", task3)
-   Task("team4-implementer-spark", task4)
-
-2. WAIT for ALL teams to complete
-
-3. CHECK each team#_current_task.json:
-   FOR EACH TEAM (1-4):
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - state.status == "completed"
-
-4. DECISION:
-   ✅ ALL TEAMS PASS → Proceed to Phase 2
-   ❌ ANY TEAM FAILED → Retry only failed teams
-
-# PHASE 2: Testing (PARALLEL)
-5. SINGLE MESSAGE WITH ALL FOUR TESTERS:
-   Task("team1-tester-spark", "Test team1 implementation")
-   Task("team2-tester-spark", "Test team2 implementation")
-   Task("team3-tester-spark", "Test team3 implementation")
-   Task("team4-tester-spark", "Test team4 implementation")
-
-6. WAIT for ALL teams to complete
-
-7. CHECK each team#_current_task.json:
-   FOR EACH TEAM:
-   - quality.step_6_testing.coverage >= 95
-   - quality.can_proceed == true
-
-8. DECISION:
-   ✅ ALL TEAMS PASS → Proceed to Phase 3
-   ❌ ANY TEAM FAILED → Retry only failed teams
-
-# PHASE 3: Documentation (PARALLEL)
-9. SINGLE MESSAGE WITH ALL FOUR DOCUMENTERS:
-   Task("team1-documenter-spark", "Document team1 feature")
-   Task("team2-documenter-spark", "Document team2 feature")
-   Task("team3-documenter-spark", "Document team3 feature")
-   Task("team4-documenter-spark", "Document team4 feature")
-
-10. WAIT for ALL teams to complete
-
-11. CHECK each team#_current_task.json:
-    FOR EACH TEAM:
-    - output.docs.readme == true
-    - quality.can_proceed == true
-
-12. FINAL DECISION:
-    ✅ ALL TEAMS COMPLETE → Report: "All 4 tasks implemented, tested, and documented"
-    ❌ ANY TEAM FAILED → Retry only failed teams
-
-# ❌ WRONG #1 - USING GENERIC AGENT:
-Task("implementer-spark", "Team1: ...")  # NO! Use team1-implementer-spark!
-Task("implementer-spark", "Team2: ...")  # NO! Use team2-implementer-spark!
-
-# ❌ WRONG #2 - SEQUENTIAL MESSAGES:
-Message 1: Task("team1-implementer-spark", ...)
-Message 2: Task("team2-implementer-spark", ...)  # NO! This waits for Team1!
-```
-
-### **EXECUTION STEPS:**
-1. **PREPARE**: Create all team JSON files (team1_current_task.json, etc.)
-2. **LAUNCH ALL AT ONCE**: Single message with 4 Task tool calls
-3. **WAIT**: For all 4 teams to complete
-4. **TEST ALL AT ONCE**: Single message with 4 tester Task calls
-5. **REPORT**: Consolidate results
-
-⚠️ **REMEMBER**: If you send Task calls in separate messages, they run SEQUENTIALLY, not in PARALLEL!
-
-## 🎯 COMMON MISTAKES TO AVOID
-
-### ❌ Mistake 1: Using generic implementer-spark
-```python
-# WRONG - This breaks parallelism!
-Task("implementer-spark", "Team 1: Implement API")
-Task("implementer-spark", "Team 2: Implement Database")
-```
-
-### ❌ Mistake 2: Adding team prefix to task
-```python
-# WRONG - Agent already knows its team!
-Task("team1-implementer-spark", "Team 1: Implement API")
-# CORRECT - No prefix needed
-Task("team1-implementer-spark", "Implement API")
-```
-
-### ❌ Mistake 3: Sequential messages
-```python
-# WRONG - Waits for each to finish!
-Message 1: Task("team1-implementer-spark", ...)
-[Wait for result]
-Message 2: Task("team2-implementer-spark", ...)
-```
-
-## 📝 Orchestration Process
-
-### Phase 0: Task Allocation
-Analyze tasks and allocate to teams:
-1. Parse task IDs from command
-2. Team JSON files will be auto-generated by StateManager:
-   ```python
-   # StateManager automatically creates team#_current_task.json files
-   # when write_team_state(team_id, task_data) is called
-   # Uses hardcoded _default_state() structure with team_id added
-   ```
-3. Identify shared resources needing locks
-
-### Phase 1: Parallel Implementation
-Call all assigned teams SIMULTANEOUSLY (not sequentially):
-```
-# ALL FOUR CALLS AT ONCE - NO WAITING BETWEEN!
-Task("team1-implementer-spark", "{task1}")
-Task("team2-implementer-spark", "{task2}")
-Task("team3-implementer-spark", "{task3}")
-Task("team4-implementer-spark", "{task4}")
-```
-
-Each team implementer:
-- Automatically reads their team#_current_task.json file
-- Implements only their assigned feature
-- Updates their JSON file with 'implementation' section
-- Runs self-validation before exit (recommended)
-- Respects file locks for shared resources
-
-### Phase 1.5: Claude CODE Implementation Review
-After all implementations complete, Claude CODE reviews all team results:
-
-```python
-# Claude CODE reviews each team's results
-1. Read team1_current_task.json (check 'implementation' section)
-2. Read team2_current_task.json (check 'implementation' section)  
-3. Read team3_current_task.json (check 'implementation' section)
-4. Read team4_current_task.json (check 'implementation' section)
-
-# Decision for each team:
-✅ If team results satisfactory → Proceed to Phase 2
-❌ If issues found → Re-call that team's implementer
-```
-
-### Phase 2: Parallel Testing
-After Claude CODE approves all implementations, call testers:
-```
-Task("team1-tester-spark", "Test Team 1 implementation")
-Task("team2-tester-spark", "Test Team 2 implementation")
-Task("team3-tester-spark", "Test Team 3 implementation")
-Task("team4-tester-spark", "Test Team 4 implementation")
-```
-
-Each team tester:
-- Automatically reads their team#_current_task.json
-- Creates comprehensive tests (95% coverage target)
-- Updates their JSON file with 'testing' section
-- Runs self-validation before exit (recommended)
-
-### Phase 2.5: Claude CODE Testing Review
-After all testing complete, Claude CODE reviews all test results:
-
-```python
-# Claude CODE reviews each team's test results
-1. Read team1_current_task.json (check 'testing' section)
-2. Read team2_current_task.json (check 'testing' section)
-3. Read team3_current_task.json (check 'testing' section)  
-4. Read team4_current_task.json (check 'testing' section)
-
-# Decision for each team:
-✅ If test coverage ≥95% and all tests pass → Proceed to Phase 3
-❌ If issues found → Re-call that team's tester
-```
-
-### Phase 3: Parallel Documentation
-After Claude CODE approves all testing, call documenters:
-```
-Task("team1-documenter-spark", "Document Team 1 work")
-Task("team2-documenter-spark", "Document Team 2 work")
-Task("team3-documenter-spark", "Document Team 3 work")
-Task("team4-documenter-spark", "Document Team 4 work")
-```
-
-Each team documenter:
-- Automatically reads their team#_current_task.json
-- Documents implementation and test results
-- Updates their JSON file with 'documentation' section
-- Runs self-validation before exit (recommended)
-
-### Phase 3.5: Claude CODE Documentation Review
-After all documentation complete, Claude CODE reviews all documentation results:
-
-```python
-# Claude CODE reviews each team's documentation
-1. Read team1_current_task.json (check 'documentation' section)
-2. Read team2_current_task.json (check 'documentation' section)
-3. Read team3_current_task.json (check 'documentation' section)
-4. Read team4_current_task.json (check 'documentation' section)
-
-# Decision for each team:
-✅ If documentation complete → Mark team as finished
-❌ If issues found → Re-call that team's documenter
-```
-
-### Phase 4: Final Consolidation
-After all teams pass all phases, Claude CODE provides final report:
-
-```python
-# Final multi-team implementation report
-- Summary of all team implementations
-- Consolidated quality metrics
-- Integration points and dependencies
-- Overall project completion status
-```
-
-## 💡 Quality Criteria
-
-Same as single implementation:
-- MyPy strict: 0 errors
-- Ruff: 0 violations
-- Test coverage: ≥95%
-- Security scan: 0 issues
-- Documentation: Complete
-
-## 🔧 JSON Context Structure
-
-Each team's JSON file (team#_current_task.json) contains:
-```json
-{
-  "team_id": "team1",
-  "task_id": "TASK-API-01",
-  "status": "implementing|testing|documenting|completed",
-  "task_details": {
-    "description": "Implement user authentication endpoint",
-    "files_to_modify": ["api/auth.py"],
-    "requirements": ["JWT support", "Refresh tokens"]
-  },
-  "implementation": {
-    "agent": "team1-implementer-spark",
-    "timestamp": "ISO-8601",
-    "status": "completed",
-    "files_created": ["api/auth.py"],
-    "files_modified": ["main.py"],
-    "quality_metrics": {
-      "linting_passed": true,
-      "type_checking_passed": true
+class MultiImplementCommand:
+    """Parallel team implementation with intelligent coordination.
+    
+    This protocol ensures team autonomy while the philosophy above
+    guides coordination and integration. Harmony through structure.
+    """
+    
+    # Team coordination - PARALLEL EXECUTION
+    TEAMS = ["team1", "team2", "team3", "team4"] 
+    COORDINATION_PHASES = [
+        "task_distribution",
+        "parallel_implementation",
+        "integration_validation"
+    ]
+    
+    # Quality requirements - CONSISTENT ACROSS TEAMS
+    TEAM_QUALITY_GATES = {
+        "violations_per_team": 0,
+        "integration_conflicts": 0,
+        "shared_resource_violations": 0,
+        "all_teams_complete": True
     }
-  },
-  "testing": {
-    "agent": "team1-tester-spark",
-    "timestamp": "ISO-8601",
-    "status": "completed",
-    "test_files": ["tests/test_auth.py"],
-    "coverage": 96,
-    "all_tests_pass": true
-  },
-  "documentation": {
-    "agent": "team1-documenter-spark",
-    "timestamp": "ISO-8601",
-    "status": "completed",
-    "docs_created": ["docs/auth_api.md"],
-    "readme_updated": true
-  },
-  "locks_held": ["constants.py"],
-  "self_validated": true
-}
+    
+    def coordinate_parallel_implementation(self, tasks: list) -> dict:
+        """Main parallel coordination with team synchronization."""
+        coordination_state = {
+            "task_assignments": self.distribute_tasks_to_teams(tasks),
+            "team_states": {},
+            "integration_points": {},
+            "final_results": {}
+        }
+        
+        # Execute teams in parallel - CRITICAL: ONE MESSAGE
+        team_results = self.launch_teams_in_parallel(
+            coordination_state["task_assignments"]
+        )
+        
+        # Validate integration and resolve conflicts
+        integration_validation = self.validate_team_integration(team_results)
+        
+        if not integration_validation["all_teams_integrated"]:
+            resolved_conflicts = self.resolve_integration_conflicts(
+                integration_validation["conflicts"]
+            )
+            coordination_state["conflict_resolutions"] = resolved_conflicts
+        
+        return self.finalize_parallel_implementation(
+            coordination_state, team_results
+        )
+    
+    def balance_autonomy_with_coordination(self, context: dict) -> str:
+        """Balance team independence with necessary coordination.
+        
+        Embodies '미묘한 조절이나 균형의 묘' - knowing when teams need
+        autonomy versus when they need coordination.
+        """
+        if context["task_interdependency"] == "high":
+            return "coordinated_implementation"
+        elif context["team_experience"] == "high":
+            return "autonomous_implementation"
+        else:
+            return "balanced_coordination"
 ```
-
-## 🔒 File Lock Management
-
-For shared resources (constants.py, types.py):
-- Teams request locks through JSON
-- Orchestrator manages lock allocation
-- 30-second timeout prevents deadlocks
-
-## 🚀 Usage Examples
-
-```bash
-# 2 tasks in parallel
-/multi-implement "TASK-API-01" "TASK-UI-02"
-
-# 4 tasks in parallel 
-/multi-implement "TASK-API-01" "TASK-UI-02" "TASK-SEC-03" "TASK-DATA-04"
-
-# With task descriptions
-/multi-implement "Create user auth endpoint" "Build dashboard component" "Add security middleware" "Implement data pipeline"
-```
-
-## 📊 Performance Benefits
-
-- **2 tasks**: ~1.8x faster than sequential
-- **3 tasks**: ~2.5x faster than sequential
-- **4 tasks**: ~3.1x faster than sequential
-
-## ⚠️ Limitations
-
-- Maximum 4 teams (context window constraint)
-- All teams wait for slowest to complete each phase
-- Shared file modifications are serialized
-- No direct agent-to-agent communication
