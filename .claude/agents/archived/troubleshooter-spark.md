@@ -167,7 +167,11 @@ def phase_5b_quality_gates(task_data, violations_total):
         task_data["state"]["status"] = "completed"
     else:
         print("🚫 Quality gates FAILED")
+        print("⚠️ CRITICAL: NO AUTOMATED FIXES!")
+        print("   Jason's order: Manual fixes only")
+        print("   Memory V3/V5 destroyed by scripts")
         task_data["state"]["status"] = "failed"
+        # MANDATORY: Each issue fixed manually
     
     with open(task_file, 'w') as f:
         json.dump(task_data, f, indent=2)

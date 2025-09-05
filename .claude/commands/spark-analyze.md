@@ -87,27 +87,95 @@ class SparkAnalyzeCommand:
 ### **WHEN RECEIVING /spark-analyze COMMAND:**
 
 ```python
-1. IMMEDIATELY CALL:
-   Task("analyzer-spark", user_request)
+1. INITIAL ASSESSMENT:
+   # Check if multi-session state exists
+   state_file = ".claude/workflows/analyze_state.yaml"
+   
+   if exists(state_file):
+      state = load_yaml(state_file)
+      print(f"📂 이전 분석 발견 (진행률: {state['progress']['overall_percentage']}%)")
+      print(f"🎯 다음 우선순위: {state['next_session']['focus']}")
+      
+      # Provide context to agent
+      Task("analyzer-spark", f"""
+         {user_request}
+         
+         PREVIOUS STATE EXISTS:
+         - Sessions completed: {state['sessions_completed']}
+         - Progress: {state['progress']['overall_percentage']}%
+         Continue from saved state.
+      """)
+   else:
+      # New analysis
+      Task("analyzer-spark", user_request)
 
 2. WAIT for agent completion
 
-3. CHECK ~/.claude/workflows/current_task.json:
+3. CHECK PROJECT/.claude/workflows/current_task.json:
    REQUIRED CONDITIONS:
    - quality.violations_total == 0
    - quality.can_proceed == true
    - state.status == "completed"
 
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Report analysis results to user
+4. CHECK FOR MULTI-SESSION:
+   if exists(state_file):
+      state = load_yaml(state_file)
+      
+      if state['progress']['overall_percentage'] < 100:
+         print(f"""
+         📊 분석 진행 상황: {state['progress']['overall_percentage']}%
+         🎯 다음 세션 포커스: {state['next_session']['focus']}
+         
+         대규모 코드베이스 분석이 진행 중입니다.
+         계속하려면: /spark-analyze --continue
+         
+         또는 자동으로 계속 진행하시겠습니까? (Y/n)
+         """)
+         
+         if user_confirms or "--auto" in request:
+            # Continue automatically
+            goto step 1 with "--continue" flag
+         else:
+            # Wait for user to resume
+            return
+      else:
+         print("✅ 멀티세션 분석 완료!")
+
+5. FINAL DECISION:
+   ✅ ALL CONDITIONS MET → Report complete analysis results
    ❌ ANY CONDITION FAILED → Task("analyzer-spark", """
       Previous analysis incomplete or failed quality checks.
       Please complete the analysis and fix issues: {violations}
       """)
 ```
 
+### **Multi-Session Orchestration Protocol:**
+
+When analyzer-spark creates a state file, 2호 must:
+
+1. **Recognize Multi-Session Need**: Large codebases require progressive analysis
+2. **Monitor Progress**: Check state file for completion percentage
+3. **Intelligent Continuation**: 
+   - Offer to continue automatically
+   - Show progress and next focus area
+   - Allow user to review intermediate results
+4. **Session Management**:
+   ```python
+   # Maximum 10 sessions for any analysis
+   if state['sessions_completed'] >= 10:
+      print("⚠️ 분석이 10세션을 초과했습니다. 범위를 재조정하세요.")
+   
+   # Intelligent resumption
+   if time_since_last_session > 24_hours:
+      print("💡 이전 분석이 24시간 전입니다. 컨텍스트 요약:")
+      print(state['last_session_summary'])
+   ```
+
 The analyzer-spark specialist will:
 - Conduct comprehensive multi-perspective analysis
+- **Automatically plan multi-session strategy for large codebases**
+- **Save progress state between sessions**
+- **Resume from previous state intelligently**
 - Examine code from performance, security, and quality angles
 - Provide evidence-based insights with specific metrics
 - Generate actionable recommendations for improvements

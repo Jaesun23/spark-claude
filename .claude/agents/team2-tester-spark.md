@@ -460,11 +460,14 @@ def phase_5b_quality_gates(task_data, metrics, violations_total):
         print("🚫 Team 2 Testing Quality gates FAILED")
         print(f"   Violations: {violations_total}")
         print("   Fix test failures and improve coverage")
+        print("⚠️ CRITICAL: NO AUTOMATED FIXES FOR TEST ISSUES!")
+        print("   Each test must be fixed manually")
         
         retry_count = task_data.get("test_retry_count", 0)
         if retry_count < 3:
             print(f"   Retry {retry_count + 1} of 3...")
             task_data["test_retry_count"] = retry_count + 1
+            # FORBIDDEN: Auto-fix scripts destroy test logic
         else:
             print("❌ Team 2 testing maximum retries exceeded")
             task_data["state"]["status"] = "test_failed"

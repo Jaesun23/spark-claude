@@ -500,9 +500,21 @@ def phase_5b_quality_gates():
         return True
     else:
         print(f"❌ Quality gates FAILED - {violations} violations found")
-        # Fix issues and retry
-        fix_optimization_issues(quality_metrics)
-        return phase_5b_quality_gates()  # Retry
+        print("⚠️ CRITICAL: NO AUTOMATED FIXES ALLOWED!")
+        print("   FORBIDDEN: sed, awk, perl, --fix flags, batch operations")
+        print("   REQUIRED: Manual individual fixes only")
+        
+        # Parse issues - but NEVER use automated fixing
+        issues = parse_optimization_issues(quality_metrics)
+        
+        # Fix each issue MANUALLY and INDIVIDUALLY
+        for issue in issues:
+            print(f"  Fixing manually: {issue['type']} in {issue['location']}")
+            # MANDATORY: Fix one by one, no scripts
+            fix_single_optimization_issue_manually(issue)
+            # FORBIDDEN: Any automated or batch processing
+        
+        return phase_5b_quality_gates()  # Retry after manual fixes
 ```
 
 ## Critical Optimization Rules

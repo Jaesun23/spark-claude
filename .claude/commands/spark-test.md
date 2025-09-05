@@ -9,109 +9,71 @@ requires: tester-spark
 
 **Purpose**: Testing is an art of healthy skepticism combined with systematic validation, where tests are not just safety nets but living documentation that teaches, validates, and inspires confidence.
 
-## Philosophy (Natural Language Inspiration)
+## Decision Framework (2호의 테스트 전략 판단)
 
-We test not to find bugs (though we will), but to prove our promises and document our intentions through executable examples. Testing philosophy shapes our approach:
+2호가 테스트 명령을 실행할 때 상황에 따른 판단 기준:
 
-- **Paranoid**: Assume everything will break
-- **Pragmatic**: Test what matters most  
-- **Comprehensive**: Leave no stone unturned
+### Testing Strategy Balance (미묘한 조절이나 균형의 묘)
 
-Every test should prevent a real bug or document intent. Test names should tell the story of the feature.
+**상황별 테스트 접근:**
+- **Critical Code**: 철저한 테스트 (모든 edge case 포함)
+- **Time Pressure**: 위험 기반 테스트 (핵심 경로 우선)
+- **Normal Cases**: 균형잡힌 테스트 (95% 커버리지 + 의미있는 테스트)
 
-## Behavior Protocol (Code-Based Execution)
+**구체적 판단 기준:**
+- Coverage 95% 달성이 목표이지만, 무의미한 테스트로 채우지 않음
+- 테스트 이름은 기능을 설명하는 문서 역할
+- 버그 예방과 의도 증명에 집중
 
-```python
-class SparkTestCommand:
-    """Intelligent test generation with systematic validation.
-    
-    This protocol enforces testing discipline while the philosophy above
-    inspires thoughtful test design. Together they achieve balance.
-    """
-    
-    # Test distribution pyramid
-    TEST_PYRAMID = {
-        "unit": {"proportion": 0.70, "speed": "< 100ms"},
-        "integration": {"proportion": 0.20, "speed": "< 1s"},
-        "e2e": {"proportion": 0.10, "speed": "< 10s"}
-    }
-    
-    # Coverage requirements - NON-NEGOTIABLE
-    COVERAGE_TARGETS = {
-        "line": 0.95,
-        "branch": 0.90,
-        "function": 1.00,
-        "critical_paths": 1.00
-    }
-    
-    def generate_test_suite(self, analysis: dict, philosophy: str) -> dict:
-        """Generate tests based on analysis and chosen philosophy."""
-        test_suite = {
-            "unit_tests": [],
-            "integration_tests": [],
-            "e2e_tests": []
-        }
-        
-        # Philosophy shapes approach
-        if philosophy == "paranoid":
-            focus = ["error_paths", "edge_cases", "security", "concurrency"]
-        elif philosophy == "pragmatic":
-            focus = ["critical_paths", "complex_logic", "integrations"]
-        else:  # comprehensive
-            focus = ["all"]
-        
-        return self.generate_targeted_tests(analysis, focus, test_suite)
-    
-    def validate_test_quality(self, test: dict) -> bool:
-        """Ensure test quality, not just coverage."""
-        return (
-            self.has_descriptive_name(test) and
-            not self.is_trivial_test(test) and
-            self.tests_behavior_not_implementation(test)
-        )
-    
-    def balance_coverage_with_meaning(self, context: dict) -> str:
-        """Balance between coverage metrics and meaningful tests.
-        
-        Sometimes 95% coverage with the right tests is better than
-        100% with trivial tests - '미묘한 조절이나 균형의 묘'.
-        """
-        if context["code_criticality"] == "high":
-            return "exhaustive_testing"
-        elif context["time_constraint"] == "tight":
-            return "risk_based_testing"
-        else:
-            return "balanced_testing"
-```
+### Testing Philosophy
 
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
+**테스트 작성 원칙:**
+1. **Paranoid Assumption**: 모든 것이 실패할 수 있다고 가정
+2. **Pragmatic Focus**: 가장 중요한 부분을 우선적으로 테스트
+3. **Comprehensive Coverage**: 빠뜨린 부분이 없도록 체계적 접근
+4. **Living Documentation**: 테스트 자체가 기능 설명서
+
+## Design Principles (테스트 설계 지침)
+
+**Test Pyramid Distribution:**
+- Unit Tests: 70% (< 100ms 실행)
+- Integration Tests: 20% (< 1s 실행)  
+- E2E Tests: 10% (< 10s 실행)
+
+**Quality Standards:**
+- Line Coverage: ≥ 95%
+- Branch Coverage: ≥ 90%
+- Function Coverage: 100%
+- Critical Paths: 100%
+
+## 📝 2호 Execution Protocol (테스트 orchestration)
 
 ### **WHEN RECEIVING /spark-test COMMAND:**
 
-```python
-1. IMMEDIATELY CALL:
-   Task("tester-spark", user_request)
-
-2. WAIT for agent completion
-
-3. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
-   - quality.step_6_testing.coverage >= 95
-   - quality.can_proceed == true
-   - output.tests.unit > 0
+**Single Phase: Testing**
+```bash
+1. Task("tester-spark", user_request)
+2. Wait for completion
+3. Check JSON: ~/.claude/workflows/current_task.json
+   ✅ PASS CONDITIONS:
    - state.status == "completed"
-
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Report test results to user
-   ❌ ANY CONDITION FAILED → Task("tester-spark", "Improve coverage to 95%: {current_coverage}%")
+   - quality.step_6_testing.coverage >= 95
+   - output.tests.unit > 0
+   - quality.can_proceed == true
+   
+   ❌ FAIL → Retry: Task("tester-spark", "Coverage insufficient: {current}%. Target: 95%+")
+   Maximum 2 retries, then abort with coverage report.
 ```
 
-The tester-spark specialist will:
-- Generate comprehensive test suites based on the codebase
-- Execute tests and analyze results
-- Optimize for 95%+ code coverage
-- Ensure all quality standards are met
-- Provide detailed coverage reports and recommendations
+**SUCCESS REPORT:**
+```
+✅ Testing Complete:
+- Coverage: [line]% line, [branch]% branch, [function]% function
+- Tests: [unit_count] unit, [integration_count] integration, [e2e_count] e2e  
+- Quality: All tests passing, coverage target achieved
+```
+
+⚡ **Core Principle**: 2호는 tester-spark에게 위임하고 결과를 검증합니다
 
 ## Usage Examples
 

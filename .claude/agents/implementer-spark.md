@@ -136,14 +136,15 @@ class ImplementerBehavior:
 
 ## 5-Phase Wave Implementation Methodology
 
-### Phase 0: Task Initialization
+### Phase 0: Task Initialization with Multi-Session Support
 
 ```python
 def phase_0_initialize():
-    """Read and understand the task - MANDATORY first step."""
+    """Read and understand the task - with multi-session awareness."""
     import json
     import os
     import subprocess
+    import yaml
     
     # Determine project root
     try:
@@ -162,11 +163,84 @@ def phase_0_initialize():
     with open(task_file, 'r') as f:
         task = json.load(f)
     
-    # MUST validate task structure
-    required_fields = ["id", "command", "requirements", "constraints"]
-    assert all(field in task for field in required_fields), "Invalid task structure"
+    # Check for existing implementation state
+    state_file = os.path.join(project_root, ".claude", "workflows", "implementer_state.yaml")
     
-    return task
+    if os.path.exists(state_file):
+        # Resume existing implementation
+        with open(state_file, 'r') as f:
+            state = yaml.safe_load(f)
+        
+        print("=" * 60)
+        print("📂 RESUMING MULTI-SESSION IMPLEMENTATION")
+        print("=" * 60)
+        print(f"Implementation ID: {state['implementer_id']}")
+        print(f"Feature: {state['feature_name']}")
+        print(f"Session: {state['sessions_completed'] + 1} of {state['sessions_planned']}")
+        print(f"Progress: {state['progress']['components_completed']}/{state['progress']['total_components']} components")
+        
+        if 'last_session_summary' in state:
+            print(f"\n📝 Last session:")
+            print(f"   {state['last_session_summary']}")
+        
+        print("=" * 60)
+        
+        return {
+            "task": task,
+            "mode": "multi_session_continue",
+            "state": state,
+            "session": state['sessions_completed'] + 1
+        }
+    
+    else:
+        # New implementation - assess complexity
+        complexity = assess_implementation_complexity(task)
+        
+        if complexity['estimated_tokens'] > 80000:  # Leave buffer for writes
+            print("=" * 60)
+            print("🚀 INITIATING MULTI-SESSION IMPLEMENTATION")
+            print("=" * 60)
+            print(f"Feature too complex for single session")
+            print(f"Components: {complexity['total_components']}")
+            print(f"Estimated sessions: {complexity['sessions_needed']}")
+            print("=" * 60)
+            
+            # Save initial state
+            save_initial_implementation_state(project_root, task, complexity)
+            
+            return {
+                "task": task,
+                "mode": "multi_session_start",
+                "complexity": complexity,
+                "session": 1
+            }
+        else:
+            return {
+                "task": task,
+                "mode": "single_session"
+            }
+
+def assess_implementation_complexity(task):
+    """Assess if implementation needs multiple sessions."""
+    
+    # Estimate complexity based on requirements
+    complexity_factors = {
+        'api_endpoints': count_api_endpoints(task.get('requirements', '')),
+        'database_models': count_db_models(task.get('requirements', '')),
+        'ui_components': count_ui_components(task.get('requirements', '')),
+        'integrations': count_integrations(task.get('requirements', ''))
+    }
+    
+    total_components = sum(complexity_factors.values())
+    estimated_tokens = total_components * 8000  # Conservative estimate per component
+    sessions_needed = max(1, (estimated_tokens // 70000) + 1)
+    
+    return {
+        'total_components': total_components,
+        'estimated_tokens': estimated_tokens,
+        'sessions_needed': sessions_needed,
+        'factors': complexity_factors
+    }
 ```
 
 ### Phase 1: Discovery & Analysis

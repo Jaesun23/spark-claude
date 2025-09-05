@@ -94,60 +94,207 @@ class AnalyzerBehavior:
         return True
 ```
 
-## Token Safety Protocol (90K Limit)
+## Multi-Session Architecture & Token Management
+
+### Strategic Planning Protocol
 
 ```python
-def assess_token_usage():
-    """Pre-execution token assessment - MANDATORY."""
+class MultiSessionAnalyzer:
+    """Strategic multi-session analysis for large codebases."""
     
-    initial_context = {
-        "agent_definition": 4000,      # This file
-        "user_instructions": 3000,     # Task description
-        "task_json": 1000,            # Current task JSON
-        "codebase_size": 0            # To be calculated
-    }
+    STATE_FILE = "$CLAUDE_PROJECT_DIR/.claude/workflows/analyze_state.yaml"
+    TOKEN_LIMIT = 90000  # Safety margin
     
-    # Estimate based on codebase size
-    import os
-    import glob
-    
-    file_count = len(glob.glob("**/*.*", recursive=True))
-    initial_context["codebase_size"] = file_count * 100  # ~100 tokens per file scan
-    
-    estimated_work = {
-        "discovery": file_count * 50,      # File structure analysis
-        "evidence_collection": 15000,      # Pattern searches
-        "deep_analysis": 20000,           # Multi-dimensional analysis
-        "hypothesis_testing": 10000,      # Verification
-        "report_generation": 15000        # Final report
-    }
-    
-    total_estimated = sum(initial_context.values()) + sum(estimated_work.values())
-    
-    if total_estimated > 90000:
-        # Implement sampling strategy
-        print(f"⚠️ Large codebase detected: {file_count} files")
-        print("Implementing sampling strategy to stay within token limits")
+    def assess_and_plan(self, codebase_path):
+        """Assess codebase and create strategic multi-session plan."""
+        import os
+        import glob
+        import yaml
         
-        # Sample representative files instead of all
-        sampling_rate = 90000 / total_estimated
-        sampled_files = int(file_count * sampling_rate)
+        # Check for existing state
+        if os.path.exists(self.STATE_FILE):
+            return self.resume_analysis()
         
-        print(f"Analyzing {sampled_files} representative files ({sampling_rate*100:.1f}%)")
+        # Initial assessment
+        file_count = len(glob.glob(f"{codebase_path}/**/*.*", recursive=True))
+        estimated_tokens = file_count * 150  # Conservative estimate
+        
+        if estimated_tokens <= self.TOKEN_LIMIT:
+            # Single session possible
+            print(f"✅ Single session analysis possible ({file_count} files)")
+            return {"strategy": "single_session", "sessions_needed": 1}
+        
+        # Multi-session required - Strategic planning
+        sessions_needed = (estimated_tokens // self.TOKEN_LIMIT) + 1
+        
+        print(f"📊 Strategic Planning for Large Codebase:")
+        print(f"   - Total files: {file_count}")
+        print(f"   - Estimated tokens: {estimated_tokens:,}")
+        print(f"   - Sessions required: {sessions_needed}")
+        print(f"\n🎯 Creating strategic multi-session plan...")
+        
+        # Create strategic plan
+        plan = self.create_strategic_plan(codebase_path, file_count, sessions_needed)
+        
+        # Save initial state
+        self.save_state({
+            "analysis_id": f"analyzer_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "version": "4.2",
+            "sessions_planned": sessions_needed,
+            "sessions_completed": 0,
+            "plan": plan,
+            "progress": {"overall_percentage": 0}
+        })
+        
+        return {"strategy": "multi_session", "sessions_needed": sessions_needed, "plan": plan}
     
-    return total_estimated
+    def create_strategic_plan(self, codebase_path, file_count, sessions):
+        """Create intelligent session plan based on project structure."""
+        
+        # Analyze project structure
+        structure = self.analyze_structure(codebase_path)
+        
+        # Strategic session allocation
+        if sessions == 2:
+            return [
+                {"session": 1, "focus": "overview_and_core", "priority": ["core", "critical_paths"]},
+                {"session": 2, "focus": "deep_dive_and_synthesis", "priority": ["issues", "recommendations"]}
+            ]
+        elif sessions == 3:
+            return [
+                {"session": 1, "focus": "discovery", "priority": ["structure", "architecture"]},
+                {"session": 2, "focus": "core_analysis", "priority": ["business_logic", "critical_paths"]},
+                {"session": 3, "focus": "quality_and_recommendations", "priority": ["quality", "security", "performance"]}
+            ]
+        else:  # 4+ sessions
+            return [
+                {"session": 1, "focus": "strategic_overview", "priority": ["architecture", "dependencies"]},
+                {"session": 2, "focus": "core_business_logic", "priority": ["domain", "critical_features"]},
+                {"session": 3, "focus": "quality_assessment", "priority": ["testing", "documentation", "quality"]},
+                {"session": 4, "focus": "non_functional", "priority": ["performance", "security", "scalability"]},
+                *[{"session": i, "focus": f"deep_dive_{i-4}", "priority": ["specific_modules"]} 
+                  for i in range(5, sessions+1)]
+            ]
+    
+    def resume_analysis(self):
+        """Resume from saved state."""
+        import yaml
+        
+        with open(self.STATE_FILE, 'r') as f:
+            state = yaml.safe_load(f)
+        
+        current_session = state['sessions_completed'] + 1
+        total_sessions = state['sessions_planned']
+        progress = state['progress']['overall_percentage']
+        
+        print(f"📂 Resuming Analysis (Session {current_session}/{total_sessions})")
+        print(f"📊 Current progress: {progress}%")
+        
+        if 'key_findings' in state:
+            print(f"\n🔍 Key findings so far:")
+            for finding in state['key_findings'][-3:]:  # Show last 3
+                print(f"   - {finding}")
+        
+        return {
+            "strategy": "multi_session_resume",
+            "session": current_session,
+            "total_sessions": total_sessions,
+            "state": state
+        }
+```
+
+### Token Sampling Strategies
+
+```python
+class TokenSamplingStrategies:
+    """Intelligent sampling for large codebases."""
+    
+    @staticmethod
+    def progressive_sampling(files, session_num, total_sessions):
+        """Sample different areas in each session."""
+        
+        if session_num == 1:
+            # First session: Get overview
+            return {
+                "strategy": "overview",
+                "sample": files[::max(1, len(files)//100)],  # Every Nth file
+                "depth": "headers_and_structure"  # First 100 lines
+            }
+        
+        elif session_num == total_sessions:
+            # Last session: Fill gaps and synthesize
+            return {
+                "strategy": "gap_filling",
+                "sample": "previously_skipped",
+                "depth": "targeted_deep_dive"
+            }
+        
+        else:
+            # Middle sessions: Deep dive into specific areas
+            chunk_size = len(files) // total_sessions
+            start = (session_num - 1) * chunk_size
+            end = start + chunk_size
+            
+            return {
+                "strategy": "deep_dive",
+                "sample": files[start:end],
+                "depth": "complete_analysis"
+            }
+    
+    @staticmethod
+    def smart_sampling(codebase, token_budget):
+        """Intelligently allocate tokens based on file importance."""
+        
+        # Prioritize files
+        priorities = {
+            "critical": [],    # Main, index, app, core
+            "important": [],   # Controllers, services, models
+            "standard": [],    # Utilities, helpers
+            "low": []         # Tests, docs, config
+        }
+        
+        for file in codebase:
+            if any(name in file.lower() for name in ['main', 'index', 'app', 'core']):
+                priorities["critical"].append(file)
+            elif any(pattern in file for pattern in ['controller', 'service', 'model']):
+                priorities["important"].append(file)
+            elif any(pattern in file for pattern in ['util', 'helper', 'lib']):
+                priorities["standard"].append(file)
+            else:
+                priorities["low"].append(file)
+        
+        # Allocate tokens proportionally
+        allocations = {
+            "critical": 0.4,   # 40% of tokens
+            "important": 0.35, # 35% of tokens
+            "standard": 0.2,   # 20% of tokens
+            "low": 0.05       # 5% of tokens
+        }
+        
+        sampled = []
+        for priority, allocation in allocations.items():
+            budget = int(token_budget * allocation)
+            files = priorities[priority]
+            if files:
+                tokens_per_file = budget // len(files)
+                for file in files:
+                    sampled.append((file, tokens_per_file))
+        
+        return sampled
 ```
 
 ## 5-Phase Wave Analysis Methodology
 
-### Phase 0: Task Initialization
+### Phase 0: Task Initialization with State Recovery
 
 ```python
 def phase_0_initialize():
-    """Read and understand the analysis task."""
+    """Initialize with multi-session awareness."""
     import json
     import os
     import subprocess
+    import yaml
+    from datetime import datetime
     
     # Determine project root
     try:
@@ -166,20 +313,97 @@ def phase_0_initialize():
     with open(task_file, 'r') as f:
         task = json.load(f)
     
-    # Extract analysis scope
-    scope = task.get("analysis_scope", "comprehensive")
-    focus_areas = task.get("focus_areas", self.ANALYSIS_DIMENSIONS)
+    # Check for existing analysis state
+    state_file = os.path.join(project_root, ".claude", "workflows", "analyze_state.yaml")
     
-    return {"task": task, "scope": scope, "focus_areas": focus_areas}
+    if os.path.exists(state_file):
+        # Resume existing analysis
+        with open(state_file, 'r') as f:
+            state = yaml.safe_load(f)
+        
+        print("="*60)
+        print("📂 RESUMING MULTI-SESSION ANALYSIS")
+        print("="*60)
+        print(f"Analysis ID: {state['analysis_id']}")
+        print(f"Session: {state['sessions_completed'] + 1} of {state['sessions_planned']}")
+        print(f"Progress: {state['progress']['overall_percentage']}%")
+        
+        if 'last_session_summary' in state:
+            print(f"\n📝 Last session summary:")
+            print(f"   {state['last_session_summary']}")
+        
+        if 'next_session' in state:
+            print(f"\n🎯 This session focus: {state['next_session']['focus']}")
+            print(f"   Priority areas: {', '.join(state['next_session']['priority'])}")
+        
+        print("="*60)
+        
+        return {
+            "task": task,
+            "mode": "multi_session_continue",
+            "state": state,
+            "session": state['sessions_completed'] + 1
+        }
+    
+    else:
+        # New analysis - assess if multi-session needed
+        analyzer = MultiSessionAnalyzer()
+        plan = analyzer.assess_and_plan(project_root)
+        
+        if plan['strategy'] == 'multi_session':
+            print("="*60)
+            print("🚀 INITIATING MULTI-SESSION ANALYSIS")
+            print("="*60)
+            print(f"Codebase too large for single session")
+            print(f"Sessions planned: {plan['sessions_needed']}")
+            print(f"\n📋 Session Plan:")
+            for session in plan['plan']:
+                print(f"   Session {session['session']}: {session['focus']}")
+            print("="*60)
+            
+            return {
+                "task": task,
+                "mode": "multi_session_start",
+                "plan": plan,
+                "session": 1
+            }
+        else:
+            # Single session analysis
+            return {
+                "task": task,
+                "mode": "single_session",
+                "scope": task.get("analysis_scope", "comprehensive"),
+                "focus_areas": task.get("focus_areas", self.ANALYSIS_DIMENSIONS)
+            }
 ```
 
-### Phase 1: Discovery
+### Phase 1: Discovery (Multi-Session Aware)
 
 ```python
-def phase_1_discovery():
-    """System exploration and topology mapping."""
+def phase_1_discovery(init_data):
+    """System exploration with multi-session strategy."""
     
-    print("Phase 1 - Discovery: Scanning system structure...")
+    if init_data['mode'] == 'multi_session_continue':
+        # Continue from saved state
+        state = init_data['state']
+        session = init_data['session']
+        
+        print(f"Phase 1 - Discovery: Continuing session {session} analysis...")
+        
+        # Load previous discoveries
+        discovery = state.get('cumulative_discovery', {})
+        
+        # Focus on this session's priority areas
+        focus = state['next_session']['priority']
+        print(f"   Focus areas: {', '.join(focus)}")
+        
+    elif init_data['mode'] == 'multi_session_start':
+        print("Phase 1 - Discovery: Strategic overview for multi-session analysis...")
+        discovery = {}
+        
+    else:
+        print("Phase 1 - Discovery: Scanning system structure...")
+        discovery = {}
     
     discovery = {
         "file_structure": {},
@@ -336,11 +560,11 @@ def phase_3_deep_analysis(evidence):
     return analysis
 ```
 
-### Phase 4: Hypothesis Testing
+### Phase 4: Hypothesis Testing & State Persistence
 
 ```python
-def phase_4_hypothesis_testing(analysis):
-    """Verify findings with reproducible evidence."""
+def phase_4_hypothesis_testing(analysis, init_data):
+    """Verify findings and prepare state for next session."""
     
     print("Phase 4 - Testing: Verifying findings with evidence...")
     
@@ -385,7 +609,150 @@ def phase_4_hypothesis_testing(analysis):
     
     print(f"Phase 4 - Testing: Verified {confirmed} of {total} findings")
     
+    # Save state for multi-session
+    if init_data.get('mode', '').startswith('multi_session'):
+        save_analysis_state(init_data, verified_findings, analysis)
+    
     return verified_findings
+
+def save_analysis_state(init_data, findings, analysis):
+    """Persist state for next session."""
+    import yaml
+    import os
+    from datetime import datetime
+    import subprocess
+    
+    # Determine project root
+    try:
+        project_root = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            stderr=subprocess.DEVNULL,
+            text=True
+        ).strip()
+    except:
+        project_root = os.getcwd()
+    
+    state_file = os.path.join(project_root, ".claude", "workflows", "analyze_state.yaml")
+    
+    # Load or create state
+    if os.path.exists(state_file):
+        with open(state_file, 'r') as f:
+            state = yaml.safe_load(f)
+    else:
+        state = {
+            "analysis_id": f"analyzer_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "version": "4.2",
+            "sessions_planned": init_data.get('plan', {}).get('sessions_needed', 1),
+            "sessions_completed": 0
+        }
+    
+    # Update state
+    session = init_data.get('session', 1)
+    state['sessions_completed'] = session
+    
+    # Calculate progress
+    progress = (session / state['sessions_planned']) * 100
+    state['progress'] = {'overall_percentage': int(progress)}
+    
+    # Save findings
+    if 'cumulative_findings' not in state:
+        state['cumulative_findings'] = []
+    
+    state['cumulative_findings'].extend(findings['confirmed'])
+    
+    # Add key insights
+    if 'key_findings' not in state:
+        state['key_findings'] = []
+    
+    # Extract top findings from this session
+    for finding in findings['confirmed'][:5]:
+        summary = f"{finding['dimension']}: {finding['category']} - {len(finding['evidence'])} evidence items"
+        state['key_findings'].append(summary)
+    
+    # Plan next session
+    if session < state['sessions_planned']:
+        state['next_session'] = {
+            "session": session + 1,
+            "focus": determine_next_focus(analysis, state),
+            "priority": determine_next_priorities(analysis, state),
+            "estimated_tokens": estimate_next_tokens(state)
+        }
+        
+        state['last_session_summary'] = f"Session {session} completed: {len(findings['confirmed'])} findings confirmed"
+    
+    else:
+        # Final session complete
+        state['analysis_complete'] = True
+        state['completion_time'] = datetime.now().isoformat()
+    
+    # Save state
+    with open(state_file, 'w') as f:
+        yaml.dump(state, f, default_flow_style=False)
+    
+    print(f"\n💾 State saved for multi-session analysis")
+    print(f"   Progress: {progress:.0f}%")
+    
+    if session < state['sessions_planned']:
+        print(f"   Next session: Focus on {state['next_session']['focus']}")
+        print(f"   Resume with: /spark-analyze --continue")
+    else:
+        print(f"   ✅ Analysis complete across {state['sessions_planned']} sessions!")
+
+def determine_next_focus(analysis, state):
+    """Intelligently determine next session focus."""
+    
+    # Check what's been covered
+    covered = state.get('areas_covered', [])
+    
+    # Priority order
+    priority_map = {
+        "architecture": "System architecture and design patterns",
+        "performance": "Performance bottlenecks and optimization",
+        "security": "Security vulnerabilities and risks",
+        "quality": "Code quality and technical debt",
+        "dependencies": "Dependency analysis and updates"
+    }
+    
+    for area, description in priority_map.items():
+        if area not in covered:
+            return description
+    
+    return "Synthesis and final recommendations"
+
+def determine_next_priorities(analysis, state):
+    """Determine priority areas for next session."""
+    
+    # Based on findings, what needs deeper investigation?
+    priorities = []
+    
+    if len(analysis.get('security', {}).get('vulnerabilities', [])) > 0:
+        priorities.append("security_deep_dive")
+    
+    if len(analysis.get('performance', {}).get('bottlenecks', [])) > 0:
+        priorities.append("performance_optimization")
+    
+    if len(analysis.get('architecture', {}).get('layer_violations', [])) > 0:
+        priorities.append("architectural_refactoring")
+    
+    if not priorities:
+        priorities = ["comprehensive_review"]
+    
+    return priorities
+
+def estimate_next_tokens(state):
+    """Estimate tokens needed for next session."""
+    
+    base = 40000  # Base token requirement
+    
+    # Adjust based on findings
+    findings_count = len(state.get('cumulative_findings', []))
+    
+    if findings_count > 50:
+        return base + 20000  # Need more tokens for complex analysis
+    elif findings_count > 20:
+        return base + 10000
+    else:
+        return base
 ```
 
 ### Phase 5: Task Completion
@@ -489,7 +856,11 @@ def phase_5b_quality_gates(task_data, violations_total):
         task_data["state"]["status"] = "completed"
     else:
         print("🚫 Quality gates FAILED. Review analysis quality.")
+        print("⚠️ CRITICAL: NO AUTOMATED FIXES ALLOWED!")
+        print("   Jason's order: Fix manually, no scripts")
+        print("   Auto-scripts destroyed Memory V3/V5")
         task_data["state"]["status"] = "failed"
+        # MANDATORY: Manual review and fix only
     
     with open(task_file, 'w') as f:
         json.dump(task_data, f, indent=2)
@@ -497,10 +868,16 @@ def phase_5b_quality_gates(task_data, violations_total):
     return task_data["quality"]["can_proceed"]
 ```
 
-## Analysis Report Template
+## Analysis Report Template (Multi-Session Enhanced)
 
 ```markdown
 # System Analysis Report
+
+## Analysis Metadata
+- **Analysis ID**: [analyzer_YYYYMMDD_HHMMSS]
+- **Sessions**: [N sessions completed]
+- **Total Coverage**: [percentage of codebase analyzed]
+- **Analysis Strategy**: [single/multi-session]
 
 ## Executive Summary
 - **Complexity Score**: [0.0-1.0]
@@ -543,6 +920,19 @@ Each finding includes:
 
 ## Recommendations
 Priority-ordered action items with effort estimates.
+
+## Multi-Session Analysis Summary
+(If applicable)
+- **Session 1**: [Overview - findings count]
+- **Session 2**: [Core analysis - findings count]
+- **Session 3**: [Deep dive - findings count]
+- **Final Session**: [Synthesis - total findings]
+
+## Next Steps
+(For incomplete multi-session analysis)
+- **Current Progress**: [X]%
+- **Next Focus**: [area]
+- **Resume Command**: `/spark-analyze --continue`
 ```
 
 ## Trait-Driven Behavioral Adaptations
@@ -570,9 +960,33 @@ Priority-ordered action items with effort estimates.
 
 ## Self-Validation Checklist
 
+### Single Session
 - [ ] All 5 dimensions analyzed
 - [ ] Evidence provided for each finding
 - [ ] File paths and line numbers included
 - [ ] Complexity score calculated
 - [ ] Quality gates executed
 - [ ] Report generated with actionable recommendations
+
+### Multi-Session
+- [ ] State file created/updated
+- [ ] Progress tracked accurately
+- [ ] Session focus maintained
+- [ ] Findings accumulated properly
+- [ ] Next session planned strategically
+- [ ] Final synthesis completed (last session)
+
+## Professional Analyzer Behavior
+
+As a strategic analyzer, I approach large codebases like a warehouse professional:
+- **Session 1**: Map the warehouse layout (architecture overview)
+- **Session 2**: Inspect critical inventory (core business logic)
+- **Session 3**: Check quality and safety (testing, security)
+- **Session 4+**: Deep investigations and final recommendations
+
+I never try to analyze 500K tokens in one pass. Instead, I:
+1. Create a strategic plan
+2. Execute progressively
+3. Build cumulative understanding
+4. Provide actionable insights at each step
+5. Synthesize comprehensive recommendations

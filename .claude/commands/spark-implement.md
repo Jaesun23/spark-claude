@@ -9,86 +9,46 @@ requires: implementer-spark, tester-spark, documenter-spark
 
 **Purpose**: Orchestrates a complete development pipeline where quality isn't just checked but cultivated at every step, ensuring deliverables that inspire confidence and pride.
 
-## Philosophy (Natural Language Inspiration)
+## Decision Framework (2호의 판단 기준)
 
-This command embodies a philosophy of comprehensive, thoughtful implementation that values:
-- **Elegance in simplicity**, not cleverness
-- **Thoughtful error handling** that anticipates real-world usage  
-- **Documentation that teaches**, not just describes
-- **Tests that validate intent**, not just coverage
-- **Code that reads like well-written prose**
+2호가 이 명령어를 실행할 때 다음 기준으로 판단하고 행동합니다:
 
-The command strives to nurture quality through iterative refinement, ensuring each phase builds upon excellence rather than merely meeting requirements.
+### Quality vs Velocity Balance (미묘한 조절이나 균형의 묘)
 
-## Behavior Protocol (Code-Based Execution)
+**상황별 의사결정:**
+- **긴급한 요청**: 품질 게이트는 유지하되, 핵심 기능에 집중
+- **복잡한 요청**: 시간을 더 투자해서 thorough 검증
+- **일반적 요청**: 균형잡힌 접근으로 품질과 속도 모두 확보
 
-```python
-class SparkImplementCommand:
-    """Quality-driven implementation workflow with intelligent orchestration.
-    
-    This protocol ensures unambiguous execution while the philosophy above
-    provides nuanced inspiration. Together they maintain '미묘한 조절이나 균형의 묘'.
-    """
-    
-    # Workflow phases - IMMUTABLE ORDER
-    PHASES = ["implementation", "testing", "documentation"]
-    
-    # Quality requirements - ZERO TOLERANCE
-    QUALITY_GATES = {
-        "syntax_errors": 0,
-        "type_errors": 0,
-        "linting_violations": 0,
-        "security_issues": 0,
-        "test_coverage": 0.95,
-        "documentation_completeness": 1.0
-    }
-    
-    # Retry logic with learning
-    MAX_RETRIES = 3
-    RETRY_WITH_CONTEXT = True
-    
-    def orchestrate(self, user_request: str) -> Dict:
-        """Main orchestration flow - no phase skipping allowed."""
-        workflow_state = {
-            "phases_completed": [],
-            "current_phase": "implementation",
-            "quality_achieved": None
-        }
-        
-        # Execute phases in strict sequence
-        for phase in self.PHASES:
-            result = self.execute_phase(phase, user_request)
-            
-            if not result["success"]:
-                # Retry with feedback from failure
-                result = self.retry_with_learning(phase, result["feedback"])
-                if not result["success"]:
-                    return self.graceful_failure(workflow_state, result)
-            
-            workflow_state["phases_completed"].append(phase)
-        
-        return self.success_report(workflow_state)
-    
-    def validate_phase_transition(self, current: str, next: str) -> bool:
-        """Ensure no phase skipping or backward movement."""
-        phase_order = {phase: i for i, phase in enumerate(self.PHASES)}
-        return phase_order[next] == phase_order[current] + 1
-    
-    def balance_quality_with_velocity(self, context: dict) -> str:
-        """Balance between perfection and delivery.
-        
-        This embodies '미묘한 조절이나 균형의 묘' - maintaining quality
-        standards while being pragmatic about time and resources.
-        """
-        if context["deadline_pressure"] == "high":
-            # Still maintain quality gates, but focus on essentials
-            return "essential_quality"
-        elif context["complexity"] == "high":
-            # Take more time for thorough validation
-            return "comprehensive_quality"
-        else:
-            return "balanced_quality"
-```
+**구체적 행동 지침:**
+- 모든 품질 게이트는 반드시 통과 (violations_total = 0)
+- 단, 시간 압박이 있을 때는 documentation을 간소화 가능
+- 복잡도가 높을 때는 추가 validation 단계 포함
+
+### Implementation Philosophy
+
+**코드 품질 원칙:**
+1. **Elegance over Cleverness**: 복잡한 로직보다는 읽기 쉬운 코드
+2. **Proactive Error Handling**: 실제 사용 시나리오를 고려한 예외 처리
+3. **Teaching Documentation**: 단순 설명이 아닌 이해를 돕는 문서
+4. **Intent-Based Testing**: Coverage 숫자가 아닌 의도 검증 중심
+5. **Prose-Like Code**: 코드 자체가 문서가 되도록 작성
+
+## Design Principles (설계 지침)
+
+**Phase 진행 원칙:**
+- **Sequential Execution**: implementation → testing → documentation 순서 엄수
+- **Quality Gates**: 각 단계마다 품질 검증 필수
+- **Context-Aware Retry**: 실패 시 맥락을 고려한 재시도 (최대 3회)
+- **Evidence-Based Decision**: JSON 결과를 바탕으로 다음 단계 결정
+
+**품질 기준 (Zero Tolerance):**
+- Syntax Errors: 0
+- Type Errors: 0  
+- Linting Violations: 0
+- Security Issues: 0
+- Test Coverage: ≥ 95%
+- Documentation: 완전성 100%
 
 ## 🚀 Quality-Driven Multi-Agent Workflow
 
@@ -115,156 +75,71 @@ This command orchestrates a complete development pipeline with quality gates ens
     ✅ Completion Report
 ```
 
-## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
+## 📝 2호 Execution Protocol (정확한 실행 지침)
 
 ### **WHEN RECEIVING /spark-implement COMMAND:**
 
-```python
-# PHASE 1: Implementation
-1. IMMEDIATELY CALL:
-   Task("implementer-spark", user_request)
-
-2. WAIT for agent completion
-
-3. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - output.files.created is not empty
+**PHASE 1: Implementation**
+```bash
+1. Task("implementer-spark", user_request)
+2. Wait for completion
+3. Check JSON: ~/.claude/workflows/current_task.json
+   ✅ PASS CONDITIONS:
    - state.status == "completed"
+   - quality.violations_total == 0  
+   - quality.can_proceed == true
+   - len(output.files.created) > 0 OR len(output.files.modified) > 0
+   
+   ❌ FAIL → Retry: Task("implementer-spark", "Fix violations: [list specific quality issues]")
+   Maximum 3 retries, then abort with error report.
+```
 
-4. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 2
-   ❌ ANY CONDITION FAILED → Task("implementer-spark", """
-      Previous attempt failed quality checks:
-      - Violations found: {specific violations}
-      Please fix these issues and retry.
-      """)
-
-# PHASE 2: Testing
-5. CALL:
-   Task("tester-spark", "Create comprehensive tests for the implementation")
-
-6. WAIT for agent completion
-
-7. CHECK ~/.claude/workflows/current_task.json:
-   REQUIRED CONDITIONS:
+**PHASE 2: Testing**
+```bash
+4. Task("tester-spark", "Create comprehensive tests for the implemented features")
+5. Wait for completion  
+6. Check JSON: ~/.claude/workflows/current_task.json
+   ✅ PASS CONDITIONS:
+   - state.status == "completed"
    - quality.step_6_testing.coverage >= 95
    - output.tests.unit > 0
    - quality.can_proceed == true
-   - state.status == "completed"
-
-8. DECISION:
-   ✅ ALL CONDITIONS MET → Proceed to Phase 3
-   ❌ ANY CONDITION FAILED → Task("tester-spark", """
-      Testing requirements not met:
-      - Current coverage: {coverage}%
-      - Target: 95%
-      Please improve test coverage.
-      """)
-
-# PHASE 3: Documentation
-9. CALL:
-   Task("documenter-spark", "Document the feature comprehensively")
-
-10. WAIT for agent completion
-
-11. CHECK ~/.claude/workflows/current_task.json:
-    REQUIRED CONDITIONS:
-    - output.docs.readme == true
-    - output.docs.api == true
-    - quality.can_proceed == true
-    - state.status == "completed"
-
-12. FINAL DECISION:
-    ✅ ALL CONDITIONS MET → Report to user: "Implementation complete with tests and documentation"
-    ❌ ANY CONDITION FAILED → Task("documenter-spark", """
-       Documentation incomplete:
-       - README: {status}
-       - API docs: {status}
-       Please complete all documentation.
-       """)
+   
+   ❌ FAIL → Retry: Task("tester-spark", "Improve coverage to 95%+ and add missing tests")
+   Maximum 2 retries, then abort with coverage report.
 ```
 
-⚡ **Core Principle**: Claude CODE reviews JSON results at each phase and decides next agent invocation
+**PHASE 3: Documentation**
+```bash
+7. Task("documenter-spark", "Create comprehensive documentation for the feature")
+8. Wait for completion
+9. Check JSON: ~/.claude/workflows/current_task.json
+   ✅ PASS CONDITIONS:
+   - state.status == "completed"
+   - output.docs.readme == true
+   - output.docs.api == true (if API endpoints were created)
+   - quality.step_7_documentation.docstrings == 0 (violations)
+   
+   ❌ FAIL → Retry: Task("documenter-spark", "Complete missing documentation")
+   Maximum 2 retries, then abort with documentation status.
+```
 
-## 📝 Orchestration Process
+**SUCCESS REPORT:**
+```
+✅ Implementation Complete:
+- Files: [list created/modified files]
+- Tests: [coverage]% coverage, [count] test files
+- Docs: README updated, API docs generated
+- Quality: All gates passed (0 violations)
+```
 
-### Phase 1: Implementation
-Claude CODE will delegate to implementer-spark specialist:
+⚡ **Core Principle**: 2호는 각 단계마다 JSON 결과를 검토하고 다음 에이전트 호출을 결정합니다
 
-1. **Task Assignment**: Request the implementer-spark specialist to implement the feature
-2. **Quality Validation**: The SPARK quality gates hook automatically validates:
-   - Syntax correctness (0 errors)
-   - Type checking (MyPy 0 errors)
-   - Linting compliance (Ruff 0 violations)
-   - Security scanning (0 issues)
-   - Documentation presence (docstrings required)
-3. **Auto-Retry**: If quality gates fail, the specialist automatically retries (max 3 attempts)
+## 💡 Quality Standards Summary
 
-**Quality Review Checklist:**
-- ✅ Syntax validation (0 errors)
-- ✅ Type checking (MyPy 0 errors)  
-- ✅ Linting (Ruff 0 violations)
-- ✅ Security scan (0 issues)
-- ✅ Documentation (Docstrings required)
-
-**Phase 1 → Phase 2 Decision by Claude CODE:**
-- Review `implementation` section in current_task.json
-- Check quality_metrics in the JSON
-- If satisfied → Call tester-spark
-- If issues found → Call implementer-spark again with feedback
-
-### Phase 2: Testing
-After Claude CODE approves implementation, call tester-spark specialist:
-
-1. **Test Development**: Request comprehensive test creation with 95%+ coverage target
-2. **Test Validation**: The test runner hook automatically verifies:
-   - All tests passing (0 failures)
-   - Coverage ≥ 95% (target achievement)
-   - Edge cases covered (boundary testing)
-   - Integration tests exist (system testing)
-3. **Coverage Retry**: If coverage is below 95%, the specialist enhances tests (max 2 attempts)
-
-**Test Quality Review:**
-- ✅ All tests passing (0 failures)
-- ✅ Coverage ≥ 95% (target achieved)
-- ✅ Edge cases covered (boundary testing)
-- ✅ Integration tests exist (system testing)
-
-**Phase 2 → Phase 3 Decision by Claude CODE:**
-- Review `testing` section in current_task.json
-- Check test coverage (target: 95%+)
-- If satisfied → Call documenter-spark
-- If issues found → Call tester-spark again with feedback
-
-### Phase 3: Documentation
-After Claude CODE approves testing, call documenter-spark specialist:
-
-1. **Documentation Creation**: Request comprehensive documentation including:
-   - README updates with new features
-   - API documentation for new endpoints
-   - Usage examples and code samples
-   - Inline docstrings for all functions
-2. **Final Report**: Generate completion report with all deliverables
-
-**Phase 3 Completion Criteria:**
-- README.md updated
-- API documentation complete (if applicable)
-- Usage examples added
-- All functions/classes have docstrings
-- Final implementation report generated
-
-## 💡 Quality Standards
-
-### Implementation Quality (Phase 1)
-- **필수 통과 항목**: Syntax (0), MyPy (0), Ruff (0), Security (0), Docstrings (0)
-
-### Testing Quality (Phase 2) 
-- **필수 달성**: Coverage ≥95%, Test failures (0), Edge cases covered
-
-### Documentation Quality (Phase 3)
-- **필수 포함**: README updates, API docs, Usage examples, Inline docstrings
+**Implementation**: Syntax(0), Types(0), Linting(0), Security(0), Docstrings(0)  
+**Testing**: Coverage ≥95%, All tests pass, Edge cases covered  
+**Documentation**: README updated, API docs complete, Examples provided
 
 ## 🚀 Usage Examples
 
