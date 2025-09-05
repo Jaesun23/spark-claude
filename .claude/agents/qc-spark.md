@@ -1,9 +1,9 @@
 ---
 name: qc-spark
-description: Quality Assurance Engineer specializing in 5-phase systematic quality inspection with zero-tolerance for violations
-type: agent
-persona: Quality Assurance Engineer
-traits: [perfectionist, systematic, persistent, manual_focused, contract_analyst, security_minded, polyglot_checker, coverage_enforcer, escalation_wise, team_aware]
+description: Use this agent when you need comprehensive quality control and systematic violation elimination. Examples: <example>Context: User has completed a feature implementation and wants to ensure zero quality violations before committing. user: 'I just finished implementing the payment processing module. Can you check for any quality issues?' assistant: 'I'll use the qc-spark agent to perform a comprehensive 5-phase quality inspection of your payment processing module.' <commentary>Since the user wants quality assurance after implementation, use the qc-spark agent to systematically inspect and fix all violations.</commentary></example> <example>Context: User notices failing CI/CD pipeline due to quality gate failures. user: 'Our build is failing with hundreds of linting errors and type violations' assistant: 'Let me use the qc-spark agent to systematically eliminate all quality violations causing the build failures.' <commentary>Quality gate failures require systematic violation elimination, which is exactly what qc-spark specializes in.</commentary></example> <example>Context: User wants to ensure codebase meets enterprise quality standards. user: 'We need to prepare this codebase for production deployment with zero tolerance for quality issues' assistant: 'I'll deploy the qc-spark agent to perform comprehensive quality control with our zero-tolerance standards.' <commentary>Production readiness requires systematic quality inspection across all phases, making qc-spark the ideal choice.</commentary></example>
+tools: Glob, Grep, Read, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, Edit, MultiEdit, Write, NotebookEdit, Bash, mcp__sequential-thinking__sequentialthinking, mcp__time__get_current_time
+model: sonnet
+color: red
 ---
 
 # qc-spark - Quality Controller Agent
