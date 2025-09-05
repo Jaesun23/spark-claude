@@ -1,6 +1,88 @@
-# /spark-test - SPARK Testing Command
+---
+name: spark-test
+description: Intelligent test generation and validation with coverage-driven quality assurance
+type: command
+requires: tester-spark
+---
 
-**Purpose**: Intelligent test generation, execution, and coverage analysis with SPARK enhancement
+# /spark-test - Intelligent Testing Command
+
+**Purpose**: Testing is an art of healthy skepticism combined with systematic validation, where tests are not just safety nets but living documentation that teaches, validates, and inspires confidence.
+
+## Philosophy (Natural Language Inspiration)
+
+We test not to find bugs (though we will), but to prove our promises and document our intentions through executable examples. Testing philosophy shapes our approach:
+
+- **Paranoid**: Assume everything will break
+- **Pragmatic**: Test what matters most  
+- **Comprehensive**: Leave no stone unturned
+
+Every test should prevent a real bug or document intent. Test names should tell the story of the feature.
+
+## Behavior Protocol (Code-Based Execution)
+
+```python
+class SparkTestCommand:
+    """Intelligent test generation with systematic validation.
+    
+    This protocol enforces testing discipline while the philosophy above
+    inspires thoughtful test design. Together they achieve balance.
+    """
+    
+    # Test distribution pyramid
+    TEST_PYRAMID = {
+        "unit": {"proportion": 0.70, "speed": "< 100ms"},
+        "integration": {"proportion": 0.20, "speed": "< 1s"},
+        "e2e": {"proportion": 0.10, "speed": "< 10s"}
+    }
+    
+    # Coverage requirements - NON-NEGOTIABLE
+    COVERAGE_TARGETS = {
+        "line": 0.95,
+        "branch": 0.90,
+        "function": 1.00,
+        "critical_paths": 1.00
+    }
+    
+    def generate_test_suite(self, analysis: dict, philosophy: str) -> dict:
+        """Generate tests based on analysis and chosen philosophy."""
+        test_suite = {
+            "unit_tests": [],
+            "integration_tests": [],
+            "e2e_tests": []
+        }
+        
+        # Philosophy shapes approach
+        if philosophy == "paranoid":
+            focus = ["error_paths", "edge_cases", "security", "concurrency"]
+        elif philosophy == "pragmatic":
+            focus = ["critical_paths", "complex_logic", "integrations"]
+        else:  # comprehensive
+            focus = ["all"]
+        
+        return self.generate_targeted_tests(analysis, focus, test_suite)
+    
+    def validate_test_quality(self, test: dict) -> bool:
+        """Ensure test quality, not just coverage."""
+        return (
+            self.has_descriptive_name(test) and
+            not self.is_trivial_test(test) and
+            self.tests_behavior_not_implementation(test)
+        )
+    
+    def balance_coverage_with_meaning(self, context: dict) -> str:
+        """Balance between coverage metrics and meaningful tests.
+        
+        Sometimes 95% coverage with the right tests is better than
+        100% with trivial tests - '미묘한 조절이나 균형의 묘'.
+        """
+        if context["code_criticality"] == "high":
+            return "exhaustive_testing"
+        elif context["time_constraint"] == "tight":
+            return "risk_based_testing"
+        else:
+            return "balanced_testing"
+```
 
 ## 📝 2호(Claude Code) MUST FOLLOW THIS EXACT PROTOCOL
 

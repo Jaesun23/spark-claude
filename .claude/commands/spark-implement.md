@@ -1,6 +1,94 @@
-# /implement - SPARK Implementation Command
+---
+name: spark-implement
+description: Quality-driven implementation workflow orchestrating multiple specialists through phases with strict quality gates
+type: command
+requires: implementer-spark, tester-spark, documenter-spark
+---
 
-**Purpose**: Quality-driven implementation workflow with 2호's intelligent orchestration and optimized token efficiency
+# /spark-implement - Quality-Driven Implementation Command
+
+**Purpose**: Orchestrates a complete development pipeline where quality isn't just checked but cultivated at every step, ensuring deliverables that inspire confidence and pride.
+
+## Philosophy (Natural Language Inspiration)
+
+This command embodies a philosophy of comprehensive, thoughtful implementation that values:
+- **Elegance in simplicity**, not cleverness
+- **Thoughtful error handling** that anticipates real-world usage  
+- **Documentation that teaches**, not just describes
+- **Tests that validate intent**, not just coverage
+- **Code that reads like well-written prose**
+
+The command strives to nurture quality through iterative refinement, ensuring each phase builds upon excellence rather than merely meeting requirements.
+
+## Behavior Protocol (Code-Based Execution)
+
+```python
+class SparkImplementCommand:
+    """Quality-driven implementation workflow with intelligent orchestration.
+    
+    This protocol ensures unambiguous execution while the philosophy above
+    provides nuanced inspiration. Together they maintain '미묘한 조절이나 균형의 묘'.
+    """
+    
+    # Workflow phases - IMMUTABLE ORDER
+    PHASES = ["implementation", "testing", "documentation"]
+    
+    # Quality requirements - ZERO TOLERANCE
+    QUALITY_GATES = {
+        "syntax_errors": 0,
+        "type_errors": 0,
+        "linting_violations": 0,
+        "security_issues": 0,
+        "test_coverage": 0.95,
+        "documentation_completeness": 1.0
+    }
+    
+    # Retry logic with learning
+    MAX_RETRIES = 3
+    RETRY_WITH_CONTEXT = True
+    
+    def orchestrate(self, user_request: str) -> Dict:
+        """Main orchestration flow - no phase skipping allowed."""
+        workflow_state = {
+            "phases_completed": [],
+            "current_phase": "implementation",
+            "quality_achieved": None
+        }
+        
+        # Execute phases in strict sequence
+        for phase in self.PHASES:
+            result = self.execute_phase(phase, user_request)
+            
+            if not result["success"]:
+                # Retry with feedback from failure
+                result = self.retry_with_learning(phase, result["feedback"])
+                if not result["success"]:
+                    return self.graceful_failure(workflow_state, result)
+            
+            workflow_state["phases_completed"].append(phase)
+        
+        return self.success_report(workflow_state)
+    
+    def validate_phase_transition(self, current: str, next: str) -> bool:
+        """Ensure no phase skipping or backward movement."""
+        phase_order = {phase: i for i, phase in enumerate(self.PHASES)}
+        return phase_order[next] == phase_order[current] + 1
+    
+    def balance_quality_with_velocity(self, context: dict) -> str:
+        """Balance between perfection and delivery.
+        
+        This embodies '미묘한 조절이나 균형의 묘' - maintaining quality
+        standards while being pragmatic about time and resources.
+        """
+        if context["deadline_pressure"] == "high":
+            # Still maintain quality gates, but focus on essentials
+            return "essential_quality"
+        elif context["complexity"] == "high":
+            # Take more time for thorough validation
+            return "comprehensive_quality"
+        else:
+            return "balanced_quality"
+```
 
 ## 🚀 Quality-Driven Multi-Agent Workflow
 
