@@ -1,12 +1,12 @@
-# SPARK Team Agents Guide v4.1 - Multi-Team Parallel Execution
+# SPARK Team Agents Guide v4.3 - Multi-Team Parallel Execution
 
 ## 📖 Document Overview
 
-This guide provides comprehensive documentation for SPARK's 12 team agents (team1-4 × implementer/tester/documenter) that enable parallel multi-team execution. These specialized agents coordinate through JSON files to deliver large-scale implementations efficiently.
+This guide provides comprehensive documentation for SPARK's 15 team agents (team1-5 × implementer/tester/documenter) that enable parallel multi-team execution. These specialized agents coordinate through JSON files to deliver large-scale implementations efficiently.
 
 **Target Audience**: SPARK system developers, team coordinators, parallel execution users  
 **Complexity Level**: Advanced  
-**Last Updated**: August 2025
+**Last Updated**: September 2025
 
 ---
 
@@ -14,10 +14,10 @@ This guide provides comprehensive documentation for SPARK's 12 team agents (team
 
 ### System Overview
 
-The SPARK team agent system enables up to **4 teams working in parallel**, each with 3 specialized agents:
+The SPARK team agent system enables up to **5 teams working in parallel**, each with 3 specialized agents:
 
 ```
-Team Structure (12 Total Agents):
+Team Structure (15 Total Agents):
 ├── Team 1: Backend Services
 │   ├── team1-implementer-spark
 │   ├── team1-tester-spark
@@ -30,10 +30,14 @@ Team Structure (12 Total Agents):
 │   ├── team3-implementer-spark
 │   ├── team3-tester-spark
 │   └── team3-documenter-spark
-└── Team 4: Integration & Testing
-    ├── team4-implementer-spark
-    ├── team4-tester-spark
-    └── team4-documenter-spark
+├── Team 4: Integration & Testing
+│   ├── team4-implementer-spark
+│   ├── team4-tester-spark
+│   └── team4-documenter-spark
+└── Team 5: DevOps & Deployment
+    ├── team5-implementer-spark
+    ├── team5-tester-spark
+    └── team5-documenter-spark
 ```
 
 ### Key Characteristics
@@ -42,7 +46,7 @@ Team Structure (12 Total Agents):
 - **JSON Coordination**: Communication via team-specific JSON files  
 - **Resource Locking**: Prevents conflicts on shared files
 - **Sequential Handoff**: Within each team: implementer → tester → documenter
-- **Parallel Teams**: All 4 teams can execute simultaneously
+- **Parallel Teams**: All 5 teams can execute simultaneously
 
 ---
 

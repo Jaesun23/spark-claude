@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SPARK v4.1 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system achieving 95.5% token reduction by loading only the required agent on-demand from a pool of 28 specialized agents.
+SPARK v4.3 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system achieving 95.5% token reduction by loading only the required agent on-demand from a pool of 32 specialized agents.
 
 ## Core Commands
 
@@ -34,7 +34,8 @@ python benchmarks/run_benchmarks.py
 - `/spark-design <system>` - Architecture and API design
 - `/spark-clean` - Remove technical debt and dead code
 - `/spark-fix <issue>` - Troubleshoot and fix issues
-- `/spark-improve <code>` - Refactor and optimize
+- `/spark-improve <code>` - Performance optimization and modernization
+- `Task("qc-spark", "fix ruff violations")` - Quality violations cleanup (use direct Task calls)
 
 #### Pipeline Commands (Sequential Phases)
 - `/spark <complex-task>` - Full pipeline: analyze → implement → test → document
@@ -45,14 +46,14 @@ python benchmarks/run_benchmarks.py
 - `/spark-launch <feature>` - Complete: design → implement → test → document → git
 
 #### Parallel Execution
-- `/multi-implement task1,task2,task3,task4` - Execute 4 tasks in parallel using team agents
+- `/multi-implement task1,task2,task3,task4,task5` - Execute up to 5 tasks in parallel using team agents
 
 ## Architecture & Execution Flow
 
 ### Three-Layer System
 1. **Router Layer** (`.claude/hooks/spark_persona_router.py`) - Analyzes task and selects optimal agent
 2. **Quality Gates** (`.claude/hooks/spark_quality_gates.py`) - Verifies agent claims vs actual results  
-3. **Agent Layer** (`.claude/agents/`) - 28 specialized agents (16 primary + 12 team)
+3. **Agent Layer** (`.claude/agents/`) - 32 specialized agents (17 primary + 15 team)
 
 ### Critical Execution Protocol for Claude Code
 
@@ -76,6 +77,7 @@ Task("team1-implementer-spark", task1)
 Task("team2-implementer-spark", task2)
 Task("team3-implementer-spark", task3)
 Task("team4-implementer-spark", task4)
+Task("team5-implementer-spark", task5)
 # WAIT for ALL to complete
 ```
 
@@ -121,14 +123,14 @@ python3 ~/.claude/hooks/spark_quality_gates.py
 Agents communicate via JSON state files:
 ```
 ~/.claude/workflows/current_task.json         # Main task state
-~/.claude/workflows/team[1-4]_current_task.json  # Team-specific states
+~/.claude/workflows/team[1-5]_current_task.json  # Team-specific states
 ```
 
 Structure:
 ```json
 {
   "id": "spark_YYYYMMDD_HHMMSS",
-  "version": "4.1",
+  "version": "4.3",
   "state": {"status": "pending|running|completed|failed"},
   "quality": {
     "violations_total": 0,
@@ -144,6 +146,37 @@ Structure:
 - Skipping quality gate validation
 - Not checking JSON state after agent completion
 - Forgetting Write operations double token consumption
+
+## Agent Specialization & Role Separation
+
+### Primary Agents (17 total)
+- **improver-spark**: Performance optimization, architecture modernization, context7 research
+- **qc-spark**: Quality violations cleanup (ruff, mypy, pytest failures) with 5-phase inspection
+- **analyzer-spark**: Multi-dimensional system analysis with multi-session support
+- **implementer-spark**: Feature implementation with 95% test coverage requirement
+- **tester-spark**: Comprehensive testing (95% unit, 85% integration) 
+- **designer-spark**: System architecture and API design
+- **documenter-spark**: API docs, user guides, architecture documentation
+- **troubleshooter-spark**: Systematic debugging and issue resolution
+- **cleaner-spark**: Dead code removal and dependency updates
+- **explainer-spark**: Concept and pattern explanation
+- **builder-spark**: Build process and CI/CD optimization
+- **estimater-spark**: Evidence-based time and resource estimation
+- **gitter-spark**: Git strategy, branching, automation
+- **loader-spark**: Project context analysis and loading
+- **indexer-spark**: SuperClaude command navigation
+- **tasker-spark**: Multi-session project management
+- **spawner-spark**: Complex multi-agent coordination
+
+### Team Agents (15 total - 5 teams × 3 roles)
+- **team[1-5]-implementer-spark**: Parallel implementation specialists
+- **team[1-5]-tester-spark**: Parallel testing specialists  
+- **team[1-5]-documenter-spark**: Parallel documentation specialists
+
+### Critical Role Separation
+- **Quality Control**: Use `qc-spark` for fixing violations (ruff, mypy, test failures)
+- **Enhancement**: Use `improver-spark` for modernization and optimization
+- **Multi-Session**: `analyzer-spark`, `improver-spark`, and `qc-spark` support progressive work
 
 ## Key File Locations
 

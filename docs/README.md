@@ -1,4 +1,4 @@
-# 📚 SPARK v4.1 Documentation
+# 📚 SPARK v4.3 Documentation
 
 ## Quick Navigation
 
@@ -21,15 +21,15 @@ git clone <spark-repo>
 # 2. Basic Usage
 /spark-implement "new feature"     # Single agent
 /spark "complex task"              # Full pipeline
-/multi-implement t1,t2,t3,t4      # Parallel execution
+/multi-implement t1,t2,t3,t4,t5   # Parallel execution
 ```
 
 ## 📊 System Overview
 
-- **28 Specialized Agents**: Expert agents for every task
+- **32 Specialized Agents**: Expert agents for every task (17 primary + 15 team)
 - **95.5% Token Reduction**: Efficient on-demand loading
 - **8-Step Quality Gates**: Zero-tolerance verification
-- **Parallel Execution**: 4x speedup with team agents
+- **Parallel Execution**: Up to 5x speedup with team agents
 
 ## 🎯 Most Common Commands
 
@@ -42,6 +42,7 @@ git clone <spark-repo>
 - `/spark-analyze` - System analysis
 - `/spark-refactor` - Code improvement
 - `/spark-clean` - Remove technical debt
+- `Task("qc-spark", "fix violations")` - Quality control
 
 ### For Complex Tasks
 - `/spark` - Full development pipeline
@@ -52,14 +53,16 @@ git clone <spark-repo>
 
 ```
 docs/
-├── README.md                 # This file - Overview
-├── SPARK_COMPLETE_GUIDE.md   # Complete reference
-├── ARCHITECTURE.md           # System design
-├── INSTALLATION.md           # Setup guide
-├── PHASE_STRUCTURE.md        # Agent phases
-├── TEAM_AGENTS.md            # Parallel execution
-└── templates/                # Report templates
-    └── agent-reports/        # Agent report formats
+├── README.md                                    # This file - Overview
+├── SPARK_COMPLETE_GUIDE.md                      # Complete reference
+├── ARCHITECTURE.md                              # System design
+├── INSTALLATION.md                              # Setup guide
+├── PHASE_STRUCTURE.md                           # Agent phases
+├── TEAM_AGENTS.md                               # Parallel execution
+├── multi-session-architecture-20250905.md      # Multi-session design
+├── SPARK_Agent_Command_분석보고서_20250905_1401.md # Latest analysis
+└── templates/                                   # Report templates
+    └── agent-reports/                           # Agent report formats
 ```
 
 ## 💡 Key Concepts
@@ -74,7 +77,7 @@ Every agent follows Phase 0-5, with mandatory Phase 5B quality gates.
 90K token safety limit with automatic compression strategies.
 
 ### Parallel Execution
-Team agents enable 4x parallel processing for complex tasks.
+Team agents enable up to 5x parallel processing for complex tasks.
 
 ## 🔗 Related Resources
 
@@ -85,4 +88,4 @@ Team agents enable 4x parallel processing for complex tasks.
 
 ---
 
-*SPARK v4.1 - Production Ready*
+*SPARK v4.3 - Enhanced with Quality Control Separation*

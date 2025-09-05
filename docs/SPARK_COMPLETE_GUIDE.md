@@ -1,27 +1,28 @@
-# SPARK v4.1 Complete Guide
+# SPARK v4.3 Complete Guide
 
 ## 🎯 System Overview
 
-SPARK v4.1 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system for Claude Code. It achieves 95.5% token reduction by loading only the required agent on-demand.
+SPARK v4.3 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system for Claude Code. It achieves 95.5% token reduction by loading only the required agent on-demand.
 
 ### Core Architecture
-- **28 Specialized Agents**: 16 primary + 12 team agents
+- **32 Specialized Agents**: 17 primary + 15 team agents
 - **Token Efficiency**: 95.5% reduction vs loading all agents
 - **Quality Gates**: 8-step verification with zero-tolerance
-- **Parallel Execution**: Multi-team coordination support
+- **Parallel Execution**: Multi-team coordination support (up to 5 teams)
 
 ## 📋 Command Reference
 
 ### Single Agent Commands
 ```bash
-/spark-analyze <scope>      # System analysis
-/spark-implement <feature>   # Feature implementation
-/spark-test <target>        # Testing
-/spark-design <system>      # System design
-/spark-document <scope>     # Documentation
-/spark-clean <project>      # Code cleanup
-/spark-fix <issue>         # Troubleshooting
-/spark-improve <code>       # Code improvement
+/spark-analyze <scope>           # System analysis
+/spark-implement <feature>       # Feature implementation
+/spark-test <target>            # Testing
+/spark-design <system>          # System design
+/spark-document <scope>         # Documentation
+/spark-clean <project>          # Code cleanup
+/spark-fix <issue>              # Troubleshooting
+/spark-improve <code>           # Performance optimization & modernization
+Task("qc-spark", "fix ruff violations")  # Quality control (direct calls)
 ```
 
 ### Pipeline Commands (Sequential Phases)
@@ -36,7 +37,7 @@ SPARK v4.1 (Subagent Performance Architecture with Reduced toKens) is a traits-b
 
 ### Parallel Execution Command
 ```bash
-/multi-implement task1,task2,task3,task4
+/multi-implement task1,task2,task3,task4,task5
 ```
 
 ## 🚀 Execution Protocol for 2호(Claude Code)
@@ -68,6 +69,7 @@ Task("team1-implementer-spark", task1)
 Task("team2-implementer-spark", task2)
 Task("team3-implementer-spark", task3)
 Task("team4-implementer-spark", task4)
+Task("team5-implementer-spark", task5)
 
 # WAIT for ALL to complete
 # Then proceed to next phase

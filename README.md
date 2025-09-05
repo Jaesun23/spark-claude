@@ -1,27 +1,28 @@
-# ⚡ SPARK v4.1: Unified Phase-Based Multi-Agent System for Claude Code
+# ⚡ SPARK v4.3: Enhanced Multi-Agent System with Quality Control Separation
 
 > **Subagent Performance Architecture with Reduced toKens**  
 > A revolutionary traits-based agent orchestration system with unified phase structure and mandatory quality gates.
 
-[![Version](https://img.shields.io/badge/version-4.1-gold?style=for-the-badge)](docs/spark-agent-phase-structure-v4.1.md)
+[![Version](https://img.shields.io/badge/version-4.3-gold?style=for-the-badge)](docs/spark-agent-phase-structure-v4.1.md)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-blue?style=for-the-badge)](https://claude.ai/code)
 
 ## What is SPARK?
 
-SPARK v4.1 is an independent multi-agent system for [Claude Code](https://claude.ai/code), inspired by SuperClaude's persona system but built from scratch with revolutionary improvements. Through its TRAITS system, each agent instantly activates 3-5 specific traits instead of scanning 11 personas, achieving 35% cognitive load reduction while maintaining lazy-loading efficiency.
+SPARK v4.3 is an independent multi-agent system for [Claude Code](https://claude.ai/code), inspired by SuperClaude's persona system but built from scratch with revolutionary improvements. Through its TRAITS system, each agent instantly activates 3-5 specific traits instead of scanning 11 personas, achieving 35% cognitive load reduction while maintaining lazy-loading efficiency.
 
 ### Project Evolution
 - **v3.0**: Initial release with lazy loading, 95.5% token reduction, workflow automation
 - **v3.5**: Stabilization update with enhanced quality gates and refined hooks
 - **v3.8**: TRAITS revolution - replacing persona scanning with instant trait activation
 - **v4.1**: Unified Phase structure with JSON state management and 8-step quality gates
+- **v4.3**: Quality control separation (qc-spark) + team5 addition + role specialization
 
 ### Key Features
 
 - **TRAITS System**: Dynamic trait activation replacing 11-persona scanning (35% cognitive load reduction)
-- **28 Specialized Agents**: 16 primary agents + 12 team agents using 3-5 traits each
-- **Lazy Loading Architecture**: Load only the agent you need, not all 28 at once
+- **32 Specialized Agents**: 17 primary agents + 15 team agents using 3-5 traits each
+- **Lazy Loading Architecture**: Load only the agent you need, not all 32 at once
 - **Smart Routing**: Automatically selects the optimal agent based on your task
 - **Quality Gates**: 8-step validation comparing agent claims vs actual measurements
 - **Parallel Execution**: Run multiple independent tasks simultaneously
@@ -98,16 +99,16 @@ class QualityGateHook:
 
 ### Multi-Team Parallel Execution
 
-Execute up to 4 tasks simultaneously with team agents:
+Execute up to 5 tasks simultaneously with team agents:
 
 ```bash
 # Initialize multi-team execution
-/multi_implement TASK-001 TASK-002 TASK-003 TASK-004
+/multi_implement TASK-001 TASK-002 TASK-003 TASK-004 TASK-005
 
 # Each team works independently with:
-- Dedicated JSON files (team1_current_task.json)
+- Dedicated JSON files (team[1-5]_current_task.json)
 - No cross-team communication
-- Parallel execution for 3.1x speedup
+- Parallel execution for up to 5x speedup
 ```
 
 ### Quality Gates Verification
@@ -159,9 +160,9 @@ SPARK v3.8 uses a three-layer architecture with traits-based behavioral dynamics
 
 1. **Router Layer**: Analyzes your request and determines which agent to load
 2. **Orchestration Layer**: Manages agent lifecycle and trait activation
-3. **Agent Layer**: 28 specialized agents using TRAITS methodology
-   - 16 primary agents with domain-specific traits (시스템_사고, 분석적_추론, etc.)
-   - 12 team agents for parallel execution with collaboration traits
+3. **Agent Layer**: 32 specialized agents using TRAITS methodology
+   - 17 primary agents with domain-specific traits (시스템_사고, 분석적_추론, etc.)
+   - 15 team agents for parallel execution with collaboration traits
 
 ### What are TRAITS?
 
@@ -206,9 +207,9 @@ Unlike traditional approaches that load all documentation and context upfront, S
 | **team agents (12)** | 3,261-4,432 bytes | ~815-1,108 tokens | Parallel execution |
 
 **Token Usage (Updated):**
-- **Total agents**: 28 (16 primary + 12 team)
+- **Total agents**: 32 (17 primary + 15 team)
 - **Average token usage**: ~2,370 tokens per agent
-- **Single agent**: 1.5-2.5% of 200K context window
+- **Single agent**: 1.2-2.0% of 200K context window
 - **Token savings**: 95.5% reduction vs. loading all agents
 
 ### Quality Assurance
@@ -226,7 +227,7 @@ Every code change passes through 8 quality gates:
 
 ## Available Agents with TRAITS
 
-### Primary Agents (16) - Each with Unique Trait Combinations
+### Primary Agents (17) - Each with Unique Trait Combinations
 
 | Agent | Core Traits | Purpose | Command Example |
 |-------|-------------|---------|-----------------|
@@ -236,7 +237,8 @@ Every code change passes through 8 quality gates:
 | designer-spark | 장기적_사고, 추상화_능력, 시스템_사고, 사용자_중심_사고, 위험_평가 | System design | "design microservice architecture" |
 | troubleshooter-spark | 분석적_추론, 증거_기반_실천, 근본_원인_분석, 침착함 | Debugging | "fix the memory leak issue" |
 | documenter-spark | 명확한_의사소통, 지식_구조화, 사용자_중심_사고, 공감 | Documentation | "create API documentation" |
-| improver-spark | 근본_원인_분석, 반복적_개선, 측정_우선, 실용주의 | Code improvement | "refactor for better performance" |
+| improver-spark | 근본_원인_분석, 반복적_개선, 측정_우선, 실용주의 | Performance optimization & modernization | "optimize algorithms and apply latest patterns" |
+| qc-spark | 완벽주의, 체계적_실행, 끈기, 품질_중심 | Quality violations cleanup | "fix all ruff and mypy errors" |
 | cleaner-spark | 단순성_우선, 체계적_실행, 근본_원인_분석, 위험_평가 | Technical debt | "remove dead code and update deps" |
 | builder-spark | 자동화, 프로세스_최적화, 시스템_사고, 측정_우선 | Build optimization | "optimize webpack configuration" |
 | estimater-spark | 분석적_추론, 증거_기반_실천, 위험_평가, 확률론적_사고 | Project estimation | "estimate time for new features" |
@@ -247,7 +249,7 @@ Every code change passes through 8 quality gates:
 | indexer-spark | 지식_구조화, 명확한_의사소통, 문제_해결 | Command navigation | "list available commands" |
 | tasker-spark | 계획성, 장기적_사고, 체계적_실행, 우선순위_설정 | Project management | "create task breakdown structure" |
 
-### Team Agents (12) - For Parallel Execution
+### Team Agents (15) - For Parallel Execution
 
 Each team agent inherits the same traits as their primary counterparts but with enhanced collaboration focus:
 
@@ -257,15 +259,22 @@ Each team agent inherits the same traits as their primary counterparts but with 
 | **Team 2** | team2-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
 | **Team 3** | team3-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
 | **Team 4** | team4-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
+| **Team 5** | team5-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
 
 **Usage**: For large tasks requiring parallel execution across multiple domains simultaneously.
 
-## New Features in v4.1 - Unified Phase Structure
+## New Features in v4.3 - Quality Control Revolution
+
+### 🎯 Quality Control Separation (v4.3)
+- **Role Specialization**: `improver-spark` focuses on performance optimization and modernization
+- **Quality Violations**: `qc-spark` handles all quality control (ruff, mypy, pytest failures)
+- **Team Expansion**: Added team5 agents for 5-way parallel execution
+- **Multi-Session Support**: Enhanced for large-scale quality control and improvement tasks
 
 ### 📊 Unified Phase Structure (v4.1)
-- **Phase 0**: Universal task initialization for all 28 agents
+- **Phase 0**: Universal task initialization for all 32 agents
 - **Phase 1-3**: Agent-specific work phases
-- **Phase 4**: Quality validation (16 agents)
+- **Phase 4**: Quality validation (17 agents)
 - **Phase 5**: Two-part completion:
   - Part A: Agent-specific completion work
   - Part B: Universal JSON update & quality gates
@@ -304,20 +313,21 @@ All agents now generate comprehensive reports after task completion:
 - Template library available at `/docs/templates/agent-reports/`
 
 ### ⚡ Multi-Team Parallel Execution
-Execute large-scale tasks with up to 4 teams working simultaneously:
+Execute large-scale tasks with up to 5 teams working simultaneously:
 
 ```bash
-# Example: Full-stack implementation with 4 parallel teams
+# Example: Full-stack implementation with 5 parallel teams
 "Implement user management system across all layers"
 # Automatically delegates to:
 # Team 1: Backend API implementation
 # Team 2: Database schema and queries  
 # Team 3: Frontend components
 # Team 4: Testing and documentation
+# Team 5: DevOps and deployment
 ```
 
 **Benefits:**
-- Up to 4x faster execution for complex multi-domain tasks
+- Up to 5x faster execution for complex multi-domain tasks
 - Independent team coordination via JSON state management
 - Each team includes implementer + tester + documenter for complete coverage
 
@@ -353,7 +363,7 @@ echo '{"subagent": "implementer-spark", "self_check": true}' | python3 .claude/h
 ```
 spark-claude/
 ├── .claude/
-│   ├── agents/          # 28 specialized agents (16 primary + 12 team)
+│   ├── agents/          # 32 specialized agents (17 primary + 15 team)
 │   ├── commands/        # Multi-team execution commands
 │   ├── hooks/           # Quality gates and routing
 │   └── workflows/       # JSON state management
