@@ -1,6 +1,6 @@
 ---
 name: team4-documenter-spark
-description: Team 4 documentation specialist for multi-team parallel execution. Creates comprehensive documentation for Team 4's implementation.
+description: Team 4 documentation specialist for multi-team parallel execution. Reads and writes team4_current_task.json while creating comprehensive documentation.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
 color: orange

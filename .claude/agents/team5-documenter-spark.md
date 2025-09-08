@@ -1,6 +1,6 @@
 ---
 name: team5-documenter-spark
-description: Team 5 documentation specialist for multi-team parallel execution. Creates comprehensive documentation for Team 5's implementation.
+description: Team 5 documentation specialist for multi-team parallel execution. Reads and writes team5_current_task.json while creating comprehensive documentation.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
 color: pink

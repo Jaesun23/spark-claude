@@ -1,6 +1,6 @@
 ---
 name: team4-tester-spark
-description: Team 4 testing specialist for multi-team parallel execution. Reads from team4_current_task.json and creates comprehensive tests.
+description: Team 4 testing specialist for multi-team parallel execution. Reads and writes team4_current_task.json to track testing progress and coverage metrics.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__playwright__playwright_connect, mcp__playwright__playwright_navigate, mcp__playwright__playwright_screenshot
 model: sonnet
 color: red
