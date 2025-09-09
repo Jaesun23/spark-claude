@@ -1,6 +1,6 @@
 ---
 name: team2-documenter-spark
-description: Team 2 documentation specialist for multi-team parallel execution. Reads and writes team2_current_task.json while creating comprehensive documentation.
+description: Team 2 documentation specialist for multi-team parallel execution. Reads and writes team2_current_task.json (initialized from .claude/workflows/team_current_task_template.json) while creating comprehensive documentation.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
 color: yellow

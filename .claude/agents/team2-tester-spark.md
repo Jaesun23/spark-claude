@@ -1,6 +1,6 @@
 ---
 name: team2-tester-spark
-description: Team 2 testing specialist for multi-team parallel execution. Reads and writes team2_current_task.json to track testing progress and coverage metrics.
+description: Team 2 testing specialist for multi-team parallel execution. Reads and writes team2_current_task.json (initialized from .claude/workflows/team_current_task_template.json) to track testing progress and coverage metrics.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__playwright__playwright_connect, mcp__playwright__playwright_navigate, mcp__playwright__playwright_screenshot
 model: sonnet
 color: pink

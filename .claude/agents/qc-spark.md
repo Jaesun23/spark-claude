@@ -216,7 +216,7 @@ class QcSparkAgent:
 
 2. WAIT for agent completion
 
-3. CHECK PROJECT/.claude/workflows/current_task.json:
+3. CHECK PROJECT/.claude/workflows/current_task.json (initialized from .claude/workflows/current_task_template.json):
    REQUIRED CONDITIONS:
    - quality.violations_total == 0
    - quality.can_proceed == true

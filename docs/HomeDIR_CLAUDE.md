@@ -301,11 +301,19 @@ async executeMultiImplement(tasks: string[]) {
 ```typescript
 class JSONStateManager {
   // CRITICAL RULES - UPDATED:
-  // 1. 2호가 초기 JSON 구조 생성
-  // 2. Agents READ & WRITE JSON files (작업 결과 기록)
-  // 3. 2호가 최종 검증
-  // 4. 팀별 독립 JSON으로 충돌 방지
+  // 1. 템플릿은 프로젝트별 .claude/workflows/에서 가져옴
+  // 2. 2호가 템플릿 기반으로 초기 JSON 구조 생성
+  // 3. Agents READ & WRITE JSON files (작업 결과 기록)
+  // 4. 2호가 최종 검증
+  // 5. 팀별 독립 JSON으로 충돌 방지
   
+  // 📌 CRITICAL: 템플릿 위치 (프로젝트 루트 기준)
+  private readonly templates = {
+    main: ".claude/workflows/current_task_template.json",
+    team: ".claude/workflows/team_current_task_template.json"
+  };
+  
+  // 실제 작업 파일 위치 (홈 디렉토리 기준)
   private readonly stateFiles = {
     main: "~/.claude/workflows/current_task.json",
     team1: "~/.claude/workflows/team1_current_task.json",
@@ -315,15 +323,23 @@ class JSONStateManager {
     team5: "~/.claude/workflows/team5_current_task.json"
   };
   
-  // 2호가 초기 JSON 생성
+  // 2호가 템플릿 기반으로 초기 JSON 생성
   async initializeJSON(teamId: string, task: any): Promise<void> {
+    // 1. 프로젝트 템플릿 읽기
+    const template = await this.readTemplate(teamId ? 'team' : 'main');
+    
+    // 2. 템플릿에 작업 정보 채우기
     const initialState = {
+      ...template,
       task_id: task.id,
       checklist_path: task.checklistPath,
-      status: "pending",
-      quality: { violations_total: -1, can_proceed: false }
+      created_at: new Date().toISOString(),
+      team_id: teamId || null
     };
-    await this.writeJSON(`team${teamId}_current_task.json`, initialState);
+    
+    // 3. 홈 디렉토리의 workflows에 저장
+    const fileName = teamId ? `team${teamId}_current_task.json` : 'current_task.json';
+    await this.writeJSON(fileName, initialState);
   }
   
   // 2호가 품질 검증
