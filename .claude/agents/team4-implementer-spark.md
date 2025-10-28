@@ -1,6 +1,6 @@
 ---
 name: team4-implementer-spark
-description: Team 4 implementation specialist for multi-team parallel execution. Reads and writes team4_current_task.json (initialized from .claude/workflows/team_current_task_template.json) to track implementation progress and quality metrics.
+description: Team 4 implementation specialist for multi-team parallel execution. Reads from team4_current_task.json and updates team4-specific sections.
 tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__sequential-thinking__sequentialthinking, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__time__get_current_time
 model: sonnet
 color: yellow

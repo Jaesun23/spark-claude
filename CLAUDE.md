@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SPARK v4.3 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system achieving 95.5% token reduction by loading only the required agent on-demand from a pool of 32 specialized agents.
+SPARK v4.3 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system achieving 95.5% token reduction by loading only the required agent on-demand from a pool of 21 specialized agents (6 core + 15 team agents).
+
+**Constitution**: All agents follow SPARK Constitution v1.1 (`.claude/SPARK_CONSTITUTION.md`)
 
 ## Core Commands
 
@@ -52,8 +54,18 @@ python benchmarks/run_benchmarks.py
 
 ### Three-Layer System
 1. **Router Layer** (`.claude/hooks/spark_persona_router.py`) - Analyzes task and selects optimal agent
-2. **Quality Gates** (`.claude/hooks/spark_quality_gates.py`) - Verifies agent claims vs actual results  
-3. **Agent Layer** (`.claude/agents/`) - 32 specialized agents (17 primary + 15 team)
+2. **Quality Gates** (`.claude/hooks/spark_quality_gates.py`) - Verifies agent claims vs actual results
+3. **Agent Layer** (`.claude/agents/`) - 21 specialized agents (6 core + 15 team)
+
+**Core Agents (6)**:
+- `analyzer-spark` - Multi-dimensional system analysis (v1.1: 500 lines, evidence-based)
+- `implementer-spark` - Feature implementation with 95% test coverage
+- `tester-spark` - Comprehensive testing (95% unit, 85% integration)
+- `designer-spark` - System architecture and API design
+- `documenter-spark` - API docs, user guides, architecture documents
+- `qc-spark` - Quality violations cleanup with 5-phase inspection
+
+**Team Agents (15)**: 5 teams × 3 roles (implementer, tester, documenter) for parallel execution
 
 ### Critical Execution Protocol for Claude Code
 
@@ -83,14 +95,23 @@ Task("team5-implementer-spark", task5)
 
 ### Phase Structure (All Agents)
 
-Every agent follows this 5-phase structure:
-- **Phase 0**: Task Initialization (read JSON state)
-- **Phase 1-4**: Agent-specific work
-- **Phase 5A**: Quality metrics recording
-- **Phase 5B**: Quality gates execution (MANDATORY)
+**Constitution v1.1**: Phase count is flexible, workflow is adaptive and iterative.
+
+Typical structure:
+- **Phase 0**: Task Understanding (read 2号's specific instructions)
+- **Phase 1-N**: Domain work (agent-specific, iterative)
+- **Phase N+1**: Quality verification (MANDATORY)
+  - Phase 5A: Quality metrics recording
+  - Phase 5B: Quality gates execution
   - Must check for "Quality gates PASSED" or "Quality gates FAILED"
   - All violations must be 0 to proceed
   - Maximum 3 retry attempts
+
+**Key Principles**:
+- Agents use professional judgment, not mechanical checklists
+- Iteration between phases is expected (e.g., Phase 2 ↔ Phase 3)
+- 2号 provides task-specific instructions (scope, depth, priorities)
+- Agents provide common protocols that adapt to any task
 
 ### Quality Gates Verification
 

@@ -94,26 +94,68 @@ class QcSparkAgent:
             fixes_applied[3][language] = lang_fixes
         
         # Phase 4-5: Team work only
+        # Reason: Individual qc tasks focus on code quality (Phase 1-3)
+        #         Team tasks also verify spec compliance and coverage
         if self.is_team_context():
             # Phase 4: Specification compliance
             violations[4] = self.verify_spec_compliance(codebase)
             fixes_applied[4], escalations[4] = self.handle_spec_violations(
                 violations[4]
             )
-            
+
             # Phase 5: Test coverage verification
             violations[5] = self.verify_test_coverage(codebase)
             fixes_applied[5] = self.improve_test_coverage(violations[5])
-        
-        return self.compile_quality_report(violations, fixes_applied, escalations)
+
+        # ✅ MANDATORY: Calculate total violations
+        total_violations = sum(
+            len(v) if isinstance(v, list) else sum(len(lv) for lv in v.values()) if isinstance(v, dict) else 0
+            for v in violations.values()
+        )
+
+        # ✅ MANDATORY: Execute quality gates
+        quality_result = self.execute_quality_gates(
+            violations_total=total_violations,
+            fixes_applied=fixes_applied
+        )
+
+        # ✅ MANDATORY: Compile report with quality metrics
+        report = self.compile_quality_report(violations, fixes_applied, escalations)
+
+        # ✅ MANDATORY: Enforce can_proceed based on violations
+        report["quality"] = {
+            "violations_total": total_violations,
+            "can_proceed": total_violations == 0,  # ✅ Explicit enforcement
+            "verification_complete": True,
+            "quality_gates_passed": quality_result.get("passed", False)
+        }
+
+        # ✅ MANDATORY: Save quality state to JSON before returning
+        self.save_quality_state(report)
+
+        # ✅ DO NOT return until quality gates pass
+        if not report["quality"]["can_proceed"]:
+            print(f"⚠️ Quality gates FAILED: {total_violations} violations remaining")
+            print("   Agent must continue fixing until violations_total == 0")
+            # Note: Agent should retry, not raise error
+            # This ensures the protocol: keep working until success
+
+        return report
     
     def apply_manual_fix(self, violation: dict) -> dict:
         """Manual, context-aware fixing - no automation allowed.
-        
+
         Embodies '따박따박 꾸역꾸역' - persistent manual work until perfect.
         """
         attempts = 0
-        max_attempts = 5
+
+        # ✅ Dynamic max attempts based on complexity
+        complexity = violation.get("complexity", "low")
+        max_attempts = {
+            "high": 15,    # Complex violations need more attempts
+            "medium": 10,  # Medium complexity
+            "low": 5       # Simple violations
+        }.get(complexity, 10)
         
         while attempts < max_attempts:
             attempts += 1
@@ -216,49 +258,106 @@ class QcSparkAgent:
 
 2. WAIT for agent completion
 
-3. CHECK PROJECT/.claude/workflows/current_task.json (initialized from .claude/workflows/current_task_template.json):
-   REQUIRED CONDITIONS:
-   - quality.violations_total == 0
-   - quality.can_proceed == true
-   - state.status == "completed"
+3. CHECK JSON & ENFORCE QUALITY GATES (MANDATORY, NOT OPTIONAL):
+   import json
+   import os
 
-4. CHECK FOR MULTI-SESSION:
+   # ✅ Load current task state
+   workflow_dir = os.path.expanduser("~/.claude/workflows")
+   task_file = os.path.join(workflow_dir, "current_task.json")
+
+   with open(task_file, 'r') as f:
+       state = json.load(f)
+
+   # ✅ ENFORCE: Check all conditions (not optional!)
+   violations_total = state.get("quality", {}).get("violations_total", -1)
+   can_proceed = state.get("quality", {}).get("can_proceed", False)
+   status = state.get("state", {}).get("status", "unknown")
+
+   conditions_met = (
+       violations_total == 0 and
+       can_proceed == True and
+       status == "completed"
+   )
+
+   if not conditions_met:
+       # ✅ AUTOMATIC RETRY (not a choice, MANDATORY!)
+       print(f"""
+       🚫 QUALITY GATES FAILED
+       - Violations: {violations_total}
+       - Can proceed: {can_proceed}
+       - Status: {status}
+
+       ⚠️ qc-spark MUST fix ALL violations before proceeding.
+       ⚠️ Automatically retrying...
+       """)
+
+       # ✅ MANDATORY: Retry (선택 아님!)
+       Task("qc-spark", f"""
+          RETRY: Quality gates failed.
+          Violations remaining: {violations_total}
+          You MUST fix all violations and re-run quality gates.
+          Do not report complete until violations_total == 0.
+
+          CRITICAL: No automated scripts allowed (Memory V3/V5 lesson)
+          Fix each violation manually and individually.
+       """)
+
+       return False  # ✅ Stop here, retry in progress
+
+   # ✅ All conditions passed
+   print(f"✅ Quality gates PASSED: 0 violations")
+   return True
+
+4. CHECK FOR MULTI-SESSION CONTINUATION (IF APPLICABLE):
+   # Only if qc-spark created multi-session state file
+   state_file = f"{git_root()}/.claude/workflows/qc_state.yaml"
+
    if exists(state_file):
       state = load_yaml(state_file)
-      
+
       if not state.get('inspection_complete', False):
          remaining = state['progress']['violations_remaining']
-         
+
          print(f"""
          📊 품질 검사 진행 상황:
          - 총 위반: {state['progress']['total_violations']}개
-         - 수정 완료: {state['progress']['violations_fixed']}개  
+         - 수정 완료: {state['progress']['violations_fixed']}개
          - 남은 작업: {remaining}개
          🎯 다음 단계: Phase {state['current_phase']}
-         
+
          ⚠️ 스크립트 자동 수정 절대 금지 - Memory V3/V5 파괴 교훈
-         
+
          계속하려면: /spark-qc --continue
-         
+
          또는 자동으로 계속 진행하시겠습니까? (Y/n)
          """)
-         
+
          if user_confirms or "--auto" in request:
-            # Continue automatically
-            goto step 1 with "--continue" flag
+            # Continue automatically - go back to Step 1
+            Task("qc-spark", f"""
+               {user_request}
+
+               CONTINUE FROM MULTI-SESSION STATE:
+               - Violations remaining: {remaining}
+               - Current phase: {state['current_phase']}
+               Resume work from saved state.
+            """)
          else:
             # Wait for user to resume
             return
       else:
          print("✅ 품질 검사 완료! 모든 위반 사항 해결됨 (0 violations)")
 
-5. FINAL DECISION:
-   ✅ ALL CONDITIONS MET → Report complete quality control results
-   ❌ ANY CONDITION FAILED → Task("qc-spark", """
-      Previous quality inspection incomplete or failed.
-      Please complete all phases and fix violations: {violations}
-      CRITICAL: No automated scripts - fix each violation individually
-      """)
+5. REPORT RESULTS:
+   # Step 3 already enforced quality gates
+   # Only report if we reached here (all conditions passed)
+   print(f"""
+   ✅ Quality Control 완료
+   - Total violations fixed: [count]
+   - Quality gates: PASSED
+   - Status: Ready to proceed
+   """)
 ```
 
 ### **Multi-Session Orchestration Protocol:**
