@@ -41,12 +41,14 @@ This Constitution enshrines these discoveries and ensures that all future develo
 
 **Requirements**:
 - Every agent MUST be defined by a set of core traits (characteristics/qualities)
+- Traits MUST NOT exceed 5 per agent (to prevent cognitive dissonance and choice paralysis)
 - These traits MUST enable natural performance of the agent's domain work
 - Agents MUST NOT be defined by listing multiple job functions
 - Trait combinations MUST be unique per agent to avoid role confusion
 
 **Rationale**:
 - Super Claude failed because it mixed job functions (analyzer + implementer + tester), causing cognitive dissonance
+- During Super Claude → SPARK migration experiments, excessive traits (>5) caused 2号 to experience choice paralysis and cognitive dissonance
 - Traits-based definition allows agents to naturally adapt their behavior within their expertise domain
 - Example: "Evidence-Based Practice" trait naturally leads to thorough analysis, not because we told the agent to "be thorough"
 
@@ -82,7 +84,7 @@ super-agent:
 
 **The Three-Layer Architecture**: Each layer has a distinct, non-overlapping responsibility.
 
-**Layer 1 - CLAUDE.md** (2号's Guidebook):
+**Layer 1 - CLAUDE.md** (2号's System Prompt and Memory):
 - **Responsibility**: "What agents exist, when to use them, and how 2号 orchestrates them"
 - **Content**: Agent registry, orchestration guide, state management, quality verification
 - **Forbidden**: Agent internals, traits definitions, phase implementations
@@ -104,6 +106,71 @@ super-agent:
 - Content found in the wrong layer MUST be moved to the correct layer
 - Cross-layer references MUST be minimal and indirect (e.g., via JSON state files)
 - Each layer MUST be independently maintainable
+
+#### Section 1.2.1: Agent Isolation Model
+
+**The Fundamental Constraint**: Agents are isolated sessions created by 2号's Task command.
+
+**Technical Reality**:
+- **Agent Nature**: Each agent is an isolated, independent session spawned by Task tool
+- **Tool Access**: Agents can use all tools EXCEPT Task (cannot spawn sub-agents)
+- **Execution Model**: Synchronous blocking - 2号 pauses when agent runs, resumes when agent completes
+- **Communication**: Zero communication possible between running agent and 2号/other agents
+
+**Architectural Implications**:
+
+This isolation constraint drives the entire architecture design:
+
+1. **JSON as Communication Channel**:
+   - Agents cannot communicate directly → JSON files become the **only inter-session communication mechanism**
+   - Pattern: Agent → JSON → 2号 (results), 2号 → JSON → Next Agent (context)
+   - Files: `current_task.json` (single agent), `team[1-5]_current_task.json` (parallel agents)
+
+2. **Sequential Orchestration by 2号**:
+   - Agents cannot call other agents → 2号 MUST orchestrate all multi-agent workflows
+   - Pattern: 2号 → Agent A → (complete) → 2号 → Agent B → (complete) → 2号
+   - Commands exist because 2号 cannot memorize all orchestration protocols
+
+3. **Evidence Before Completion**:
+   - Agent terminates → 2号 cannot verify claims afterward
+   - Solution: Agents MUST collect evidence (file:line) **before termination**
+   - Isolation constraint forces evidence-based culture
+
+4. **Layer Separation for Token Efficiency**:
+   - Each agent loads only its definition (Layer 3) → isolated sessions benefit from minimal loading
+   - 2号 loads only orchestration guide (Layer 1 + 2) → agents never see orchestration logic
+   - No cross-contamination → each session optimally sized
+
+**Anti-Patterns Prevented by Isolation**:
+- ❌ Infinite recursion: Agents cannot call Task → no recursion possible
+- ❌ Role confusion: Only 2号 can orchestrate → clear responsibility
+- ❌ State pollution: Sessions isolated → predictable behavior
+- ❌ Token explosion: No shared context → load only what's needed
+
+**Design Elegance**: Every architectural decision (JSON, commands, 3-layer, evidence protocol) is a **logical necessity** derived from the single constraint of agent isolation. This is not arbitrary design—it is the inevitable solution to the isolation constraint.
+
+#### Section 1.2.2: Validation Through Hooks (Experimental)
+
+**The Validation Challenge**: Agent isolation creates a verification problem—once agents complete, 2号 cannot verify their claims.
+
+**Hooks as Solution (Experimental)**: Claude Code provides "hooks"—automated scripts that execute transparently at specific lifecycle events. Agents and 2号 are **unaware** that hooks execute; they happen invisibly in response to triggers.
+
+**How Hooks Complement Isolation**:
+- **Agents**: Execute tasks in isolated sessions → write claims to JSON
+- **Hooks**: Trigger automatically → verify claims independently → block or allow completion
+- **2号**: Resumes → sees validated results
+
+**Key Characteristics**:
+1. **Transparent Execution**: Agents/2号 do not know hooks run
+2. **Event-Triggered**: Hooks fire on specific events (e.g., after tool use, before prompt processing)
+3. **Bidirectional Control**: Can block operations, inject context, or pass through silently
+4. **Independent Validation**: Hooks run outside agent context, providing true verification
+
+**SPARK Experimentation**: Quality gates (`spark_quality_gates.py`) attempted to use hooks for automatic validation of agent claims (e.g., "I fixed all Ruff violations" → hook runs `ruff check` → verifies claim). Results were mixed; **further research and testing required**.
+
+**Current Status**: **Experimental**. Hooks are powerful but require careful design and thorough testing. SPARK has experimented with hooks but has not yet achieved reliable, production-ready integration.
+
+**Detailed Reference**: See **INTEGRATION_GUIDE.md Section 4.1.5** for technical details and complete documentation at `docs/CLAUDE_CODE_HOOKS_AND_AGENTS.md`.
 
 ### Section 1.3: Token Efficiency Mandate
 

@@ -83,6 +83,123 @@ super-agent:
 
 ---
 
+## Section 2.1.5: Agent File Structure (YAML Frontmatter)
+
+### Overview
+
+Agent files are Markdown documents with YAML frontmatter that defines metadata and configuration. Claude Code uses this frontmatter for **progressive disclosure**—loading only `name` and `description` initially to help 2号 select agents without loading full context.
+
+### File Structure
+
+```markdown
+---
+name: agent-name
+description: Detailed description of when to use this agent
+tools: Bash, Read, Write, Edit
+model: sonnet
+color: red
+---
+
+# Agent Content Begins Here
+
+[Traits, Protocol, Workflow defined below...]
+```
+
+### Required Fields
+
+**name** (string, required)
+- **Purpose**: Unique identifier for agent invocation
+- **Format**: lowercase-with-hyphens (e.g., `analyzer-spark`, `team1-implementer-spark`)
+- **Used By**: 2号 when calling `Task("agent-name", "instructions")`
+- **Must Be Unique**: Across all agents in user and project directories
+
+**description** (string, required)
+- **Purpose**: Teach 2号 when to use this agent
+- **Length**: 100-500+ words recommended
+- **Content**: Triggering conditions, use cases, specialization, methodology
+- **Critical**: This is how 2号 selects the right agent for user requests
+
+**Example** (from analyzer-spark):
+```yaml
+description: Use this agent when you need comprehensive multi-dimensional system
+  analysis following trait-based dynamic persona principles with systematic 5-phase
+  methodology. Perfect for architectural assessments, performance bottleneck
+  identification, security audits, technical debt evaluation, and complex system
+  reviews where evidence-based analysis is critical.
+```
+
+### Optional Fields
+
+**tools** (comma-separated list, optional)
+- **Purpose**: Restrict agent to specific tool subset
+- **Default**: If omitted, agent has access to all tools (except `Task`)
+- **Available Tools**: `Bash`, `Read`, `Write`, `Edit`, `MultiEdit`, `Glob`, `Grep`, `LS`, `WebFetch`, `WebSearch`, `TodoWrite`, `NotebookEdit`, `mcp__*` (MCP tools)
+- **Use Case**: Safety restrictions, specialization, or token optimization
+
+**model** (string, optional)
+- **Purpose**: Specify Claude model variant
+- **Values**: `sonnet` (default, balanced), `haiku` (fast, cost-effective), `opus` (most capable)
+- **Default**: Inherits from parent session if omitted
+- **Use Case**: Use `haiku` for simple tasks, `opus` for complex reasoning
+
+**color** (string, optional)
+- **Purpose**: Visual identification in Claude Code UI
+- **Values**: `red`, `blue`, `green`, `yellow`, `orange`, `purple`, `pink`, `cyan`, etc.
+- **Use Case**: Team differentiation, workflow visualization
+
+### SPARK Examples
+
+**Core Agent** (analyzer-spark):
+```yaml
+---
+name: analyzer-spark
+description: Use this agent when you need comprehensive multi-dimensional system
+  analysis...
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite,
+  WebSearch, mcp__sequential-thinking__sequentialthinking
+model: sonnet
+color: red
+---
+```
+
+**Team Agent** (team1-implementer-spark):
+```yaml
+---
+name: team1-implementer-spark
+description: Team 1 implementation specialist for multi-team parallel execution.
+  Reads from team1_current_task.json...
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write
+model: sonnet
+color: red
+---
+```
+
+### Best Practices
+
+**Description Writing**:
+1. **Start with summary**: "Use this agent when you need [core purpose]"
+2. **Specify triggers**: Clear conditions for when to select this agent
+3. **Highlight unique capabilities**: What distinguishes it from other agents
+4. **Include methodology**: What process/protocol it follows (e.g., "5-phase methodology")
+5. **Provide examples** (optional): Concrete usage scenarios
+
+**Tool Selection**:
+- **Omit `tools` field** for maximum flexibility (default)
+- **Specify tools** only when restriction needed for safety or specialization
+- **Include MCP tools** when advanced capabilities required (e.g., `mcp__sequential-thinking__sequentialthinking`)
+
+**Model Selection**:
+- **sonnet**: Most agents (balanced performance/cost)
+- **haiku**: Simple, repetitive tasks only
+- **opus**: Complex reasoning, critical decisions only
+
+**Naming Conventions** (SPARK pattern):
+- Core agents: `[domain]-spark` (e.g., `analyzer-spark`, `implementer-spark`)
+- Team agents: `team[1-5]-[role]-spark` (e.g., `team1-implementer-spark`)
+- Consistency aids 2号 agent selection and user understanding
+
+---
+
 ## Section 2.2: Dual Definition Structure
 
 ### The Harmony Principle
@@ -361,6 +478,7 @@ The agent definition contains **"프로토콜을 그 분야(분석/구현/테스
 
 **특징**:
 - 특성들의 조합으로 정의됨 (Combination of characteristics)
+- **최대 5개까지 제한** (Maximum 5 traits per agent - prevents cognitive dissonance and choice paralysis)
 - 작업마다 특성들의 강도 조합이 달라짐 (Intensity varies by task)
 - 유연하고 적응적 (Flexible and adaptive)
 

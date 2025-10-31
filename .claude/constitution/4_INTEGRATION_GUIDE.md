@@ -11,9 +11,157 @@ This guide expands on **Article IV: Integration Standards** with detailed specif
 
 ## Table of Contents
 
-1. [JSON State Management](#section-41-json-state-management)
-2. [Evidence Requirements by Agent](#section-42-evidence-requirements-by-agent)
-3. [Completion Criteria](#section-43-completion-criteria)
+1. [Agent Isolation Model](#section-40-agent-isolation-model)
+2. [JSON State Management](#section-41-json-state-management)
+3. [Evidence Requirements by Agent](#section-42-evidence-requirements-by-agent)
+4. [Completion Criteria](#section-43-completion-criteria)
+
+---
+
+## Section 4.0: Agent Isolation Model
+
+### The Fundamental Architecture Constraint
+
+**Core Reality**: Agents are isolated sessions spawned by 2号's Task tool. This isolation is not a design choice—it is a technical constraint that drives the entire SPARK architecture.
+
+### Technical Characteristics
+
+**1. Session Isolation**
+- Each agent runs in a completely separate execution context
+- Agent spawns when 2号 calls `Task("agent-name", "task description")`
+- 2号 **blocks** (pauses) until agent completes
+- Agent returns single final message to 2号, then terminates
+- All agent memory and context is destroyed upon termination
+
+**2. Tool Access Restrictions**
+- Agents have access to all tools EXCEPT Task
+- Cannot spawn sub-agents or call other agents
+- Cannot communicate with 2号 during execution
+- Cannot communicate with other agents
+
+**3. Execution Flow**
+```
+2号 Active → Task("agent-A") → 2号 PAUSED
+                                Agent A Spawned
+                                Agent A Executes (isolated)
+                                Agent A Writes JSON
+                                Agent A Returns Message
+                                Agent A Terminates
+2号 RESUMES ← Agent A Message ← Agent A Complete
+2号 Reads JSON State
+2号 Active → Task("agent-B") → [cycle repeats]
+```
+
+### Architectural Implications
+
+This isolation constraint **forces** specific design decisions:
+
+#### 1. JSON as the Only Communication Channel
+
+**Problem**: Agents cannot communicate with 2号 or other agents during execution.
+
+**Solution**: JSON state files become the sole inter-session communication mechanism.
+
+```
+Agent → Writes JSON → Agent Terminates → 2号 Reads JSON
+```
+
+**File Structure**:
+- `current_task.json`: Single agent execution state
+- `team[1-5]_current_task.json`: Parallel agent execution states
+
+**Data Flow**:
+- Agent → JSON: Results, evidence, quality metrics
+- 2号 → JSON: Initial task context (rarely needed)
+- Next Agent → JSON: Reads previous agent's results (via 2号)
+
+#### 2. 2号 as Mandatory Orchestrator
+
+**Problem**: Agents cannot call other agents.
+
+**Solution**: 2号 MUST orchestrate all multi-agent workflows.
+
+**Pattern**:
+```
+User Request → 2号 Analyzes → Determines Agent Sequence
+2号 → Agent A → Complete → 2号 Verifies → Agent B → Complete → 2号
+```
+
+**Why Commands Exist**:
+- 2号 cannot memorize all orchestration protocols
+- Commands provide pre-defined multi-agent sequences
+- Commands encode validation and retry logic
+- Example: `/spark-implement` orchestrates: analyze → design → implement → test → document
+
+#### 3. Evidence Before Termination
+
+**Problem**: Once agent terminates, 2号 cannot verify claims.
+
+**Solution**: Agents MUST collect evidence (file:line references) **before** completing.
+
+**Enforcement**:
+- EVIDENCE-BEFORE-REPORT protocol
+- Minimum evidence counts (analyzer: 12+, implementer: test results)
+- JSON must contain all verification data
+- Quality gates verify evidence existence
+
+#### 4. Layer Separation for Token Efficiency
+
+**Problem**: Each agent loads file content into context. Loading unnecessary files wastes tokens.
+
+**Solution**: Strict separation—agents load only what they need.
+
+**Layer Isolation**:
+- Layer 1 (CLAUDE.md): 2号 only—never loaded by agents
+- Layer 2 (Commands): 2号 only—never loaded by agents
+- Layer 3 (Agents): Specific agent only—other agents never see it
+
+**Token Savings**:
+- Agent doesn't load 2号's orchestration logic (~800 lines saved)
+- Agent doesn't load other agent definitions (~6,000 lines saved for 6 agents)
+- Loads only own traits + protocol (~500 lines)
+- 90%+ token reduction per agent invocation
+
+### Anti-Patterns Prevented by Isolation
+
+**1. Infinite Recursion**
+- ❌ Impossible: Agents cannot call Task → cannot spawn agents → no recursion
+
+**2. Role Confusion**
+- ❌ Impossible: Only 2号 can orchestrate → clear responsibility boundary
+
+**3. State Pollution**
+- ❌ Impossible: Each session completely isolated → no shared state → no contamination
+
+**4. Token Explosion**
+- ❌ Prevented: No shared context → each session minimal → predictable token usage
+
+### Design Elegance: Constraints Create Solutions
+
+**Key Insight**: The entire SPARK architecture (JSON communication, 3-layer separation, commands, evidence protocols) is not arbitrary—it is the **inevitable logical solution** to the single constraint of agent isolation.
+
+**Architecture Derivation**:
+```
+Root Constraint: Agent Isolation
+    ↓
+Derived Constraint: No inter-agent communication
+    ↓
+Solution 1: JSON as communication channel
+    ↓
+Derived Constraint: 2号 must orchestrate
+    ↓
+Solution 2: Commands encode orchestration
+    ↓
+Derived Constraint: Post-termination verification impossible
+    ↓
+Solution 3: Evidence collected before completion
+    ↓
+Optimization Opportunity: Token efficiency
+    ↓
+Solution 4: 3-layer separation (load only what's needed)
+```
+
+This is **constraint-driven design** at its finest—the architecture is necessary, not chosen.
 
 ---
 
@@ -463,6 +611,242 @@ completed → running ❌ (completed is terminal)
   }
 }
 ```
+
+### Section 4.1.5: Hooks - Automated Validation (Experimental)
+
+⚠️ **EXPERIMENTAL FEATURE**: Hooks are powerful but require extensive testing and careful design. SPARK has experimented with hooks but has not achieved production-ready integration. Use with caution and thorough testing.
+
+#### Overview
+
+**Hooks** are automated shell scripts that execute transparently at specific Claude Code lifecycle events, enabling validation, context injection, and workflow automation without agent or 2号 awareness.
+
+**Key Characteristic**: Hooks execute **invisibly**—agents and 2号 do not know they have run. This is not background processing; hooks intercept events and execute before control returns.
+
+#### How Hooks Work
+
+**Execution Flow**:
+```
+Event Occurs (e.g., Tool Use, Prompt Submit)
+  → Hook Triggered Automatically
+  → Hook Receives JSON Input via stdin
+  → Hook Executes Shell Commands
+  → Hook Returns Exit Code + Optional JSON Output
+  → Control Returns to Agent/2号 (unaware hook ran)
+```
+
+**Communication**:
+- **Input**: JSON via `stdin` (session data, event data, tool parameters)
+- **Output**: Exit code (0 = success, 2 = blocking error, other = non-blocking error)
+- **Optional**: JSON to `stdout` for advanced control
+
+#### Major Hook Types
+
+**Tool-Related Hooks**:
+
+1. **PreToolUse**
+   - **Trigger**: After agent creates tool parameters, before execution
+   - **Purpose**: Validate, modify, or block tool calls
+   - **Example**: Block dangerous Bash commands, validate file paths, enforce standards
+   - **Supports Matchers**: Target specific tools (`Bash`, `Write`, `Edit`, etc.)
+
+2. **PostToolUse**
+   - **Trigger**: After tool completes successfully
+   - **Purpose**: React to results, log operations, trigger follow-up
+   - **Access**: Both tool inputs and tool outputs
+   - **Example**: Auto-format code after Write, run tests after Edit
+
+**Event Hooks**:
+
+3. **UserPromptSubmit**
+   - **Trigger**: When user submits prompt (before Claude processes)
+   - **Purpose**: Inject context, validate requests, load standards
+   - **Context Injection**: Hook stdout added to Claude's context
+   - **Example**: Load PROJECT_STANDARDS.md before every request
+
+4. **SessionStart/SessionEnd**
+   - **Trigger**: Session initialization/termination
+   - **Purpose**: Setup environment, cleanup tasks
+   - **Example**: Activate virtual environment, save session logs
+
+5. **Stop/SubagentStop**
+   - **Trigger**: When agents finish responding
+   - **Purpose**: Intervene before completion, cleanup
+   - **Example**: Validate final state, save artifacts
+
+#### Configuration
+
+**Location**: `.claude/settings.json`, `.claude/settings.local.json`, or `~/.claude/settings.json`
+
+**Structure**:
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/path/to/validate_bash.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/quality_check.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Fields**:
+- **matcher**: Regex pattern for tool names (case-sensitive). Use `*` or `""` for all tools
+- **command**: Shell command or script path. Use `$CLAUDE_PROJECT_DIR` for project-relative
+- **timeout**: Seconds (default 60)
+
+#### SPARK Experimentation: Quality Gates
+
+**Goal**: Automatically verify agent claims using PostToolUse hooks.
+
+**Approach**:
+```python
+# spark_quality_gates.py (experimental)
+import json
+import sys
+
+# Read JSON state written by agent
+state = json.load(sys.stdin)
+
+# Agent claims: "violations_total": 0
+claimed_violations = state.get("quality", {}).get("violations_total", 0)
+
+# Actually run ruff to verify
+import subprocess
+result = subprocess.run(["ruff", "check", "."], capture_output=True)
+actual_violations = len(result.stdout.decode().splitlines())
+
+if claimed_violations != actual_violations:
+    print(f"VIOLATION: Agent claimed {claimed_violations} but found {actual_violations}", file=sys.stderr)
+    sys.exit(2)  # Block completion
+
+sys.exit(0)  # Allow completion
+```
+
+**Configuration**:
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/spark_quality_gates.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Results**: Mixed. Hooks triggered correctly but:
+- Timing issues (hook runs before agent finishes writing all files)
+- Context availability (hook needs access to full JSON state)
+- Error handling (blocking errors sometimes not surfaced correctly)
+
+**Status**: **Requires further research and testing** before production use.
+
+#### Hook Input/Output
+
+**Input Structure** (all hooks receive):
+```json
+{
+  "session_id": "unique_identifier",
+  "transcript_path": "/path/to/transcript.json",
+  "cwd": "/current/working/directory",
+  "hook_event_name": "PreToolUse|PostToolUse|etc",
+  "tool_name": "Bash",  // For tool hooks
+  "tool_input": {...},   // For tool hooks
+  "tool_output": {...}   // For PostToolUse only
+}
+```
+
+**Output Options**:
+
+1. **Simple Exit Codes**:
+   - `0`: Success (stdout shown in transcript or added as context)
+   - `2`: Blocking error (stderr fed to Claude for handling)
+   - Other: Non-blocking error (stderr shown to user)
+
+2. **Advanced JSON Output**:
+```json
+{
+  "continue": true,
+  "decision": "allow|deny|block",
+  "additionalContext": "string to inject"
+}
+```
+
+#### Security Warnings
+
+⚠️ **CRITICAL**: Hooks execute arbitrary shell commands automatically with full user permissions.
+
+**Risks**:
+- Can modify/delete any accessible files
+- Can execute arbitrary code
+- Can access sensitive data
+- No sandboxing or isolation
+
+**Best Practices**:
+1. **Validate all inputs**: Sanitize JSON data, check for path traversal (`..`)
+2. **Quote variables**: Always use `"$VAR"` syntax in shell
+3. **Use absolute paths**: For scripts and critical files
+4. **Test thoroughly**: In safe environments before production
+5. **Skip sensitive files**: `.env`, `.git/`, credentials
+6. **Limit scope**: Use matchers to target specific tools only
+
+#### Current Recommendations
+
+**For Production Use**:
+- **DO**: Use UserPromptSubmit hooks for context injection (proven reliable)
+- **DO**: Use SessionStart hooks for environment setup (proven reliable)
+- **CAUTION**: Use PreToolUse hooks for validation (test extensively first)
+- **CAUTION**: Use PostToolUse hooks for simple logging (timing issues possible)
+- **AVOID**: Complex PostToolUse hooks for quality gates (SPARK experiments inconclusive)
+
+**For Experimentation**:
+- Document all hook behavior carefully
+- Test in isolated environments
+- Maintain fallback mechanisms
+- Share findings with SPARK community
+
+**For SPARK Project**:
+- Quality gates approach is promising but needs refinement
+- Consider alternative validation mechanisms (2号-driven checks)
+- Document all experimental results
+- Iterate based on findings
+
+#### Complete Reference
+
+**Detailed Documentation**: See `docs/CLAUDE_CODE_HOOKS_AND_AGENTS.md` for:
+- Complete hook type reference
+- All configuration options
+- Advanced examples
+- MCP tool integration
+- Plugin hook support
+
+**Official Anthropic Docs**: [https://docs.claude.com/en/docs/claude-code/hooks](https://docs.claude.com/en/docs/claude-code/hooks)
 
 ---
 

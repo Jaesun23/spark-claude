@@ -83,6 +83,123 @@ super-agent:
 
 ---
 
+## Section 2.1.5: 에이전트 파일 구조 (YAML Frontmatter)
+
+### 개요
+
+에이전트 파일은 YAML frontmatter로 메타데이터와 설정을 정의하는 Markdown 문서입니다. Claude Code는 이 frontmatter를 **점진적 공개(progressive disclosure)** 방식으로 사용합니다—초기에는 `name`과 `description`만 로드하여 2号가 전체 컨텍스트를 로드하지 않고도 에이전트를 선택할 수 있게 합니다.
+
+### 파일 구조
+
+```markdown
+---
+name: agent-name
+description: 이 에이전트를 사용해야 하는 시점에 대한 상세 설명
+tools: Bash, Read, Write, Edit
+model: sonnet
+color: red
+---
+
+# 에이전트 내용 시작
+
+[아래에 Traits, Protocol, Workflow 정의...]
+```
+
+### 필수 필드
+
+**name** (문자열, 필수)
+- **목적**: 에이전트 호출을 위한 고유 식별자
+- **형식**: 소문자-하이픈 연결 (예: `analyzer-spark`, `team1-implementer-spark`)
+- **사용처**: 2号가 `Task("agent-name", "instructions")` 호출 시
+- **고유성**: 사용자 및 프로젝트 디렉토리의 모든 에이전트에서 고유해야 함
+
+**description** (문자열, 필수)
+- **목적**: 2号에게 이 에이전트를 언제 사용할지 가르침
+- **길이**: 100-500+ 단어 권장
+- **내용**: 트리거 조건, 사용 사례, 전문화, 방법론
+- **중요**: 이것이 2号가 사용자 요청에 적합한 에이전트를 선택하는 기준
+
+**예시** (analyzer-spark에서):
+```yaml
+description: Use this agent when you need comprehensive multi-dimensional system
+  analysis following trait-based dynamic persona principles with systematic 5-phase
+  methodology. Perfect for architectural assessments, performance bottleneck
+  identification, security audits, technical debt evaluation, and complex system
+  reviews where evidence-based analysis is critical.
+```
+
+### 선택 필드
+
+**tools** (쉼표로 구분된 목록, 선택)
+- **목적**: 에이전트를 특정 도구 하위 집합으로 제한
+- **기본값**: 생략 시 모든 도구 접근 가능 (`Task` 제외)
+- **사용 가능한 도구**: `Bash`, `Read`, `Write`, `Edit`, `MultiEdit`, `Glob`, `Grep`, `LS`, `WebFetch`, `WebSearch`, `TodoWrite`, `NotebookEdit`, `mcp__*` (MCP 도구)
+- **사용 사례**: 안전성 제한, 전문화, 토큰 최적화
+
+**model** (문자열, 선택)
+- **목적**: Claude 모델 변형 지정
+- **값**: `sonnet` (기본, 균형), `haiku` (빠름, 비용 효율적), `opus` (가장 강력)
+- **기본값**: 생략 시 상위 세션에서 상속
+- **사용 사례**: 간단한 작업에는 `haiku`, 복잡한 추론에는 `opus` 사용
+
+**color** (문자열, 선택)
+- **목적**: Claude Code UI에서 시각적 식별
+- **값**: `red`, `blue`, `green`, `yellow`, `orange`, `purple`, `pink`, `cyan` 등
+- **사용 사례**: 팀 구분, 워크플로우 시각화
+
+### SPARK 예시
+
+**핵심 에이전트** (analyzer-spark):
+```yaml
+---
+name: analyzer-spark
+description: Use this agent when you need comprehensive multi-dimensional system
+  analysis...
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite,
+  WebSearch, mcp__sequential-thinking__sequentialthinking
+model: sonnet
+color: red
+---
+```
+
+**팀 에이전트** (team1-implementer-spark):
+```yaml
+---
+name: team1-implementer-spark
+description: Team 1 implementation specialist for multi-team parallel execution.
+  Reads from team1_current_task.json...
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write
+model: sonnet
+color: red
+---
+```
+
+### 모범 사례
+
+**Description 작성법**:
+1. **요약으로 시작**: "Use this agent when you need [핵심 목적]"
+2. **트리거 명시**: 이 에이전트를 선택하는 명확한 조건
+3. **고유 기능 강조**: 다른 에이전트와 구별되는 점
+4. **방법론 포함**: 따르는 프로세스/프로토콜 (예: "5-phase methodology")
+5. **예시 제공** (선택): 구체적인 사용 시나리오
+
+**도구 선택**:
+- **`tools` 필드 생략**하여 최대 유연성 확보 (기본값)
+- **도구 명시**는 안전성이나 전문화를 위한 제한이 필요할 때만
+- **MCP 도구 포함**은 고급 기능 필요 시 (예: `mcp__sequential-thinking__sequentialthinking`)
+
+**모델 선택**:
+- **sonnet**: 대부분의 에이전트 (성능/비용 균형)
+- **haiku**: 간단하고 반복적인 작업만
+- **opus**: 복잡한 추론, 중요한 결정만
+
+**네이밍 컨벤션** (SPARK 패턴):
+- 핵심 에이전트: `[domain]-spark` (예: `analyzer-spark`, `implementer-spark`)
+- 팀 에이전트: `team[1-5]-[role]-spark` (예: `team1-implementer-spark`)
+- 일관성은 2号의 에이전트 선택과 사용자 이해를 돕습니다
+
+---
+
 ## Section 2.2: 이중 정의 구조
 
 ### 조화 원칙
@@ -359,6 +476,7 @@ phase 개수나 구조에 관계없이:
 
 **특징**:
 - 특성들의 조합으로 정의됨
+- **최대 5개까지 제한** (에이전트당 최대 5개 특성 - 인지 부조화 및 선택 마비 방지)
 - 작업마다 특성들의 강도 조합이 달라짐
 - 유연하고 적응적
 
