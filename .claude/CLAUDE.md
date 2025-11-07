@@ -122,49 +122,25 @@ class DelegationDecision {
 
 ------
 
-# 🤖 SPARK Agent Registry (Constitution v1.1)
+# 🤖 SPARK System Integration
 
-## ✅ Primary Agents (6 Core Specialists)
+**SPARK v4.3** is distributed as a plugin with 21 specialized agents (6 core + 15 team).
 
-**Constitution**: All agents follow SPARK Constitution v1.1 (`.claude/SPARK_CONSTITUTION.md`)
+## Agent Portfolio
 
-### Core 4 (필수)
+SPARK agents are available through the **spark-agents** plugin:
+- **6 Core Agents**: analyzer, implementer, tester, documenter, designer, qc
+- **15 Team Agents**: 5 teams × 3 roles for parallel execution
 
-**analyzer-spark** - Multi-dimensional system analysis
-- 프로토콜: EVIDENCE-BEFORE-REPORT + PROJECT-CONTEXT-DISCOVERY
-- 전문성: 5-Phase Wave, file:line 증거 수집, 12+ evidence items
-- 사용시점: 시스템 분석, 성능 병목, 보안 감사, 기술 부채 평가
+All agent details, protocols, and usage guidelines are in **spark-plugin/CLAUDE.md**.
 
-**implementer-spark** - Feature implementation with zero defects
-- 프로토콜: TEST-BEFORE-REPORT + PROJECT-CONTEXT-DISCOVERY
-- 전문성: Phase 4 pytest mandatory, 95%+ coverage, 0 violations
-- 사용시점: API 엔드포인트, 인증 시스템, 데이터 레이어, UI 컴포넌트
+## Key Principle
 
-**tester-spark** - Comprehensive testing
-- 프로토콜: TEST-EXECUTION-BEFORE-REPORT
-- 전문성: 95% unit, 85% integration, 100% E2E critical paths
-- 사용시점: 테스트 스위트 작성, 커버리지 목표 달성
-
-**documenter-spark** - Technical documentation
-- 프로토콜: VALIDATION-BEFORE-REPORT
-- 전문성: Example code must execute, 100% API coverage
-- 사용시점: API 문서, 사용자 가이드, 아키텍처 문서
-
-### Support 2 (선택적)
-
-**designer-spark** - System architecture design
-- 전문성: Architecture patterns, API specifications, scalability
-- 사용시점: 신규 시스템 설계 (> 3시간)
-
-**qc-spark** - Quality violations cleanup
-- 전문성: Ruff/MyPy 수정, 5-phase inspection, persist until success
-- 사용시점: 100+ violations 대량 일괄 수정
-
-### Team Agents (15 - Parallel Execution)
-
-5 teams × 3 roles (implementer, tester, documenter)
-- 사용시점: `/multi-implement` 명령어
-- 원칙: 작업 수만큼만 사용 (2개 작업 = team1, team2만)
+**Constitution v1.1**: All agents follow SPARK Constitution principles:
+- EVIDENCE/TEST-BEFORE-REPORT protocols
+- PROJECT-CONTEXT-DISCOVERY for standards compliance
+- Zero-tolerance quality gates (Ruff 0, MyPy 0, Coverage 95%+)
+- 90K token safety protocols
 
 ------
 
@@ -496,11 +472,11 @@ if (task.duration > 3시간) → 체인/팀
 if (task.needsDeepExpertise) → 에이전트 위임
 ```
 
-### 에이전트 포트폴리오
-- **Core 4**: analyzer, implementer, tester, documenter (필수)
-- **Support 2**: designer, qc (선택적)
+### SPARK 에이전트
+- **Core 6**: analyzer, implementer, tester, documenter, designer, qc
 - **Team 15**: 병렬 실행 전용 (5팀 × 3역할)
-- **Total**: 21 agents
+- **Total**: 21 agents (via spark-agents plugin)
+- **Details**: See spark-plugin/CLAUDE.md for complete registry
 
 ### Jason's Wisdom
 > "할 수 있으면 직접, 필요할 때만 위임"
