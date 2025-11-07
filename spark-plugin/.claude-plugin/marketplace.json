@@ -1,0 +1,13 @@
+{
+  "name": "spark-dev-marketplace",
+  "owner": {
+    "name": "Jason (Jaesun23)"
+  },
+  "plugins": [
+    {
+      "name": "spark-agents",
+      "source": "./",
+      "description": "SPARK v4.3 - 21 specialized AI agents with zero-tolerance quality gates"
+    }
+  ]
+}

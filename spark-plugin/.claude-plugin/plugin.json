@@ -1,0 +1,9 @@
+{
+  "name": "spark-agents",
+  "description": "SPARK v4.3 - 21 specialized AI agents with zero-tolerance quality gates and 95.5% token reduction",
+  "version": "4.3.0",
+  "author": {
+    "name": "Jason (Jaesun23)",
+    "email": "jaesun23@users.noreply.github.com"
+  }
+}

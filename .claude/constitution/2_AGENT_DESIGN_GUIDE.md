@@ -89,6 +89,45 @@ super-agent:
 
 Agent files are Markdown documents with YAML frontmatter that defines metadata and configuration. Claude Code uses this frontmatter for **progressive disclosure**—loading only `name` and `description` initially to help 2号 select agents without loading full context.
 
+### Progressive Disclosure in Practice
+
+**YAML Frontmatter = Agent Configuration File**
+
+All frontmatter fields configure the agent's execution environment. However, 2号, System, and agents each access different parts:
+
+**What 2号 Sees** (Agent Selection Phase):
+- ✅ `name` + `description` **only** (for selecting which agent to use)
+- ❌ Agent body content (phases, protocols, workflows)
+- ❌ Other config fields (`tools`, `model`, `color`)
+
+**What System Uses** (Agent Execution Setup):
+- ✅ Full YAML frontmatter to configure execution environment
+- `tools` → Filters agent's system prompt to include only specified tools
+- `model` → Selects Claude model variant (sonnet/haiku/opus)
+- `color` → Sets UI visualization
+
+**What Agents Receive** (Agent Execution Phase):
+- ✅ **Agent body only** (content below frontmatter)
+- ✅ Filtered system prompt (based on `tools` field)
+- ❌ Frontmatter fields themselves (no need to know their own config)
+
+**Why Agents Don't Need Frontmatter**:
+- `description`: Written for 2号 ("Use this agent when...") - agent doesn't need to know when it's used
+- `tools`: System uses this to filter agent's available tools in system prompt
+- `model`, `color`: System/UI settings irrelevant to agent's work
+
+**Token Consumption Evidence**:
+```
+2号 Context (all agents loaded):
+- 21 agents × ~95 tokens (name + description) = 2.0k tokens (1%)
+
+Agent Execution (single agent):
+- documenter-spark: 30.6k tokens total (system prompt + agent body + task + tools + response)
+- analyzer-spark: 44.6k tokens total (system prompt + agent body + task + tools + response)
+```
+
+**Key Insight**: 2号 **never** loads agent body content. Not before the call (only sees description), not after (agent runs independently). Agents receive only their body content as work instructions. Frontmatter serves as configuration for System to set up the agent's execution environment.
+
 ### File Structure
 
 ```markdown

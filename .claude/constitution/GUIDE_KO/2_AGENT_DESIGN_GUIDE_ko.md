@@ -87,7 +87,46 @@ super-agent:
 
 ### 개요
 
-에이전트 파일은 YAML frontmatter로 메타데이터와 설정을 정의하는 Markdown 문서입니다. Claude Code는 이 frontmatter를 **점진적 공개(progressive disclosure)** 방식으로 사용합니다—초기에는 `name`과 `description`만 로드하여 2号가 전체 컨텍스트를 로드하지 않고도 에이전트를 선택할 수 있게 합니다.
+에이전트 파일은 YAML frontmatter로 메타데이터와 설정을 정의하는 Markdown 문서입니다. Claude Code는 이 frontmatter를 **단계적 로드(progressive disclosure)** 방식으로 사용합니다—초기에는 `name`과 `description`만 로드하여 2号가 전체 컨텍스트를 로드하지 않고도 에이전트를 선택할 수 있게 합니다.
+
+### 단계적 로드의 실제 작동 방식
+
+**YAML Frontmatter = 에이전트 설정 파일**
+
+모든 frontmatter 필드는 에이전트 실행 환경을 설정합니다. 그러나 2号, System, 에이전트는 각각 다른 부분에 접근합니다:
+
+**2号가 보는 것** (에이전트 선택 단계):
+- ✅ `name` + `description` **만** (어떤 에이전트를 사용할지 선택용)
+- ❌ 에이전트 본문 내용 (phases, protocols, workflows)
+- ❌ 다른 설정 필드 (`tools`, `model`, `color`)
+
+**System이 사용하는 것** (에이전트 실행 환경 설정):
+- ✅ 전체 YAML frontmatter로 실행 환경 설정
+- `tools` → 에이전트의 system prompt를 필터링하여 지정된 도구만 포함
+- `model` → Claude 모델 variant 선택 (sonnet/haiku/opus)
+- `color` → UI 시각화 설정
+
+**에이전트가 받는 것** (에이전트 실행 단계):
+- ✅ **에이전트 본문만** (frontmatter 아래 내용)
+- ✅ 필터링된 system prompt (`tools` 필드 기반)
+- ❌ Frontmatter 필드 자체 (자신의 config를 알 필요 없음)
+
+**에이전트가 Frontmatter를 필요로 하지 않는 이유**:
+- `description`: 2号를 위해 작성됨 ("이 에이전트는 ~할 때 사용") - 에이전트는 자신이 언제 사용되는지 알 필요 없음
+- `tools`: System이 에이전트의 사용 가능한 도구를 system prompt에서 필터링하는 데 사용
+- `model`, `color`: System/UI 설정으로 에이전트 작업과 무관
+
+**토큰 소비 증거**:
+```
+2号 컨텍스트 (모든 에이전트 로드됨):
+- 21개 에이전트 × ~95 tokens (name + description) = 2.0k tokens (1%)
+
+에이전트 실행 (단일 에이전트):
+- documenter-spark: 30.6k tokens 총계 (system prompt + 에이전트 본문 + 작업 + 도구 + 응답)
+- analyzer-spark: 44.6k tokens 총계 (system prompt + 에이전트 본문 + 작업 + 도구 + 응답)
+```
+
+**핵심 통찰**: 2号는 에이전트 본문 내용을 **절대** 로드하지 않습니다. 호출 전에도 (description만 봄), 호출 후에도 (에이전트가 독립적으로 실행됨) 본문을 보지 않습니다. 에이전트는 본문 내용만 작업 지침으로 받습니다. Frontmatter는 System이 에이전트 실행 환경을 설정하는 구성 파일 역할을 합니다.
 
 ### 파일 구조
 

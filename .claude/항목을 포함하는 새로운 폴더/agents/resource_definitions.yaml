@@ -1,0 +1,135 @@
+# SPARK Agent Resource Definitions
+# Based on actual usage patterns and memory optimization needs
+
+agents:
+  implementer-spark:
+    token_budget: 80000   # 긴 체크리스트 + 많은 파일 생성
+    memory_weight: heavy  # Creates/modifies many files
+    parallel_safe: false  # File conflicts possible
+    max_concurrent: 1     # Only 1 implementer at a time (file conflicts)
+    
+  analyzer-spark:
+    token_budget: 60000   # 전체 코드베이스 분석
+    memory_weight: heavy   # Loads entire codebase context for analysis
+    parallel_safe: true    # Read-only operations
+    max_concurrent: 4      # Can analyze different aspects
+    
+  tester-spark:
+    token_budget: 70000   # 긴 테스트 체크리스트 + 결과 리포트
+    memory_weight: heavy   # Runs tests, creates reports
+    parallel_safe: true    # Independent test runs
+    max_concurrent: 4      # Multiple test suites
+    
+  designer-spark:
+    token_budget: 50000   # 설계 문서 + 다이어그램
+    memory_weight: heavy   # Needs full system context for design
+    parallel_safe: true    # No file conflicts
+    max_concurrent: 4      # Can design multiple components
+    
+  improver-spark:
+    token_budget: 60000   # 코드 분석 + 개선 구현
+    memory_weight: heavy   # Needs context to improve code properly
+    parallel_safe: false   # File modification conflicts
+    max_concurrent: 1      # Sequential improvements only (file conflicts)
+    
+  troubleshooter-spark:
+    token_budget: 50000   # 디버깅 분석 + 해결책
+    memory_weight: heavy   # Loads system context for debugging
+    parallel_safe: true    # Investigation is safe
+    max_concurrent: 4      # Debug different issues simultaneously
+    
+  documenter-spark:
+    token_budget: 40000   # 긴 문서 생성
+    memory_weight: medium  # Documentation generation
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Many docs at once
+    
+  builder-spark:
+    token_budget: 50000   # 빌드 설정 + 로그
+    memory_weight: heavy   # Build processes
+    parallel_safe: false   # Build conflicts
+    max_concurrent: 1      # One build at a time (process conflicts)
+    
+  cleaner-spark:
+    token_budget: 30000   # 정리할 파일 목록 + 분석
+    memory_weight: light   # Cleanup operations
+    parallel_safe: false   # Deletion conflicts
+    max_concurrent: 1      # Sequential cleanup (deletion conflicts)
+    
+  explainer-spark:
+    token_budget: 30000   # 상세한 설명 + 예제
+    memory_weight: light   # Educational content
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Multiple explanations
+    
+  estimator-spark:
+    token_budget: 35000   # 프로젝트 분석 + 견적
+    memory_weight: medium  # Needs project context for estimates
+    parallel_safe: true    # Independent estimates
+    max_concurrent: 4      # Multiple estimates
+    
+  gitter-spark:
+    token_budget: 25000   # Git 히스토리 + 작업
+    memory_weight: light   # Git operations
+    parallel_safe: false   # Git conflicts
+    max_concurrent: 1      # Sequential git ops (git conflicts)
+    
+  spawner-spark:
+    token_budget: 100000  # 여러 에이전트 조율
+    memory_weight: heavy   # Orchestrates multiple agents
+    parallel_safe: false   # Complex coordination
+    max_concurrent: 1      # One spawner only (orchestration conflicts)
+    
+  loader-spark:
+    token_budget: 50000   # 전체 프로젝트 로딩
+    memory_weight: heavy   # Loads entire project context
+    parallel_safe: true    # Read operations
+    max_concurrent: 4      # Load multiple projects
+    
+  indexer-spark:
+    token_budget: 20000   # 명령어 목록 + 설명
+    memory_weight: light   # Command listing
+    parallel_safe: true    # No conflicts
+    max_concurrent: 4      # Multiple queries
+    
+  tasker-spark:
+    token_budget: 40000   # 작업 관리 + 계획
+    memory_weight: medium  # Task management
+    parallel_safe: true    # Task tracking safe
+    max_concurrent: 4      # Multiple task managers
+
+# Team agents for multi-implement
+team_agents:
+  team1-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true  # Teams are isolated
+    
+  team2-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+    
+  team3-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+    
+  team4-implementer-spark:
+    inherits: implementer-spark
+    parallel_safe: true
+
+# Memory weight definitions
+memory_weights:
+  light: 300   # MB
+  medium: 600  # MB
+  heavy: 1000  # MB (1GB)
+
+# Parallel execution rules
+parallel_rules:
+  max_total_memory: 4000  # 4GB max for all agents
+  max_concurrent_heavy: 4  # Max 4 heavy agents
+  max_concurrent_total: 8  # Max 8 agents total
+  
+  # When to switch to wave mode
+  wave_triggers:
+    memory_usage_percent: 85  # Switch at 85% memory (더 여유있게)
+    heavy_agent_count: 5      # If 5+ heavy agents needed
+    total_agent_count: 8      # If 8+ agents needed
