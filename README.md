@@ -1,424 +1,318 @@
-# ⚡ SPARK v4.3: Enhanced Multi-Agent System with Quality Control Separation
+# ⚡ SPARK v4.3 Plugin
 
-> **Subagent Performance Architecture with Reduced toKens**  
-> A revolutionary traits-based agent orchestration system with unified phase structure and mandatory quality gates.
+> **Subagent Performance Architecture with Reduced toKens**
+> A traits-based multi-agent orchestration system distributed as a Claude Code plugin.
 
-[![Version](https://img.shields.io/badge/version-4.3-gold?style=for-the-badge)](docs/spark-agent-phase-structure-v4.1.md)
+[![Version](https://img.shields.io/badge/version-4.3.0-gold?style=for-the-badge)](spark-plugin/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-blue?style=for-the-badge)](https://claude.ai/code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0%2B-blue?style=for-the-badge)](https://claude.ai/code)
 
 ## What is SPARK?
 
-SPARK v4.3 is an independent multi-agent system for [Claude Code](https://claude.ai/code), inspired by SuperClaude's persona system but built from scratch with revolutionary improvements. Through its TRAITS system, each agent instantly activates 3-5 specific traits instead of scanning 11 personas, achieving 35% cognitive load reduction while maintaining lazy-loading efficiency.
+SPARK v4.3 is a **plugin-based multi-agent system** for [Claude Code](https://claude.ai/code), featuring 21 specialized agents with zero-tolerance quality gates and 95.5% token reduction through progressive disclosure.
 
-### Project Evolution
-- **v3.0**: Initial release with lazy loading, 95.5% token reduction, workflow automation
-- **v3.5**: Stabilization update with enhanced quality gates and refined hooks
-- **v3.8**: TRAITS revolution - replacing persona scanning with instant trait activation
-- **v4.1**: Unified Phase structure with JSON state management and 8-step quality gates
-- **v4.3**: Quality control separation (qc-spark) + team5 addition + role specialization
+### Key Innovation: Plugin Distribution
 
-### Key Features
-
-- **TRAITS System**: Dynamic trait activation replacing 11-persona scanning (35% cognitive load reduction)
-- **32 Specialized Agents**: 17 primary agents + 15 team agents using 3-5 traits each
-- **Lazy Loading Architecture**: Load only the agent you need, not all 32 at once
-- **Smart Routing**: Automatically selects the optimal agent based on your task
-- **Quality Gates**: 8-step validation comparing agent claims vs actual measurements
-- **Parallel Execution**: Run multiple independent tasks simultaneously
-- **Token Safety Protocol**: All agents include 90K token limit protection
-- **Mandatory Reporting System**: All agents generate detailed task completion reports
-- **Miller's 7±2 Validation**: Trait count optimized for human cognitive limits
+SPARK is now distributed as a **Claude Code plugin**, making it:
+- **Instantly installable**: One command to install all 21 agents
+- **Self-documenting**: Complete usage guide included in plugin
+- **Version controlled**: Plugin system handles updates
+- **Portable**: Works across all projects automatically
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/Jaesun23/spark-claude.git
-cd spark-claude
+# 1. Install Claude Code 2.0+ (native installer)
+# Download from: https://claude.ai/code
 
-# Run the interactive installer
-./scripts/install.sh
+# 2. Add SPARK plugin marketplace (for development)
+/plugin marketplace add /path/to/spark-claude/spark-plugin
 
-# Or manual setup with uv (recommended)
-uv venv
-source .venv/bin/activate
-uv pip install -e ".[full,dev,benchmark]"
+# 3. Install SPARK plugin
+/plugin install spark-agents@spark-dev-marketplace
+
+# 4. Verify installation
+/context
+# You should see 21 agents listed as "Plugin" type
 ```
 
 ### Basic Usage
 
-Simply use natural language commands in Claude Code:
+SPARK agents work through natural language or slash commands:
 
 ```bash
-# Single agent commands
-"implement user authentication with JWT"
-"analyze this codebase for performance issues"
-"write comprehensive tests for the API"
-"design a scalable microservice architecture"
+# Implementation with quality gates
+/spark-implement "Create user authentication with JWT tokens"
 
-# Multi-agent pipelines
-"analyze, improve, and test the payment module"
-"refactor and document the legacy authentication system"
+# Multi-dimensional analysis
+/spark-analyze "Find performance bottlenecks in API layer"
+
+# Comprehensive testing
+/spark-test "Achieve 95% coverage for payment module"
+
+# Complete feature pipeline
+/spark-launch "Build notification system with email and SMS"
 ```
 
-## Advanced Usage
+## What's Included
 
-### Custom Command Definitions
+### 🤖 21 Specialized Agents
 
-SPARK allows you to define custom commands that chain multiple agents for complex workflows:
+**6 Core Agents**:
+- `analyzer-spark` - Multi-dimensional system analysis with evidence collection
+- `implementer-spark` - Zero-defect implementation with 95%+ test coverage
+- `tester-spark` - Comprehensive testing (95% unit, 85% integration)
+- `documenter-spark` - Validated documentation with executable examples
+- `designer-spark` - Scalable architecture design
+- `qc-spark` - Quality violations cleanup with 5-phase inspection
 
-```markdown
-# Example: /implement-spark command definition
----
-name: implement-spark
-description: Comprehensive implementation with analysis, coding, testing, and documentation
-agents:
-  - analyzer-spark    # First analyze the requirements
-  - designer-spark    # Design the architecture
-  - implementer-spark # Implement the solution
-  - tester-spark      # Create comprehensive tests
-  - documenter-spark  # Generate documentation
----
-```
+**15 Team Agents**:
+- 5 teams × 3 roles (implementer, tester, documenter)
+- Enables parallel execution of up to 5 tasks simultaneously
+- Independent coordination via JSON state management
 
-### Hook-Based Workflows
+### 📜 12 SPARK Commands
 
-For even more control, you can implement custom hooks to create sophisticated automation:
+**Single Agent Commands**:
+- `/spark-implement` - Feature implementation with quality gates
+- `/spark-test` - Comprehensive test creation
+- `/spark-analyze` - Multi-dimensional analysis
+- `/spark-design` - Architecture design
+- `/spark-fix` - Systematic troubleshooting
+- `/spark-improve` - Performance optimization
 
-```python
-# Example: Quality gate hook that runs after each agent
-class QualityGateHook:
-    def on_subagent_stop(self, result):
-        if not self.validate_quality(result):
-            return self.retry_with_guidance(result)
-        return self.proceed_to_next_phase()
-```
+**Pipeline Commands** (Multi-agent workflows):
+- `/spark-refactor` - analyze → improve → test
+- `/spark-audit` - analyze → troubleshoot → document
+- `/spark-migrate` - analyze → design → implement → test
+- `/spark-optimize` - analyze → improve → test
+- `/spark-launch` - design → implement → test → document
 
-### Multi-Team Parallel Execution
+**Parallel Execution**:
+- `/multi-implement` - Execute up to 5 tasks in parallel
 
-Execute up to 5 tasks simultaneously with team agents:
+### 📚 Complete Documentation
 
-```bash
-# Initialize multi-team execution
-/multi_implement TASK-001 TASK-002 TASK-003 TASK-004 TASK-005
+The plugin includes comprehensive documentation in `spark-plugin/CLAUDE.md`:
+- Agent registry with specializations
+- Delegation protocol with project context requirements
+- State management via JSON files
+- Quality verification with zero-tolerance gates
+- Multi-session context strategies
+- Agent chain patterns
 
-# Each team works independently with:
-- Dedicated JSON files (team[1-5]_current_task.json)
-- No cross-team communication
-- Parallel execution for up to 5x speedup
-```
+## Architecture
 
-### Quality Gates Verification
+### Progressive Disclosure
 
-All agents must pass 8-step quality validation:
+SPARK achieves 95.5% token reduction through progressive disclosure:
 
+1. **Description Load** (~95 tokens/agent): Only descriptions loaded initially
+2. **Selection**: Claude Code selects optimal agent based on task
+3. **Full Load** (30-44K tokens): Selected agent's full body loaded on demand
+
+**Token Efficiency**:
+- 21 agent descriptions: ~2.0K tokens (1% of context)
+- Single agent execution: 30-44K tokens
+- Traditional approach: Load all agents upfront (600K+ tokens) ❌
+
+### Quality Gates System
+
+All agents follow **zero-tolerance quality standards**:
+
+**8-Step Quality Validation**:
+1. Syntax errors: 0
+2. Type errors: 0
+3. Linting violations: 0
+4. Security issues: 0
+5. Test coverage: ≥95% (unit), ≥85% (integration)
+6. Documentation: 100% completeness
+7. All tests: Pass
+8. Integration: Clean
+
+**Quality Gate Execution**:
 ```bash
 # Agent self-validation
 echo '{"subagent": "implementer-spark", "self_check": true}' | \
 python3 ~/.claude/hooks/spark_quality_gates.py
 
-# Success message:
-# ✅ 품질게이트를 통과하였습니다. 작업을 정리하고 종료하시기 바랍니다.
-
-# Failure message:
-# 🚫 품질게이트를 통과하지 못했습니다. 다시 오류수정하세요!!
-#    모든 오류가 0이 아니면 작업종료 불가능합니다.
+# Returns:
+# ✅ "Quality gates PASSED"
+# 🚫 "Quality gates FAILED"
 ```
 
-### Chaining Subagents
+### State Management
 
-Create powerful multi-step workflows by chaining agents:
+Agents communicate via JSON state files:
 
-```bash
-# Simple chain
-/spark-refactor "analyze → improve → test → document"
-
-# Complex pipeline with conditions
-/spark-pipeline "
-  if complexity > 0.7:
-    designer-spark → implementer-spark
-  else:
-    implementer-spark
-  always:
-    tester-spark → documenter-spark
-"
+```
+~/.claude/workflows/current_task.json         # Main task
+~/.claude/workflows/team[1-5]_current_task.json  # Team tasks
 ```
 
-For detailed examples and templates, see:
-- **Command definitions**: `.claude/commands/implement-spark.md`
-- **Hook implementations**: `.claude/hooks/`
-- **Workflow patterns**: `.claude/workflows/`
-
-## How It Works
-
-### TRAITS Architecture Overview
-
-SPARK v3.8 uses a three-layer architecture with traits-based behavioral dynamics:
-
-1. **Router Layer**: Analyzes your request and determines which agent to load
-2. **Orchestration Layer**: Manages agent lifecycle and trait activation
-3. **Agent Layer**: 32 specialized agents using TRAITS methodology
-   - 17 primary agents with domain-specific traits (시스템_사고, 분석적_추론, etc.)
-   - 15 team agents for parallel execution with collaboration traits
-
-### What are TRAITS?
-
-TRAITS (Trait-Reactive Adaptive Intelligence Technology System) replaces the traditional 11-persona scanning with immediate activation of 3-5 core behavioral traits:
-
-- **시스템_사고** (Systems Thinking): Holistic system understanding
-- **분석적_추론** (Analytical Reasoning): Logical decomposition
-- **증거_기반_실천** (Evidence-Based Practice): Data-driven decisions
-- **체계적_실행** (Systematic Execution): Structured implementation
-- **단순성_우선** (Simplicity First): Elegant solutions
-
-Each agent has a unique combination of traits that define its behavior and approach.
-
-### Token Management
-
-Unlike traditional approaches that load all documentation and context upfront, SPARK:
-- Loads only the specific agent needed for your task
-- Implements compression by default (30-50% reduction)
-- Includes pre-task token assessment to prevent overflow
-- Sets practical limit at 90K tokens (safe margin from 200K hard limit)
-
-#### Agent Token Usage
-
-| Agent | File Size | Token Usage | Purpose |
-|-------|-----------|-------------|---------|
-| **indexer-spark** | 7,172 bytes | ~1,793 tokens | Command discovery |
-| **tasker-spark** | 9,593 bytes | ~2,398 tokens | Project management |
-| **explainer-spark** | 10,006 bytes | ~2,501 tokens | Concept explanation |
-| **loader-spark** | 10,023 bytes | ~2,505 tokens | Project loading |
-| **estimater-spark** | 10,452 bytes | ~2,613 tokens | Time estimation |
-| **documenter-spark** | 10,539 bytes | ~2,634 tokens | Documentation |
-| **cleaner-spark** | 10,658 bytes | ~2,664 tokens | Code cleanup |
-| **gitter-spark** | 10,681 bytes | ~2,670 tokens | Git workflow |
-| **spawner-spark** | 11,453 bytes | ~2,863 tokens | Multi-task orchestration |
-| **builder-spark** | 11,829 bytes | ~2,957 tokens | Build optimization |
-| **troubleshooter-spark** | 11,971 bytes | ~2,992 tokens | Issue resolution |
-| **analyzer-spark** | 12,299 bytes | ~3,074 tokens | System analysis |
-| **improver-spark** | 12,553 bytes | ~3,138 tokens | Code improvement |
-| **designer-spark** | 12,640 bytes | ~3,160 tokens | System design |
-| **tester-spark** | 13,796 bytes | ~3,449 tokens | Testing |
-| **implementer-spark** | 15,476 bytes | ~3,869 tokens | Implementation |
-| **team agents (12)** | 3,261-4,432 bytes | ~815-1,108 tokens | Parallel execution |
-
-**Token Usage (Updated):**
-- **Total agents**: 32 (17 primary + 15 team)
-- **Average token usage**: ~2,370 tokens per agent
-- **Single agent**: 1.2-2.0% of 200K context window
-- **Token savings**: 95.5% reduction vs. loading all agents
-
-### Quality Assurance
-
-Every code change passes through 8 quality gates:
-
-1. Syntax validation
-2. Type checking (MyPy --strict)
-3. Linting (Ruff --strict)
-4. Security analysis
-5. Test coverage (Unit 95%, Integration 85%)
-6. Performance validation
-7. Documentation check
-8. Integration testing
-
-## Available Agents with TRAITS
-
-### Primary Agents (17) - Each with Unique Trait Combinations
-
-| Agent | Core Traits | Purpose | Command Example |
-|-------|-------------|---------|-----------------|
-| implementer-spark | 체계적_실행, 단순성_우선, 꼼꼼함, 구조적_무결성, 협업_지향 | Feature implementation | "implement REST API endpoints" |
-| tester-spark | 체계적_실행, 꼼꼼함, 증거_기반_실천, 위험_평가 | Test creation | "write unit tests with 95% coverage" |
-| analyzer-spark | 시스템_사고, 분석적_추론, 증거_기반_실천, 회의주의 | Code analysis | "analyze architecture and find issues" |
-| designer-spark | 장기적_사고, 추상화_능력, 시스템_사고, 사용자_중심_사고, 위험_평가 | System design | "design microservice architecture" |
-| troubleshooter-spark | 분석적_추론, 증거_기반_실천, 근본_원인_분석, 침착함 | Debugging | "fix the memory leak issue" |
-| documenter-spark | 명확한_의사소통, 지식_구조화, 사용자_중심_사고, 공감 | Documentation | "create API documentation" |
-| improver-spark | 근본_원인_분석, 반복적_개선, 측정_우선, 실용주의 | Performance optimization & modernization | "optimize algorithms and apply latest patterns" |
-| qc-spark | 완벽주의, 체계적_실행, 끈기, 품질_중심 | Quality violations cleanup | "fix all ruff and mypy errors" |
-| cleaner-spark | 단순성_우선, 체계적_실행, 근본_원인_분석, 위험_평가 | Technical debt | "remove dead code and update deps" |
-| builder-spark | 자동화, 프로세스_최적화, 시스템_사고, 측정_우선 | Build optimization | "optimize webpack configuration" |
-| estimater-spark | 분석적_추론, 증거_기반_실천, 위험_평가, 확률론적_사고 | Project estimation | "estimate time for new features" |
-| explainer-spark | 명확한_의사소통, 지식_구조화, 공감, 스캐폴딩 | Education | "explain how async/await works" |
-| gitter-spark | 시스템_사고, 체계적_실행, 자동화, 표준화 | Git workflows | "set up branching strategy" |
-| spawner-spark | 시스템_사고, 전략적_사고, 자원_최적화, 위험_평가 | Multi-task orchestration | "coordinate full-stack deployment" |
-| loader-spark | 분석적_추론, 시스템_사고, 패턴_인식, 지식_구조화 | Project onboarding | "analyze and load project context" |
-| indexer-spark | 지식_구조화, 명확한_의사소통, 문제_해결 | Command navigation | "list available commands" |
-| tasker-spark | 계획성, 장기적_사고, 체계적_실행, 우선순위_설정 | Project management | "create task breakdown structure" |
-
-### Team Agents (15) - For Parallel Execution
-
-Each team agent inherits the same traits as their primary counterparts but with enhanced collaboration focus:
-
-| Team | Agents | Shared Traits | Purpose |
-|------|--------|---------------|---------|
-| **Team 1** | team1-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
-| **Team 2** | team2-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
-| **Team 3** | team3-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
-| **Team 4** | team4-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
-| **Team 5** | team5-implementer/tester/documenter-spark | 협업_지향 + role-specific traits | Independent parallel implementation |
-
-**Usage**: For large tasks requiring parallel execution across multiple domains simultaneously.
-
-## New Features in v4.3 - Quality Control Revolution
-
-### 🎯 Quality Control Separation (v4.3)
-- **Role Specialization**: `improver-spark` focuses on performance optimization and modernization
-- **Quality Violations**: `qc-spark` handles all quality control (ruff, mypy, pytest failures)
-- **Team Expansion**: Added team5 agents for 5-way parallel execution
-- **Multi-Session Support**: Enhanced for large-scale quality control and improvement tasks
-
-### 📊 Unified Phase Structure (v4.1)
-- **Phase 0**: Universal task initialization for all 32 agents
-- **Phase 1-3**: Agent-specific work phases
-- **Phase 4**: Quality validation (17 agents)
-- **Phase 5**: Two-part completion:
-  - Part A: Agent-specific completion work
-  - Part B: Universal JSON update & quality gates
-
-### 🧬 TRAITS System (from v3.8)
-- **Dynamic Trait Activation**: 3-5 traits per agent instead of 11 personas
-- **35% Cognitive Load Reduction**: No more "쫘라락~!" persona scanning
-- **Miller's 7±2 Theory**: Scientifically optimized trait count
-
-### 🔒 8-Step Quality Gates System (v4.1)
-All agents execute these mandatory checks with numeric recording:
-1. **Architecture**: Import structure, circular dependencies, domain boundaries
-2. **Foundation**: Syntax validation, type checking
-3. **Standards**: Code formatting, naming conventions
-4. **Operations**: Logging, security, configuration
-5. **Quality**: Linting, complexity metrics
-6. **Testing**: Coverage targets (95% unit, 85% integration)
-7. **Documentation**: Docstrings, README files
-8. **Integration**: Final system checks
-
-**Zero tolerance**: All violations must be 0 to proceed
-
-### 📊 Mandatory Reporting System
-All agents now generate comprehensive reports after task completion:
-
-**Report Categories:**
-- **Detailed Reports** (7 analysis/design agents): 500-800+ lines with comprehensive findings
-- **Concise Reports** (21 execution agents): 150-300 lines with essential metrics
-
-**Report Location:** `/docs/agents-task/[agent-name]/[task_name]_[timestamp].md`
-
-**Features:**
-- Evidence-based findings with file paths and line numbers
-- Quality metrics and performance impact measurements
-- Next steps and handoff documentation for team coordination
-- Template library available at `/docs/templates/agent-reports/`
-
-### ⚡ Multi-Team Parallel Execution
-Execute large-scale tasks with up to 5 teams working simultaneously:
-
-```bash
-# Example: Full-stack implementation with 5 parallel teams
-"Implement user management system across all layers"
-# Automatically delegates to:
-# Team 1: Backend API implementation
-# Team 2: Database schema and queries  
-# Team 3: Frontend components
-# Team 4: Testing and documentation
-# Team 5: DevOps and deployment
-```
-
-**Benefits:**
-- Up to 5x faster execution for complex multi-domain tasks
-- Independent team coordination via JSON state management
-- Each team includes implementer + tester + documenter for complete coverage
-
-## Development
-
-### Running Tests
-
-```bash
-# Quality validation
-uv run mypy [file.py] --strict    # Type checking
-uv run ruff check [file.py]       # Linting
-uv run pytest tests/               # Unit tests
-
-# Performance verification
-python3 benchmarks/compare_performance.py
-```
-
-### Testing Hooks
-
-```bash
-# Test the routing system
-echo '{"prompt": "implement API"}' | python3 .claude/hooks/spark_persona_router.py
-
-# Test quality gates
-echo '{}' | python3 .claude/hooks/spark_quality_gates.py
-
-# Test agent self-validation
-echo '{"subagent": "implementer-spark", "self_check": true}' | python3 .claude/hooks/spark_quality_gates.py
+**State Structure**:
+```json
+{
+  "id": "spark_YYYYMMDD_HHMMSS",
+  "version": "4.3",
+  "state": {"status": "pending|running|completed|failed"},
+  "quality": {
+    "violations_total": 0,
+    "can_proceed": true
+  }
+}
 ```
 
 ## Project Structure
 
 ```
 spark-claude/
-├── .claude/
-│   ├── agents/          # 32 specialized agents (17 primary + 15 team)
-│   ├── commands/        # Multi-team execution commands
-│   ├── hooks/           # Quality gates and routing
-│   └── workflows/       # JSON state management
-├── benchmarks/          # Performance tests
-├── docs/
-│   ├── agents-task/     # Agent-generated reports
-│   └── templates/       # Report templates
-├── scripts/             # Installation scripts
-└── tests/               # Test suite
+├── spark-plugin/              # Plugin package (distributable)
+│   ├── .claude-plugin/
+│   │   ├── plugin.json        # Plugin metadata
+│   │   └── marketplace.json   # Local marketplace config
+│   ├── CLAUDE.md              # Complete SPARK usage guide
+│   ├── README.md              # User documentation
+│   ├── agents/                # 21 agent definitions
+│   │   ├── analyzer-spark.md
+│   │   ├── implementer-spark.md
+│   │   ├── tester-spark.md
+│   │   ├── documenter-spark.md
+│   │   ├── designer-spark.md
+│   │   ├── qc-spark.md
+│   │   └── team[1-5]-*.md     # 15 team agents
+│   └── commands/              # 12 SPARK commands
+│       ├── spark-implement.md
+│       ├── spark-analyze.md
+│       ├── multi-implement.md
+│       └── ...
+├── docs/                      # Development documentation
+│   ├── constitution/          # SPARK Constitution v1.1
+│   ├── anthropic-engineering/ # Research materials
+│   └── *.md                   # Design documents
+└── README.md                  # This file
 ```
 
-## Documentation
+## Development
 
-- [Architecture](docs/ARCHITECTURE.md) - System design and components
-- [Phase Structure Guide](docs/spark-agent-phase-structure-v4.1.md) - Universal phase execution patterns
-- [Team Agents Guide](docs/spark-team-agents-guide-v4.1.md) - Multi-team parallel coordination
-- [Installation](docs/INSTALLATION.md) - Setup instructions
-- [Development](docs/DEVELOPMENT.md) - Development guide
-- [Agents List](docs/AGENTS.md) - All 28 agents documentation
-- [CLAUDE.md](CLAUDE.md) - Instructions for Claude Code instances
+This repository is a **plugin development project** for SPARK.
+
+### Working on SPARK Plugin
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Jaesun23/spark-claude.git
+cd spark-claude
+
+# 2. Edit agents or commands
+# - Agents: spark-plugin/agents/*.md
+# - Commands: spark-plugin/commands/*.md
+# - Documentation: spark-plugin/CLAUDE.md
+
+# 3. Test changes
+# Restart Claude Code to reload plugin
+
+# 4. Verify
+/context  # Check agents load correctly
+```
+
+### Constitution v1.1
+
+All agents follow SPARK Constitution v1.1 principles:
+
+- **EVIDENCE/TEST-BEFORE-REPORT**: Protocols requiring proof before claims
+- **PROJECT-CONTEXT-DISCOVERY**: Agents discover and follow project standards
+- **Zero-Tolerance Quality**: All violations must be 0 to proceed
+- **90K Token Safety**: All agents include safety protocols
+- **Flexible Phases**: Workflow adapts to task complexity
+
+See `docs/constitution/` for complete constitution documents.
+
+### Key Files
+
+- `spark-plugin/CLAUDE.md` - SPARK usage guide (read by Claude Code)
+- `docs/constitution/1_CONSTITUTION.md` - SPARK Constitution v1.1
+- `docs/constitution/2_AGENT_DESIGN_GUIDE.md` - Agent design principles
+- `docs/AGENT_DESCRIPTION_UNDERSTANDING.md` - Description as decision algorithm
+
+## Project Evolution
+
+### From Super Claude to SPARK Plugin
+
+SPARK began as a conversion of Super Claude's persona system into a specialized multi-agent architecture:
+
+**Super Claude (Original)**:
+- Monolithic 11-persona system
+- All personas loaded simultaneously
+- ~600K tokens for full context
+
+**SPARK v3.0-4.2** (Multi-agent System):
+- 32 specialized agents (17 primary + 15 team)
+- Lazy loading architecture
+- Installed via `~/.claude/agents/` and `~/.claude/commands/`
+
+**SPARK v4.3** (Plugin System):
+- 21 agents (6 core + 15 team)
+- Distributed as Claude Code plugin
+- Progressive disclosure (95.5% token reduction)
+- Self-contained with complete documentation
+
+### Version History
+
+- **v3.0**: Initial multi-agent system with lazy loading
+- **v3.5**: Quality gates and refined hooks
+- **v3.8**: TRAITS revolution (trait-based behavior)
+- **v4.1**: Unified Phase structure with JSON state
+- **v4.3**: Plugin-based distribution with progressive disclosure
 
 ## About This Project
 
-SPARK was created through a unique collaboration between one human developer and two Claude AI instances, demonstrating the power of human-AI teamwork in building complex software systems.
+SPARK was created through collaboration between:
 
-### The Development Team
+- **Jason** ([@Jaesun23](https://github.com/Jaesun23)) - Human architect and project lead
+- **1호 (Claude Desktop)** - Design and architecture partner
+- **2호 (Claude Code)** - Implementation and refinement partner
 
-- **Jason** - Human architect and project lead who envisioned and directed SPARK
-- **1호 (Claude AI)** - Claude Desktop AI who collaborates on design, architecture, and problem-solving
-- **2호 (Claude CODE)** - Claude Code AI who implements, tests, and refines the codebase
-
-*This entire system was built by a team of one human and two AI assistants working together - proving that individual developers partnering with AI can create enterprise-grade tools that would traditionally require large teams.*
+*A demonstration of human-AI collaboration in building enterprise-grade developer tools.*
 
 ## Contributing
 
-We welcome contributions! Please feel free to submit issues and pull requests.
+We welcome contributions! SPARK is an open-source project.
+
+### How to Contribute
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+2. Create feature branch (`git checkout -b feature/your-feature`)
+3. Make changes to `spark-plugin/` (agents, commands, or docs)
+4. Test with local plugin installation
+5. Commit changes (`git commit -m 'Add your feature'`)
+6. Push to branch (`git push origin feature/your-feature`)
+7. Open Pull Request
+
+### Development Guidelines
+
+- Follow SPARK Constitution v1.1 principles
+- Maintain 7-section agent structure
+- Include Triggering Conditions in agent descriptions
+- Add Example Usage Scenarios
+- Test all quality gates pass
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## Support
+## Resources
 
+- **GitHub**: [Jaesun23/spark-claude](https://github.com/Jaesun23/spark-claude)
 - **Issues**: [GitHub Issues](https://github.com/Jaesun23/spark-claude/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/Jaesun23/spark-claude/discussions)
+- **Claude Code**: [claude.ai/code](https://claude.ai/code)
 
 ---
 
 <p align="center">
-  <i>Built with passion by Jason, 1호 (Claude AI), and 2호 (Claude CODE)</i><br>
+  <i>Built with passion by Jason, 1호, and 2호</i><br>
   <i>One human, two AIs, infinite possibilities</i>
 </p>

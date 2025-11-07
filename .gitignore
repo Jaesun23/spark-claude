@@ -77,3 +77,8 @@ Thumbs.db
 
 # Symbolic links to external archives
 docs/Archive
+
+# Claude Code runtime files
+.claude/workflows/
+.claude/*.json
+!.claude/settings.local.json
