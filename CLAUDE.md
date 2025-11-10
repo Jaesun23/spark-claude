@@ -207,3 +207,75 @@ Structure:
 - **Router script**: `.claude/hooks/spark_persona_router.py`
 - **JSON states**: `.claude/workflows/*.json`
 - **Documentation**: `docs/SPARK_COMPLETE_GUIDE.md`
+
+## ⚠️ IMPORTANT: Missing Documentation Files (2025-11-10)
+
+**Status**: The following guide documents are on Jason's home computer and NOT yet committed to the repository.
+
+**Missing Files** (created during home session, need to be retrieved):
+1. **체크리스트 작성 가이드** (Checklist Creation Guide)
+2. **작업분해 가이드** (Task Breakdown Guide)
+3. **청사진 가이드** (Blueprint Guide)
+
+**Committed Files** (currently in repository):
+- `docs/CORE_METHODOLOGY.md` - AI collaboration methodology v4.0 ✅
+- `docs/ADR_GUIDE.md` - Architecture Decision Records guide ✅
+- `docs/PROJECT_STANDARDS_GUIDE.md` - Project standards guide ✅
+
+**Work Sequence**:
+1. Created CORE_METHODOLOGY.md first
+2. Created checklist guide (bottom-up approach)
+3. Created task breakdown guide
+4. Created blueprint guide
+5. Created ADR_GUIDE.md and PROJECT_STANDARDS_GUIDE.md (only these were committed)
+
+**Action Required**:
+- DO NOT overwrite files in `docs/` from office computer
+- Retrieve missing guides from home computer first
+- All old documentation has been moved to `docs/docs-backup/`
+- Only new guides (6 total) should remain in `docs/` root
+
+**Current docs/ Structure**:
+```
+docs/
+├── ADR_GUIDE.md
+├── CORE_METHODOLOGY.md
+├── PROJECT_STANDARDS_GUIDE.md
+├── Stage1-2_가이드_작성_프로젝트.md ✅ (NEW: 2025-11-10)
+├── ENTERPRISE_INITIATION_PROCESS.md
+├── [MISSING] 체크리스트_작성_가이드.md
+├── [MISSING] 작업분해_가이드.md
+├── [MISSING] 청사진_가이드.md
+├── docs-backup/  (all previous documentation)
+└── references/  (backup and reference materials)
+```
+
+## 📋 Current Project Status (2025-11-10)
+
+### Active Work: Stage 1-2 Guide Development
+
+**Goal**: Create methodology guide for "Idea → Blueprint" stage (upward consolidation process)
+
+**Background**:
+- ✅ Downward process validated (Blueprint → Breakdown → Checklist → Implementation)
+- ❌ Upward process undefined (Idea → ??? → Blueprint)
+- 🎯 Solution approach: Hierarchical Templates (Level 1/2/3)
+
+**Key Discovery**: "Context" is the Core Challenge
+- 7 project analysis completed (6 failures + 1 success)
+- AI collaboration limitations identified:
+  - Context loss when projects scale
+  - Hallucination ("possible" → "impossible")
+  - Stubbornness (ignoring user requirements)
+  - Information overload (long documents → arbitrary actions)
+  - Repeated mistakes (if-fi, } omissions)
+
+**Method**: Real reconstruction of memory project
+- Selected project: memory system (actual need + repeated failures + appropriate scale)
+- Approach: Reconstruct from scratch with 2호, document needed template items
+- Expected output: Stage 1-2 guide with hierarchical templates
+
+**Related Documents**:
+- `docs/Stage1-2_가이드_작성_프로젝트.md` - Project definition and plan
+- `실패 프로젝트 분석 보고서/00_종합분석_7개프로젝트_패턴분석_20251110.md` - 7-project analysis
+- `실패 프로젝트 분석 보고서/Jason의 변명.md` - Real experiences from failures
