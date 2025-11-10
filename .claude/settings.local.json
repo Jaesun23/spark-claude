@@ -15,7 +15,10 @@
       "Bash(cat:*)",
       "Bash(cd:*)",
       "Bash(python src/code-laundry.py:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(정확도\" 원칙 확립\n\n### Level 2 영역 3: LangGraph 통합\n- MCP 제약사항 명확화 (자동 실행 불가)\n- 저장/검색 시나리오 4가지 정의\n- Redis + LangGraph 조합 활용 방안\n\n### Level 2 영역 4: MCP 통합\n- 필요한 MCP Tools 3가지 정의\n- RAG 활용 목적 명확화 (문서 지식베이스)\n\n## 핵심 발견\n\n### 사용자 재정의\n- 잘못: 사용자 = Jason\n- 올바름: 사용자 = 1호, 2호 (AI agents)\n- 메모리 = 1호/2호의 \"뇌\"\n\n### Level 2 질문 방식 전환\n- ❌ \"기술 스펙은?\" → Jason 답변 불가\n- ✅ \"어떻게 쓰나요?\" → 사용 경험 기반\n\n### V3/V5 실패 근본 원인\n- Level 1 (목표) → Level 3 (기술) 직행\n- **Level 2 (사용 시나리오) 누락**\n\n## 다음 단계\n\nLevel 3: ADR (Architecture Decision Records)\n- 기술 선택 근거 문서화\n- Redis 8, LangGraph, 하이브리드 검색 정당화\n- 트레이드오프 명시\n\n## 관련 문서\n\n- Level 1: memory_프로젝트_재구성_Level1_완료_20251110.md\n- Level 2: memory_프로젝트_재구성_Level2_완료_20251110.md\n- 프로젝트 개요: docs/Stage1-2_가이드_작성_프로젝트.md\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
