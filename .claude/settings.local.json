@@ -17,7 +17,19 @@
       "Bash(python src/code-laundry.py:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "WebSearch",
+      "WebFetch(domain:insights.sei.cmu.edu)",
+      "WebFetch(domain:www.sei.cmu.edu)",
+      "WebFetch(domain:martinfowler.com)",
+      "Bash(git -C /Users/jason/Projects/spark-claude add docs/session-summaries/20251112_Phase2_복합시스템_도전.md)",
+      "Bash(git -C /Users/jason/Projects/spark-claude commit -m \"docs: Fix core function analysis - ''거래'' is one function with manual/auto implementations\n\n🔄 핵심 관점 수정:\n- ❌ Before: 수동 거래 + 자동 거래 = 2개 핵심 기능\n- ✅ After: 거래 = 1개 핵심 기능, 수동/자동 = 구현 방식\n\n📝 Updated files:\n- 20251112_Phase2_복합시스템_도전.md\n\n💡 Key insight from Jason:\n''자동''에 의미를 두면 안되고 ''거래''가 핵심\n실패 = 금전 손실 (구현 방식 무관)\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git -C /Users/jason/Projects/spark-claude add:*)",
+      "Bash(git -C /Users/jason/Projects/spark-claude commit -m \"docs: Add core function identification criteria guide\n\n✨ 핵심 발견: 기능 구분이 아키텍처 결정의 출발점!\n\n📝 New document:\n- 20251112_핵심기능_판단기준.md\n\n🎯 핵심 원칙:\n❌ 잘못된 구분: 수동 거래 + 자동 거래 = 2개 핵심 기능\n✅ 올바른 구분: 거래 = 1개 핵심 기능, 수동/자동 = 구현 방식\n\n📚 포함 내용:\n- 비교표: 잘못된 vs 올바른 기능 구분\n- 3단계 실전 적용 방법\n- Layer 1 질문 적용 예시\n- 실전 체크리스트\n\n💡 Why it matters:\n핵심 기능을 잘못 구분하면 → Layer 1 답변 혼란 → 전체 설계 틀어짐!\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git -C /Users/jason/Projects/spark-claude commit:*)",
+      "WebFetch(domain:apiportal.koreainvestment.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

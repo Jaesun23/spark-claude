@@ -316,3 +316,81 @@ docs/
 - `docs/Stage1-2_가이드_작성_프로젝트.md` - Project definition and plan
 - `실패 프로젝트 분석 보고서/00_종합분석_7개프로젝트_패턴분석_20251110.md` - 7-project analysis
 - `실패 프로젝트 분석 보고서/Jason의 변명.md` - Real experiences from failures
+
+---
+
+## 📋 DNA Methodology File Naming Convention (2025-11-12)
+
+### **Purpose**
+Instant identification of Stage and document role from filename alone.
+
+### **Pattern**: `{Stage}{Type}-{Seq}_{descriptive_name}.md`
+
+```
+01F-01_core_functions.md
+│││ ││ └─ Descriptive name (snake_case)
+│││ │└─ Sequence (01-99)
+│││ └─ Separator (hyphen)
+││└─ Document Type (single letter)
+│└─ Stage (01-09)
+└─ 2-digit number
+```
+
+### **Type Codes**
+
+**Project Outputs** (files created per project):
+- **F** = Function (기능 정의)
+- **C** = Classification (분류/분석)
+- **D** = Decision (결정 사항)
+- **S** = Schema (스키마/설계)
+- **A** = ADR (Architecture Decision Record)
+- **B** = Blueprint (청사진)
+- **T** = Task (작업 분해)
+- **L** = List/Checklist (체크리스트)
+
+**Methodology Docs** (DNA methodology guides):
+- **G** = Guide (간결한 가이드)
+- **M** = Manual (상세 해설서)
+- **E** = Example/Case (사례집)
+
+**Special**:
+- **00** = Meta documents (methodology itself)
+
+### **Examples**
+
+```bash
+# Stage 1: Family Classification
+01F-01_core_functions.md          # Function definition
+01C-01_family_classification.md   # Family: A-C-A
+01D-01_tech_candidates.md         # Tech candidates
+
+# Stage 2: Structure Design
+02C-01_layer3_constraints.md      # Layer 3 constraints
+02C-02_conflicts_analysis.md      # Conflict patterns
+02D-01_tech_stack_decision.md     # Tech stack decision
+
+# Stage 3: ADR
+03A-001_logging.md                # Bootstrap ADR (001-099)
+03A-101_kis_api_selection.md      # Domain ADR (100-999)
+
+# Guides
+01G-00_core_definition_guide.md   # Stage 1 guide
+02M-01_layer3_manual.md           # Stage 2 manual
+02E-01_stock_trading_case.md      # Stage 2 example
+```
+
+### **Quick Reference**
+```
+01F-01 = Stage 1, Function doc, #1
+02C-02 = Stage 2, Classification doc, #2
+03A-101 = Stage 3, ADR, Domain #101
+01M-01 = Stage 1, Manual, #1
+```
+
+### **Benefits**
+- ✅ Instant Stage/role identification
+- ✅ Auto-sorting by Stage → Type → Seq
+- ✅ AI-friendly (clear rules)
+- ✅ Searchable (`find . -name "03A-*"` = all ADRs)
+
+**Full specification**: `docs/completed-guide/00_FILE_NAMING_CONVENTION.md`
