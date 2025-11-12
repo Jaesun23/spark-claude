@@ -10,8 +10,252 @@
 ## 📚 이 가이드의 구성
 
 - **이 문서** (Guide): 질문 템플릿 + 작업 체크리스트 (간결)
-- **해설서** (Manual): 왜? 어떻게? 상세 설명 → `02-1_STRUCTURE_DESIGN_MANUAL.md`
-- **사례집** (Cases): 전체 흐름 실전 예시 → `IMPLEMENTATION_CASES.md`
+- **해설서** (Manual): 왜? 어떻게? 상세 설명 → `02M-01_structure_design_manual.md`, `02M-02_architecture_decision_manual.md`
+- **사례집** (Cases): 전체 흐름 실전 예시 → `02E-01_stock_trading_case.md`
+
+---
+
+## 📥 입력 문서 (Stage 1에서 받은 것)
+
+Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
+
+#### 1. **`01F-01_core_functions.md`** (필수)
+- 핵심 기능 1-3개
+- 각 기능의 실패 영향
+- **활용**: Layer 3 조사 범위 결정
+
+#### 2. **`01C-01_family_classification.md`** (필수)
+- 패밀리 코드 (예: A-C-A)
+- Layer 1 질문 결과
+- **활용**: 필수 기술 방향 파악
+
+#### 3. **`01C-02_nfr_profile.md`** (필수)
+- NFR 프로파일 (예: A-B-B-A)
+- Layer 2 질문 결과
+- **활용**: 충돌 패턴 발견
+
+#### 4. **`01D-01_tech_candidates.md`** (필수)
+- 기술 후보군 목록
+- **활용**: 구체적 기술 선택
+
+#### 5. **`docs/family-tech-matrix/{패밀리}_tech_options.md`** (참고)
+- 패밀리별 Bootstrap 요소 매트릭스
+- **활용**: Bootstrap vs Domain 구분
+
+---
+
+## 📤 출력 문서 (이 Stage에서 생성해야 할 문서)
+
+### 필수 문서
+
+#### 1. **`02C-01_layer3_constraints.md`** - Layer 3 제약 조사
+**내용**:
+- L3-Q1: 기술 스택 제약 (외부 조사!)
+  - 외부 API/서비스 비교 (예: 증권사 6개)
+  - 법적 규제 조사
+  - 개인정보보호 조사
+- L3-Q2: 팀 역량 (언어, 프레임워크, 경험)
+- L3-Q3: 배포 환경 (클라우드, 온프레미스, 예산)
+
+**예시**:
+```markdown
+# Layer 3 외부 제약 조사
+
+## L3-Q1: 기술 스택 제약
+
+### 외부 API 비교
+| 증권사 | REST API | WebSocket | 제약 | 비용 |
+|--------|----------|-----------|------|------|
+| 한국투자증권 | 20건/초 | 41개 채널 | ... | 무료 |
+| 키움증권 | ... | ... | ... | ... |
+
+### 선택: 한국투자증권
+**이유**: ...
+
+## L3-Q2: 팀 역량
+- Python 경험: 5년
+- FastAPI: 2년
+- React: 3년
+
+## L3-Q3: 배포 환경
+- AWS 사용
+- 예산: 월 $500
+```
+
+#### 2. **`02C-02_conflicts_analysis.md`** - 충돌 패턴 분석
+**내용**:
+- Layer 2 NFR vs Layer 3 제약 충돌 매트릭스
+- 충돌 3개 이상 식별
+- 각 충돌의 트레이드오프 옵션
+
+**예시**:
+```markdown
+# 충돌 패턴 분석
+
+## 충돌 1: 정확성 A + API 20건/초 제한
+- **NFR**: 정확성 최우선 (실시간 체결)
+- **제약**: API 20건/초
+- **충돌**: 100개 종목 모니터링 시 초당 100건 필요
+- **해결 옵션**:
+  1. WebSocket 사용 (서버 Push)
+  2. 종목 수 제한
+  3. 하이브리드 전략
+
+## 충돌 2: ...
+```
+
+#### 3. **`02D-01_tech_stack_decision.md`** - 기술 스택 확정
+**내용**:
+- Bootstrap 기술 스택 (패밀리 강제)
+- Domain 기술 스택 (프로젝트 특화)
+- 각 선택의 근거
+
+**예시**:
+```markdown
+# 기술 스택 확정
+
+## Bootstrap (A-C-A 패밀리 강제)
+- 실시간 통신: **WebSocket**
+- API: **FastAPI** (Python)
+- 캐시: **Redis**
+- DB: **PostgreSQL**
+
+## Domain (프로젝트 특화)
+- 증권사 API: **한국투자증권**
+- 주문 전략: **하이브리드** (REST + WebSocket)
+- Queue: **Redis + Celery**
+- 프론트: **Next.js + React**
+
+## 선택 근거
+...
+```
+
+#### 4. **`02S-01_architecture_diagram.png`** - 아키텍처 다이어그램
+**내용**:
+- 전체 시스템 아키텍처
+- 컴포넌트 간 관계
+- 데이터 흐름
+
+#### 5. **`02S-02_data_schema_v1.md`** - 데이터 스키마 v1.0
+**내용**:
+- 주요 엔티티 정의
+- 테이블 구조 (PostgreSQL)
+- 관계 정의
+
+**예시**:
+```markdown
+# 데이터 스키마 v1.0
+
+## 엔티티
+
+### Order (주문)
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| id | UUID | PK |
+| user_id | UUID | FK |
+| symbol | VARCHAR(10) | 종목 코드 |
+| quantity | INTEGER | 수량 |
+| price | DECIMAL(10,2) | 가격 |
+| status | ENUM | 상태 |
+| created_at | TIMESTAMP | 생성 시각 |
+```
+
+#### 6. **`02S-03_api_design_v1.md`** - API 설계 v1.0
+**내용**:
+- 주요 엔드포인트
+- 요청/응답 스키마
+- WebSocket 채널
+
+**예시**:
+```markdown
+# API 설계 v1.0
+
+## REST API
+
+### POST /orders
+**요청**:
+```json
+{
+  "symbol": "005930",
+  "quantity": 10,
+  "price": 70000
+}
+```
+
+**응답**:
+```json
+{
+  "order_id": "uuid",
+  "status": "pending"
+}
+```
+
+## WebSocket
+
+### /ws/prices
+**구독**: `["005930", "000660"]`
+**수신**:
+```json
+{
+  "symbol": "005930",
+  "price": 70100,
+  "timestamp": "2025-11-12T..."
+}
+```
+```
+
+#### 7. **`02L-01_adr_list.md`** - ADR 작성 대상 목록
+**내용**:
+- 작성할 ADR 목록 (Bootstrap + Domain)
+- 각 ADR의 결정 요약
+- 우선순위
+
+**예시**:
+```markdown
+# ADR 작성 대상 목록
+
+## Bootstrap ADR (001-015)
+- ADR-001: 로깅 전략
+- ADR-002: 에러 처리 표준
+- ADR-003: 인증/인가 방식
+- ADR-004: 설정 관리
+- ...
+
+## Domain ADR (101-120)
+- ADR-101: 한국투자증권 API 선택
+- ADR-102: 하이브리드 주문 전략
+- ADR-103: FastAPI 선택
+- ADR-104: WebSocket 설계
+- ...
+
+## 우선순위
+1. 외부 제약 관련 (101-105)
+2. 충돌 해결 관련 (106-110)
+3. 기술 스택 관련 (111-115)
+```
+
+### 선택 문서
+
+#### 8. **`02S-04_sequence_diagrams/`** (선택적)
+- 주요 시나리오별 시퀀스 다이어그램
+
+---
+
+## 🔄 다음 Stage로 전달되는 것
+
+Stage 2 → Stage 3:
+- ✅ 확정된 기술 스택 (Bootstrap + Domain)
+- ✅ 외부 제약 목록
+- ✅ 충돌 패턴 및 해결 방안
+- ✅ ADR 작성 대상 목록 (18-25개)
+- ✅ 아키텍처 다이어그램
+- ✅ 데이터 스키마 v1.0
+- ✅ API 설계 v1.0
+
+Stage 3에서는 이를 기반으로:
+- 모든 결정을 ADR로 문서화
+- Bootstrap ADR (10-15개)
+- Domain ADR (15-20개)
 
 ---
 

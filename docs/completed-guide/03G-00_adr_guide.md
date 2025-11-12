@@ -15,13 +15,270 @@
 
 ---
 
+## 📥 입력 문서 (Stage 2에서 받은 것)
+
+Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
+
+#### 1. **`02D-01_tech_stack_decision.md`** (필수)
+- 확정된 Bootstrap 기술 스택
+- 확정된 Domain 기술 스택
+- **활용**: ADR 작성 대상 파악
+
+#### 2. **`02C-01_layer3_constraints.md`** (필수)
+- 외부 제약 조사 결과
+- **활용**: 제약에 의한 결정 ADR 작성
+
+#### 3. **`02C-02_conflicts_analysis.md`** (필수)
+- 충돌 패턴 및 해결 방안
+- **활용**: 충돌 해결 ADR 작성
+
+#### 4. **`02L-01_adr_list.md`** (필수)
+- 작성할 ADR 목록 (18-25개)
+- 우선순위
+- **활용**: ADR 작성 계획
+
+#### 5. **`02S-02_data_schema_v1.md`**, **`02S-03_api_design_v1.md`** (필수)
+- 데이터 스키마 및 API 설계
+- **활용**: 설계 결정 ADR 작성
+
+#### 6. **Stage 1 모든 산출물** (참고)
+- 패밀리, NFR, 핵심 기능
+- **활용**: 결정의 근거
+
+---
+
+## 📤 출력 문서 (이 Stage에서 생성해야 할 문서)
+
+### 필수 문서
+
+#### Bootstrap ADR (001-099)
+**위치**: `docs/adr/bootstrap/`
+
+**Bootstrap ADR 목록** (전 프로젝트 공통 요소):
+
+1. **`03A-001_logging_strategy.md`**
+   - 로깅 레벨, 포맷, 저장소
+   - 예: Structured logging with JSON format
+
+2. **`03A-002_error_handling_standard.md`**
+   - 에러 타입, 메시지 형식, 전파 방식
+   - 예: Custom exception hierarchy
+
+3. **`03A-003_authentication_method.md`**
+   - 인증 방식 (JWT, OAuth, Session 등)
+   - 예: JWT with RS256
+
+4. **`03A-004_configuration_management.md`**
+   - 환경 변수, 설정 파일 관리
+   - 예: Pydantic Settings
+
+5. **`03A-005_database_connection_pooling.md`**
+   - Connection pool 설정
+   - 예: SQLAlchemy pool size
+
+6. **`03A-006_caching_strategy.md`**
+   - 캐시 레이어 설계
+   - 예: Redis cache-aside pattern
+
+7. **`03A-007_api_versioning.md`**
+   - API 버전 관리 방식
+   - 예: URL path versioning (/v1/)
+
+8. **`03A-008_cors_policy.md`**
+   - CORS 설정
+   - 예: Origin whitelist
+
+9. **`03A-009_rate_limiting.md`**
+   - API 요청 제한
+   - 예: Token bucket algorithm
+
+10. **`03A-010_monitoring_observability.md`**
+    - 모니터링 및 메트릭 수집
+    - 예: Prometheus + Grafana
+
+... (총 10-15개)
+
+---
+
+#### Domain ADR (100-999)
+**위치**: `docs/adr/domain/`
+
+**Domain ADR 목록** (프로젝트 특화 요소):
+
+##### 외부 제약 관련 (101-105)
+1. **`03A-101_kis_api_selection.md`**
+   - 한국투자증권 API 선택
+   - 대안: 키움증권, eBest
+   - 근거: Layer 3 조사 결과
+
+2. **`03A-102_api_rate_limit_handling.md`**
+   - 20건/초 제한 대응
+   - 해결: Queue + throttling
+
+##### 충돌 해결 관련 (106-110)
+3. **`03A-106_hybrid_order_strategy.md`**
+   - REST + WebSocket 하이브리드
+   - 충돌: 정확성 A + API 제한
+   - 해결: WebSocket으로 실시간 체결, REST로 주문
+
+4. **`03A-107_websocket_channel_management.md`**
+   - 41개 채널 관리 방식
+   - 충돌: 즉시성 A + 채널 제한
+
+##### 기술 스택 관련 (111-115)
+5. **`03A-111_fastapi_selection.md`**
+   - FastAPI 선택
+   - 대안: Django, Flask
+   - 근거: 비동기, 성능, 타입 안전성
+
+6. **`03A-112_postgresql_selection.md`**
+   - PostgreSQL 선택
+   - 대안: MySQL, CockroachDB
+   - 근거: ACID, JSON 지원
+
+7. **`03A-113_redis_usage.md`**
+   - Redis 사용 범위
+   - 캐시 + Queue + Pub/Sub
+
+8. **`03A-114_nextjs_react_selection.md`**
+   - Next.js + React 선택
+   - 대안: Vue, Svelte
+   - 근거: SSR, 생태계
+
+##### 데이터 설계 관련 (116-120)
+9. **`03A-116_order_schema_design.md`**
+   - 주문 테이블 스키마
+   - UUID vs SERIAL, status enum
+
+10. **`03A-117_price_data_storage.md`**
+    - 실시간 가격 데이터 저장
+    - TimescaleDB vs Redis
+
+11. **`03A-118_user_portfolio_model.md`**
+    - 포트폴리오 데이터 모델
+
+##### API 설계 관련 (121-125)
+12. **`03A-121_rest_api_design.md`**
+    - REST API 엔드포인트 설계
+    - RESTful 원칙 적용
+
+13. **`03A-122_websocket_protocol.md`**
+    - WebSocket 메시지 프로토콜
+    - JSON format, subscription model
+
+14. **`03A-123_error_response_format.md`**
+    - API 에러 응답 표준
+    - RFC 7807 Problem Details
+
+##### 품질/보안 관련 (126-130)
+15. **`03A-126_input_validation.md`**
+    - 입력 검증 전략
+    - Pydantic models
+
+16. **`03A-127_security_headers.md`**
+    - 보안 헤더 설정
+    - HSTS, CSP, X-Frame-Options
+
+... (총 15-20개)
+
+---
+
+### ADR 템플릿
+
+모든 ADR은 다음 형식을 따라야 합니다:
+
+```markdown
+# ADR-XXX: {Decision Title}
+
+**상태**: Accepted | Proposed | Deprecated
+**작성일**: YYYY-MM-DD
+**결정자**: {Team/Person}
+**태그**: #{bootstrap|domain}, #{tech-stack|data|api|...}
+
+---
+
+## Context (배경)
+
+왜 이 결정이 필요한가?
+- 문제 상황
+- 제약 조건
+- 요구사항
+
+## Decision (결정)
+
+무엇을 선택했는가?
+- 선택한 옵션
+- 핵심 이유 (간결하게)
+
+## Alternatives (대안)
+
+고려했던 다른 옵션들:
+1. **Option A**: ...
+   - 장점: ...
+   - 단점: ...
+   - 거부 이유: ...
+
+2. **Option B**: ...
+
+## Consequences (결과)
+
+이 결정의 영향:
+- ✅ 긍정적 영향
+- ⚠️ 트레이드오프
+- ❌ 부정적 영향
+- 🔄 후속 조치 필요
+
+## References (참고)
+
+- Stage 2 문서: {파일명}
+- 외부 링크: {URL}
+- 관련 ADR: ADR-XXX
+```
+
+---
+
+### ADR 작성 우선순위
+
+1. **Phase 1**: 외부 제약 ADR (101-105)
+   - 가장 먼저 작성 (변경 불가능)
+
+2. **Phase 2**: 충돌 해결 ADR (106-110)
+   - 외부 제약 기반 해결책
+
+3. **Phase 3**: 핵심 기술 스택 ADR (111-115)
+   - Bootstrap + Domain 주요 기술
+
+4. **Phase 4**: 설계 ADR (116-125)
+   - 데이터, API 설계
+
+5. **Phase 5**: Bootstrap ADR (001-015)
+   - 공통 환경 요소
+
+6. **Phase 6**: 품질/보안 ADR (126-130)
+   - 마지막 (다른 ADR 참조)
+
+---
+
+## 🔄 다음 Stage로 전달되는 것
+
+Stage 3 → Stage 4:
+- ✅ 완성된 Bootstrap ADR (10-15개)
+- ✅ 완성된 Domain ADR (15-20개)
+- ✅ 모든 아키텍처 결정의 근거 문서화
+
+Stage 4에서는 이를 기반으로:
+- Bootstrap ADR을 바탕으로 DNA 기본시스템 청사진 작성
+- common/ 모듈 설계
+
+---
+
 ## 📍 전체 프로세스에서의 위치
 
 ```
 전체 프로세스:
 Stage 0: 아이디어
-Stage 1: 패밀리 구분 (01_CORE_DEFINITION_GUIDE.md) ✅
-Stage 2: 구조설계 (02_STRUCTURE_DESIGN_GUIDE.md) ✅
+Stage 1: 패밀리 구분 (01G-00_core_definition_guide.md) ✅
+Stage 2: 구조설계 (02G-00_structure_design_guide.md) ✅
 Stage 3: ADR 문서화 ← 이 가이드 ⭐
 Stage 4-5: Bootstrap 계획 및 실행
 Stage 6-9: Standards → Blueprint → 분해 → 구현
