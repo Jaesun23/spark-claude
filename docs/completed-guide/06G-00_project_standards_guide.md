@@ -1,6 +1,115 @@
 # 프로젝트 표준 문서 작성 가이드
 
-> **목적**: ADR 결정을 실행 가능한 표준 규칙으로 변환하여 Agent가 따를 수 있는 구체적 가이드를 제공합니다.
+> **목적**: Stage 6 - ADR 결정을 실행 가능한 표준 규칙으로 변환하여 Agent가 따를 수 있는 구체적 가이드를 제공합니다.
+>
+> **버전**: v2.0 (2025-11-12)
+> - v2.0: Stage 6 범위 명시, 입력/출력 문서 추가
+
+---
+
+## 📥 입력 문서 (Stage 3-5에서 받은 것)
+
+Stage 6를 시작하기 전에 다음 문서를 읽어야 합니다:
+
+#### 1. **모든 Bootstrap ADR** (필수)
+**위치**: `docs/adr/bootstrap/03A-001_*.md` ~ `03A-015_*.md`
+- 로깅, 에러 처리, 인증, 설정 등 공통 환경 결정
+- **활용**: Bootstrap 표준 규칙 작성
+
+#### 2. **모든 Domain ADR** (필수)
+**위치**: `docs/adr/domain/03A-101_*.md` ~ `03A-130_*.md`
+- 기술 스택, 데이터 설계, API 설계 등 프로젝트 특화 결정
+- **활용**: Domain 표준 규칙 작성
+
+#### 3. **구현된 common/ 모듈** (참고)
+**위치**: `src/common/` (Stage 4-5에서 구현됨)
+- 실제 공통 모듈 코드
+- **활용**: 모듈 사용 표준 작성
+
+---
+
+## 📤 출력 문서 (이 Stage에서 생성해야 할 문서)
+
+### 필수 문서
+
+#### 1. **`06D-01_project_standards.md`** - 프로젝트 표준 (THE 산출물)
+**내용**:
+- ADR 결정을 실행 가능한 규칙으로 변환
+- Agent가 직접 읽고 따를 수 있는 구체적 가이드
+- Mandatory vs Optional 구분
+
+**구조** (5개 섹션):
+```markdown
+# PROJECT STANDARDS
+
+## 1. Naming Conventions
+- File naming: snake_case, max 50 chars
+- Variable naming: camelCase
+- Class naming: PascalCase
+- Examples: ✅ DO / ❌ DON'T
+
+## 2. Code Organization
+- Directory structure
+- Module boundaries
+- Import rules
+
+## 3. Common Modules Usage
+- Mandatory: MUST use common.logging
+- Examples: ✅ DO / ❌ DON'T
+
+## 4. Quality Standards
+- Test coverage: 95%+ unit, 85%+ integration
+- Linting: ruff, mypy
+- Format: black
+
+## 5. Development Workflow
+- Git commit convention
+- PR rules
+- Review criteria
+```
+
+**예시**:
+```markdown
+## 3. Common Modules Usage
+
+### 3.1 Logging (Mandatory)
+**Rule**: MUST use `common.logging.get_logger()`
+
+✅ **DO**:
+```python
+from common.logging import get_logger
+logger = get_logger(__name__)
+logger.info("Order created", order_id=order.id)
+```
+
+❌ **DON'T**:
+```python
+import logging  # FORBIDDEN!
+logger = logging.getLogger(__name__)
+```
+
+**Enforcement**: Pre-commit hook blocks `import logging`
+**Reference**: ADR-001 Logging Strategy
+```
+
+**특징**:
+- ✅ DO / ❌ DON'T 예시 필수
+- Enforcement 방법 명시
+- ADR 참조 링크
+
+---
+
+## 🔄 다음 Stage로 전달되는 것
+
+Stage 6 → Stage 7:
+- ✅ 완성된 프로젝트 표준 문서
+- ✅ Mandatory vs Optional 구분
+- ✅ Agent가 따를 구체적 규칙
+- ✅ Enforcement 방법
+
+Stage 7 (Blueprint)에서는 이를 기반으로:
+- 표준 규칙을 적용한 상세 청사진 작성
+- 도메인별 구현 가이드에 표준 반영
 
 ---
 

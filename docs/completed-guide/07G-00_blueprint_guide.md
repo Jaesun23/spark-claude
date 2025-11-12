@@ -1,10 +1,87 @@
 # Blueprint (청사진) 작성 가이드
 
-> **목적**: ADR과 범용 표준을 바탕으로 전체 시스템 설계를 구체화하는 방법
+> **목적**: Stage 7 - ADR과 프로젝트 표준을 바탕으로 전체 시스템 설계를 초상세하게 구체화
 >
-> **기반**: [CORE_METHODOLOGY.md](./CORE_METHODOLOGY.md) Section 1 (Stage 4: Blueprint)
->
-> **버전**: v1.0 (2025-01-10)
+> **버전**: v2.0 (2025-11-12)
+> - v2.0: Stage 7 범위 명시, 입력/출력 문서 추가
+
+---
+
+## 📥 입력 문서 (Stage 6에서 받은 것)
+
+#### 1. **`06D-01_project_standards.md`** (필수)
+- 프로젝트 표준 규칙
+- **활용**: 청사진에 표준 반영
+
+#### 2. **모든 ADR** (참고)
+- Bootstrap ADR, Domain ADR
+- **활용**: 결정의 근거 확인
+
+#### 3. **Stage 2 산출물** (참고)
+- 아키텍처 다이어그램, 데이터 스키마, API 설계
+- **활용**: 상세화의 기반
+
+---
+
+## 📤 출력 문서 (이 Stage에서 생성해야 할 문서)
+
+### 필수 문서
+
+#### 1. **`07B-01_project_blueprint.md`** - 프로젝트 청사진 (THE 산출물)
+**내용**:
+- 초상세 전체 시스템 청사진
+- 도메인별 구현 가이드
+- 모든 컴포넌트, API, 데이터 흐름
+
+**구조**:
+```markdown
+# PROJECT BLUEPRINT
+
+## 1. System Architecture
+- 전체 시스템 구조
+- 레이어별 구조
+- 컴포넌트 다이어그램
+
+## 2. Domain Structure
+- 도메인 모델
+- 도메인별 경계
+- 도메인 간 관계
+
+## 3. Data Layer
+- 전체 데이터 스키마 (상세)
+- 테이블 관계
+- 인덱스 전략
+
+## 4. API Layer
+- 모든 엔드포인트 (상세)
+- 요청/응답 스키마
+- WebSocket 프로토콜
+
+## 5. Domain Implementation Guides
+### 5.1 Order Domain
+- 구현해야 할 기능 목록
+- 기술 스택 활용 방법
+- 최신 기법 적용
+
+### 5.2 Portfolio Domain
+...
+```
+
+#### 2. **`07S-01_domain_diagrams/`** (선택적)
+- 도메인별 상세 다이어그램
+
+---
+
+## 🔄 다음 Stage로 전달되는 것
+
+Stage 7 → Stage 8:
+- ✅ 초상세 청사진
+- ✅ 도메인별 구현 가이드
+- ✅ 모든 컴포넌트, API, 데이터 설계
+
+Stage 8 (Task Breakdown)에서는:
+- 청사진을 AI가 집중 구현할 크기로 분할
+- 4시간 이내 완료 가능한 작업 단위
 
 ---
 

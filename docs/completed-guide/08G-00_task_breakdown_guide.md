@@ -1,10 +1,86 @@
 # Task Breakdown 작성 가이드
 
-> **목적**: Blueprint(5000줄)를 AI가 처리 가능한 Task 단위(100줄)로 분해하는 방법
+> **목적**: Stage 8 - Blueprint(초상세)를 AI가 집중 구현 가능한 Task 단위로 분해
 >
-> **기반**: [CORE_METHODOLOGY.md](./CORE_METHODOLOGY.md) Section 2
->
-> **버전**: v1.0 (2025-01-09)
+> **버전**: v2.0 (2025-11-12)
+> - v2.0: Stage 8 범위 명시, 입력/출력 문서 추가
+
+---
+
+## 📥 입력 문서 (Stage 7에서 받은 것)
+
+#### 1. **`07B-01_project_blueprint.md`** (필수)
+- 초상세 프로젝트 청사진 (수천 줄)
+- **활용**: 작업 분해의 기반
+
+#### 2. **`06D-01_project_standards.md`** (참고)
+- 프로젝트 표준
+- **활용**: 작업별 표준 반영
+
+---
+
+## 📤 출력 문서 (이 Stage에서 생성해야 할 문서)
+
+### 필수 문서
+
+#### 1. **`08T-01_task_breakdown.md`** - 작업 분해 (THE 산출물)
+**내용**:
+- AI가 4시간 이내 완료 가능한 작업 단위
+- 독립적으로 테스트 가능
+- Necessary Information Only
+
+**구조**:
+```markdown
+# TASK BREAKDOWN
+
+## Task 001: Order Entity 구현
+**목표**: Order 엔티티 클래스 및 DB 모델 구현
+**예상 시간**: 2-3시간
+**의존성**: 없음
+
+### 입력
+- ADR-116: Order Schema Design
+- 표준: Naming, Validation 규칙
+
+### 출력
+- `src/domains/order/models.py`
+- 단위 테스트 (95%+ 커버리지)
+
+### 제약
+- MUST use Pydantic BaseModel
+- UUID for primary key
+
+### 참고
+- Blueprint Section 3.2
+
+---
+
+## Task 002: Order Repository 구현
+**목표**: Order CRUD 작업
+**예상 시간**: 3-4시간
+**의존성**: Task 001
+
+...
+```
+
+**특징**:
+- 1개 Task = 1개 파일 또는 1개 기능
+- 4시간 이내 완료 크기
+- 독립 테스트 가능
+- 명확한 입력/출력
+
+---
+
+## 🔄 다음 Stage로 전달되는 것
+
+Stage 8 → Stage 9:
+- ✅ 작업 목록 (Task 001~N)
+- ✅ 각 작업의 목표, 시간, 의존성
+- ✅ 우선순위
+
+Stage 9 (Checklist)에서는:
+- 각 Task마다 TDD 9-Step 체크리스트 생성
+- 단계별 실행 가이드
 
 ---
 
