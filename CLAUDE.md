@@ -250,9 +250,46 @@ docs/
 └── references/  (backup and reference materials)
 ```
 
-## 📋 Current Project Status (2025-11-10)
+## 📋 Current Project Status (2025-11-12)
 
-### Active Work: Stage 1-2 Guide Development
+### ✅ Completed: Stage 1-3 Validation (2025-11-12)
+
+**Phase 2**: 주식 거래 플랫폼 사례 연구 완료
+
+**완료된 작업**:
+- ✅ **Stage 1**: 아키텍처 패밀리 결정 (A-C-A 패턴 발견!)
+  - Part 0: 핵심 기능 파악 (거래 = 1개 기능, 수동/자동 = 구현 방식)
+  - Part 1-2: Layer 1-2 분석 (A-C-A + NFR A-B-B-A)
+
+- ✅ **Stage 2**: 환경 제약 및 구현 결정
+  - Part 1: Layer 3 외부 제약 (증권사 API 6개 비교, 금융 규제 조사)
+  - Part 2: 충돌 패턴 발견 (3개 충돌 식별)
+  - Part 3: 5단계 구현방법 (기능→속성→제약→기술→설계)
+
+- ✅ **Stage 3**: ADR 작성
+  - 전체 목록: 18개 (외부 제약, 충돌 해결, 기술 스택, 데이터/API 설계, 품질/보안)
+  - 예시 작성: 3개 (한국투자증권 선택, 하이브리드 아키텍처, FastAPI 선택)
+
+**핵심 발견**:
+1. **핵심 기능 판단 기준**: 구현 방식이 아닌 비즈니스 목적으로 구분
+2. **A-C-A 패밀리**: 새로운 아키텍처 패밀리 패턴 발견 (실시간 트랜잭션)
+3. **ADR 원칙**: "제약에 의한 결정도 ADR이다" (선택지가 1개여도 기록)
+4. **속성 질문**: NFR 프로파일 → 구체적 수치 → 기술 선택 (SEI ADD 원칙)
+
+**생성된 문서**:
+- `docs/session-summaries/20251112_Phase2_복합시스템_도전.md` (1,770줄)
+- `docs/session-summaries/20251112_핵심기능_판단기준.md` (240줄)
+- `docs/session-summaries/20251112_Layer3_외부제약조사.md` (680줄)
+
+**다음 작업 (Next Session)**:
+- 가이드 재구성: 지침/템플릿 vs 해설서 vs 사례집 분리
+  - `02_ARCHITECTURE_DECISION_GUIDE.md`: 간결한 체크리스트 + 템플릿
+  - `02-1_ARCHITECTURE_DECISION_MANUAL.md`: 상세 해설
+  - `02-2_IMPLEMENTATION_CASES.md`: Case 4 추가 (A-C-A)
+
+---
+
+### Previous Work: Stage 1-2 Guide Development (2025-11-10)
 
 **Goal**: Create methodology guide for "Idea → Blueprint" stage (upward consolidation process)
 
