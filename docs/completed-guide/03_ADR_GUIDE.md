@@ -1,11 +1,106 @@
 # ADR (Architecture Decision Records) 작성 가이드
 
-> **목적**: 아키텍처 결정을 문서화하고 시스템 강제(System Enforcement)로 전환하는 방법을 정의합니다.
+> **목적**: Stage 3 - 모든 아키텍처 결정을 문서화하고 시스템 강제(System Enforcement)로 전환
+>
+> **버전**: v2.0 (2025-11-12)
+> - v2.0: Stage 3 범위 명시 (Bootstrap vs 도메인 ADR 구분)
+> - v1.0: ADR 작성 방법론 확립
+
+---
+
+## 📚 이 가이드의 구성
+
+- **이 문서** (Guide): ADR 작성 방법 + 템플릿
+- **사례집** (Cases): 실전 ADR 예시 → `IMPLEMENTATION_CASES.md`
+
+---
+
+## 📍 전체 프로세스에서의 위치
+
+```
+전체 프로세스:
+Stage 0: 아이디어
+Stage 1: 패밀리 구분 (01_CORE_DEFINITION_GUIDE.md) ✅
+Stage 2: 구조설계 (02_STRUCTURE_DESIGN_GUIDE.md) ✅
+Stage 3: ADR 문서화 ← 이 가이드 ⭐
+Stage 4-5: Bootstrap 계획 및 실행
+Stage 6-9: Standards → Blueprint → 분해 → 구현
+```
+
+---
+
+## Stage 2에서 받은 입력
+
+Stage 2 완료 후 확정된 것:
+- ✅ **외부 제약** (API, 규제, 배포환경)
+- ✅ **충돌 패턴** (NFR vs 제약)
+- ✅ **기술 스택** (언어, DB, 프레임워크)
+- ✅ **아키텍처** (구조, 통신, 배포)
+
+Stage 3의 목표:
+- 🔄 **Bootstrap ADR 작성** (전 프로젝트 공통)
+- 🔄 **도메인 ADR 작성** (프로젝트 특화)
+- 🔄 **ADR 원칙 적용** (제약도 ADR이다!)
+
+---
+
+## Bootstrap ADR vs 도메인 ADR ⭐
+
+### Bootstrap ADR (전 프로젝트 공통)
+
+**정의**: `common/` 모듈 관련 결정, 모든 프로젝트에서 재사용
+
+**예시**:
+- **ADR-001**: Python 3.11+ 사용
+- **ADR-002**: structlog 사용 (로깅)
+- **ADR-003**: Pydantic 사용 (검증)
+- **ADR-004**: pytest + 95% coverage
+- **ADR-005**: ruff + mypy (품질 도구)
+- **ADR-006**: Clean Architecture 적용
+
+**특징**:
+- common/ 폴더에 위치
+- 여러 프로젝트에서 import
+- 한 번 결정 → 모든 곳에 적용
+
+---
+
+### 도메인 ADR (프로젝트 특화)
+
+**정의**: 특정 프로젝트만의 고유한 결정
+
+**주식 거래 플랫폼 예시**:
+- **ADR-101**: 한국투자증권 선택 (vs 키움, 이베스트)
+- **ADR-102**: 하이브리드 아키텍처 (WebSocket + Polling)
+- **ADR-103**: FastAPI 선택
+- **ADR-104**: PostgreSQL + Redis
+- **ADR-105**: Human-in-the-loop 주문 검증
+
+**특징**:
+- 프로젝트 폴더에 위치
+- 다른 프로젝트에 영향 없음
+- 프로젝트별 요구사항 반영
+
+---
+
+### ADR 번호 체계
+
+```
+Bootstrap ADR: 001-099
+- ADR-001 ~ ADR-050: 기술 스택, 도구
+- ADR-051 ~ ADR-099: 아키텍처 패턴
+
+도메인 ADR: 100+
+- 프로젝트별로 100번대부터 시작
+- memory: ADR-100, ADR-101, ...
+- trading: ADR-100, ADR-101, ...
+```
 
 ---
 
 ## 목차
 
+0. [Bootstrap vs 도메인 ADR](#bootstrap-adr-vs-도메인-adr-) ⭐
 1. [ADR이란 무엇인가](#1-adr이란-무엇인가)
 2. [ADR의 5가지 유형](#2-adr의-5가지-유형)
 3. [ADR 7개 섹션 템플릿](#3-adr-7개-섹션-템플릿)
