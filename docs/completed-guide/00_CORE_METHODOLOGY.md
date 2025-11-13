@@ -355,7 +355,7 @@ def logout(token: str) -> LogoutResponse:
     # ...
 
 → 같은 스타일, 같은 도구, 같은 구조!
-→ Bootstrap이 이 일관성을 강제!
+→ DNA 시스템이 이 일관성을 강제!
 ```
 
 **2️⃣ 누락없음 (No Omissions)**
@@ -455,7 +455,7 @@ from common.logging import get_logger  # ✅ 같은 structlog
 from common.types import LogoutRequest  # ✅ 같은 Pydantic
 logger = get_logger()
 
-→ 일관성 유지! Bootstrap이 강제!
+→ 일관성 유지! DNA 시스템이 강제!
 
 # ❌ 일관성 없음
 
@@ -622,8 +622,8 @@ Task 2: Logout (structlog 사용)
 Task 3: Refresh (print 사용)
 → 세 가지 다른 로깅!
 
-# ✅ 해결: Bootstrap으로 강제
-Bootstrap에서 common/logging/ 구축
+# ✅ 해결: DNA 시스템으로 강제
+DNA 시스템에서 common/logging/ 구축
 → 모든 Task가 get_logger() 사용
 → pre-commit hook이 print() 차단
 → 일관성 강제!
@@ -751,29 +751,29 @@ Task T2.1.1 작업 지시서:
 
 ---
 
-## 3. Bootstrap 철학
+## 3. DNA 시스템 철학
 
-### Bootstrap 없이 시작한 프로젝트의 교훈
+### DNA 시스템 없이 시작한 프로젝트의 교훈
 
 **"알고 있어도 안 하면 붕괴한다"**
 
 ```python
-bootstrap_없이_시작한_사례 = {
+DNA 시스템_없이_시작한_사례 = {
     "결과": "1,362개 아키텍처 위반으로 프로젝트 붕괴",
-    "원인": "Bootstrap 없이 바로 도메인 구현 시작",
+    "원인": "DNA 시스템 없이 바로 도메인 구현 시작",
     "교훈": "기초가 부실하면 나중에 고칠 수 없다"
 }
 ```
 
-### Bootstrap의 본질
+### DNA 시스템의 본질
 
-**Bootstrap = "환경 만들기" = "강제 시스템 준비"**
+**DNA 시스템 = "환경 만들기" = "강제 시스템 준비"**
 
 > "본격적인 작업(도메인 구현) 전에 일관성과 품질을 강제할 환경을 구축하는 단계"
 
-### 왜 Bootstrap이 필요한가?
+### 왜 DNA 시스템이 필요한가?
 
-#### ❌ Bootstrap 없이 바로 작업 시작
+#### ❌ DNA 시스템 없이 바로 작업 시작
 ```python
 Task 1: 개발자 A
 - print("User logged in")  # print() 사용
@@ -788,9 +788,9 @@ Task 3: 개발자 C
 → 일관성 붕괴!
 ```
 
-#### ✅ Bootstrap 완료 후 작업 시작
+#### ✅ DNA 시스템 완료 후 작업 시작
 ```python
-# Bootstrap에서 common/logging/ 구축
+# DNA 시스템에서 common/logging/ 구축
 # Pre-commit hook: print() 감지 시 차단
 
 Task 1: 개발자 A
@@ -807,7 +807,7 @@ Task 3: 개발자 C
 → 시스템이 일관성을 강제!
 ```
 
-### Bootstrap에서 준비하는 4가지
+### DNA 시스템에서 준비하는 4가지
 
 #### 1️⃣ DNA의 8개 시스템 (생물학적 은유)
 
@@ -918,7 +918,7 @@ common/
     └── validators.py # 검증
 ```
 
-### Bootstrap 실행 순서
+### DNA 시스템 실행 순서
 
 ```yaml
 1단계: 땅 고르기 (Architecture Foundation)
@@ -945,14 +945,14 @@ common/
   - .env.example 생성
   - 첫 Hello World 작동 (GET /health)
 
-5단계: 품질 검증 (Bootstrap Gate)
+5단계: 품질 검증 (DNA 시스템 Gate)
   - MyPy 0 오류 확인
   - pytest 첫 테스트 통과
   - Import Linter 0 violations
   - ruff check 0 violations
 ```
 
-### Bootstrap 성공 vs 실패
+### DNA 시스템 성공 vs 실패
 
 #### ❌ 실패: 직접 만들기
 ```python
@@ -969,7 +969,7 @@ Day 16: 개발 중단
 Day 1 09:00: 표준 도구 설치 (1시간)
 Day 1 10:00: common/ 모듈 구축 (2시간)
 Day 1 12:00: 첫 API 엔드포인트 작동!
-Day 1 14:00: Bootstrap Gate 통과!
+Day 1 14:00: DNA 시스템 Gate 통과!
 Day 1 15:00: Domain별 구현 시작
 
 → 검증된 기계를 설치하고 바로 생산 시작
@@ -980,42 +980,42 @@ Day 1 15:00: Domain별 구현 시작
 > "10만평 공장을 지을 건데, 1평짜리 콘크리트 방에서 공장 구현하라고 하면 가능한가?"
 
 ```
-Bootstrap = 땅 고르기 + 기계 설치 + 전력 연결 + 첫 가동
+DNA 시스템 = 땅 고르기 + 기계 설치 + 전력 연결 + 첫 가동
 
 1. 땅 고르기: Layer 구조, Import Linter
 2. 기계 설치: Pydantic, structlog, pytest, FastAPI
 3. 전력 연결: common/ 모듈, 설정 통합
-4. 첫 가동: GET /health 작동, Bootstrap Gate 통과
+4. 첫 가동: GET /health 작동, DNA 시스템 Gate 통과
 
 제품 생산(도메인 구현)은 그 다음!
 ```
 
-### Bootstrap vs 청사진
+### DNA 시스템 vs 청사진
 
-| | Bootstrap (Stage 2-3) | 청사진 (Stage 4) |
+| | DNA 시스템 (Stage 2-3) | 청사진 (Stage 4) |
 |---|---|---|
 | 목적 | **환경 구축** (일관성 강제 준비) | **완성 그림** (모든 레고블럭 명세) |
 | 범위 | 공통 인프라 (모든 Task 공유) | 도메인 로직 (프로젝트 고유) |
-| 시점 | **Blueprint 작성 전** (필수 선행!) | **Bootstrap 구현 완료 후** |
-| 작성 | Stage 2: 계획 문서 → Stage 3: 구현 | Bootstrap 환경 기반으로 작성 |
+| 시점 | **Blueprint 작성 전** (필수 선행!) | **DNA 시스템 구현 완료 후** |
+| 작성 | Stage 2: 계획 문서 → Stage 3: 구현 | DNA 시스템 환경 기반으로 작성 |
 | 내용 | 도구, 구조, 표준 모듈 | 비즈니스 로직, API, 시나리오 |
 | 예시 | "common/logging 구현" | "`from common.logging import get_logger` 사용" |
-| 완성 기준 | Bootstrap Gate 통과 | 모든 레고블럭 명세 완료 |
+| 완성 기준 | DNA 시스템 Gate 통과 | 모든 레고블럭 명세 완료 |
 
 **핵심 차이**:
-- **Bootstrap**: "어떻게 만들 것인가" (How) - 도구와 방법
+- **DNA 시스템**: "어떻게 만들 것인가" (How) - 도구와 방법
 - **청사진**: "무엇을 만들 것인가" (What) - 기능과 로직
 
-**중요: 왜 Bootstrap이 먼저 구현되어야 하나?**
+**중요: 왜 DNA 시스템이 먼저 구현되어야 하나?**
 
 ```markdown
-# ❌ Bootstrap 구현 전에 청사진 작성
+# ❌ DNA 시스템 구현 전에 청사진 작성
 Task T2.1.1: Login 엔드포인트
 - 로깅은... 뭘 쓰지? (아직 모름)
 - 타입은... 뭘 쓰지? (아직 모름)
 → 추상적인 청사진!
 
-# ✅ Bootstrap 구현 후에 청사진 작성
+# ✅ DNA 시스템 구현 후에 청사진 작성
 Task T2.1.1: Login 엔드포인트
 - `from common.logging import get_logger` ← 구체적!
 - `from common.types import LoginRequest` ← 구체적!
@@ -1023,7 +1023,7 @@ Task T2.1.1: Login 엔드포인트
 → 구체적인 청사진!
 ```
 
-**Bootstrap = 공장, Blueprint = 제품 설계도**
+**DNA 시스템 = 공장, Blueprint = 제품 설계도**
 - 공장이 먼저 있어야 제품 설계도를 구체적으로 그릴 수 있어요!
 
 ---
@@ -1041,32 +1041,32 @@ Stage 1: 프로젝트 계획
   - 표준 도구 선택 결정
   → Jason + 1호/2호 대화
 
-Stage 2: Bootstrap 계획 문서
+Stage 2: DNA 시스템 계획 문서
   - DNA 8개 시스템 설계
   - Layer 구조 정의
   - 표준 도구 스택 결정
   - common/ 표준 모듈 설계
-  - Bootstrap Gate 기준 정의
+  - DNA 시스템 Gate 기준 정의
   → "어떤 환경을 구축할지" 문서화
 
-Stage 3: Bootstrap 구현 ⭐ (핵심!)
+Stage 3: DNA 시스템 구현 ⭐ (핵심!)
   - DNA 8개 시스템 구축
   - Layer 구조 설정
   - 표준 도구 설치 및 설정
   - common/ 표준 모듈 구현
-  - Bootstrap Gate 통과 (필수!)
+  - DNA 시스템 Gate 통과 (필수!)
   → "강제할 환경" 구현 완료!
   → 이제 common/ 모듈 다 있음!
 
 Stage 4: 도메인별 청사진 (완성 그림)
-  ⚠️ Bootstrap 구현 (Stage 3) 완료 후에만 가능!
-  - Bootstrap 환경 기반으로 작성
+  ⚠️ DNA 시스템 구현 (Stage 3) 완료 후에만 가능!
+  - DNA 시스템 환경 기반으로 작성
   - 모든 레고블럭(Task) 명세
   - 구체적인 예시 코드 포함
     예: `from common.logging import get_logger`
   - 각 블럭의 완성 기준 정의
   - 5000줄+ 초상세 계획
-  → Bootstrap 환경에서 구체적으로 작성 가능!
+  → DNA 시스템 환경에서 구체적으로 작성 가능!
 
 ──────────────────────────────────────
 ⬇️ SPARK 시작 가능 지점 ⬇️
@@ -1090,7 +1090,7 @@ Stage 6: 체크리스트 작성 (Checklist)
 
 Stage 7: 도메인 구현 (Domain Implementation)
   - 체크리스트 기반 실행
-  - Bootstrap 환경이 일관성 강제
+  - DNA 시스템 환경이 일관성 강제
   - Quality Gates 검증
   - 레고블럭 조립
   → SPARK 에이전트 실행, 시스템 강제
@@ -1111,7 +1111,7 @@ Stage 8: 시스템 최적화 (Optimization)
 - 프로젝트 목표 및 범위
 - 표준 도구 선택 결정 (FastAPI? Flask? / Pydantic? dataclass?)
 
-#### Stage 2: Bootstrap 계획 문서 (Bootstrap Planning)
+#### Stage 2: DNA 시스템 계획 문서 (DNA 시스템 Planning)
 **Who**: Jason + 1호/2호 대화
 **What**: 어떤 환경을 구축할지 문서화
 **Output**:
@@ -1122,11 +1122,11 @@ Stage 8: 시스템 최적화 (Optimization)
   - common/logging: 어떤 구조?
   - common/types: 어떤 Base 모델?
   - common/errors: 어떤 예외들?
-- Bootstrap Gate 기준 정의
+- DNA 시스템 Gate 기준 정의
 
 **예시 문서**:
 ```markdown
-# Bootstrap 계획
+# DNA 시스템 계획
 
 ## common/logging
 - get_logger() 함수 제공
@@ -1143,7 +1143,7 @@ Stage 8: 시스템 최적화 (Optimization)
 - DomainError (비즈니스 로직 에러)
 ```
 
-#### Stage 3: Bootstrap 구현 ⭐ (Bootstrap Implementation)
+#### Stage 3: DNA 시스템 구현 ⭐ (DNA 시스템 Implementation)
 **Who**: Jason + 1호/2호 대화 또는 SPARK designer-spark
 **What**: 일관성 강제 환경 실제 구축
 **Why 중요**: Blueprint 작성 전에 필수!
@@ -1178,10 +1178,10 @@ class HTTPError(BaseError): pass
 def health():
     return {"status": "ok"}
 
-# Day 1 14:00: Bootstrap Gate 통과!
+# Day 1 14:00: DNA 시스템 Gate 통과!
 ```
 
-**Bootstrap Gate**:
+**DNA 시스템 Gate**:
 ```bash
 ✓ Import Linter 0 violations
 ✓ 중앙 로거 작동 (get_logger)
@@ -1195,8 +1195,8 @@ def health():
 
 #### Stage 4: 도메인별 청사진 (Blueprint)
 **Who**: Jason + 1호/2호 대화
-**When**: ⚠️ Bootstrap 구현 (Stage 3) 완료 후!
-**What**: Bootstrap 환경 기반으로 모든 레고블럭 명세
+**When**: ⚠️ DNA 시스템 구현 (Stage 3) 완료 후!
+**What**: DNA 시스템 환경 기반으로 모든 레고블럭 명세
 **Why Stage 3 후**: common/ 모듈이 있어야 구체적 예시 작성 가능
 
 **Output**:
@@ -1215,7 +1215,7 @@ def health():
 
 ### 구현 명세
 ```python
-# ✅ Bootstrap 구현 완료했으니 구체적으로 쓸 수 있어요!
+# ✅ DNA 시스템 구현 완료했으니 구체적으로 쓸 수 있어요!
 from common.logging import get_logger  # ← 이미 있음!
 from common.types import BaseRequest, BaseResponse  # ← 이미 있음!
 from common.errors import InvalidCredentialsError  # ← 이미 있음!
@@ -1238,7 +1238,7 @@ def login(request: LoginRequest) -> LoginResponse:
 
 ### 테스트
 ```python
-# ✅ pytest도 Bootstrap에서 설정했으니 구체적으로 쓸 수 있어요!
+# ✅ pytest도 DNA 시스템에서 설정했으니 구체적으로 쓸 수 있어요!
 def test_login_success():
     response = client.post("/auth/login", json={
         "email": "test@example.com",
@@ -1248,7 +1248,7 @@ def test_login_success():
 ```
 ```
 
-**핵심**: Bootstrap 없었으면 이렇게 구체적으로 못 써요!
+**핵심**: DNA 시스템 없었으면 이렇게 구체적으로 못 써요!
 
 #### Stage 5: 작업분해 (Task Breakdown)
 **Who**: SPARK 자동화 가능
@@ -1622,7 +1622,7 @@ Task T2.1.1 체크리스트:
 **Who**: SPARK 에이전트 (implementer-spark, tester-spark)
 **What**: 체크리스트 기반 구현, 시스템 강제
 **How**:
-- Bootstrap 환경이 일관성 강제
+- DNA 시스템 환경이 일관성 강제
 - Pre-commit hook이 위반 차단
 - Quality Gates가 품질 검증
 - 레고블럭 완성 및 조립
@@ -1655,8 +1655,8 @@ if violations_total != 0:
 ```
 Stage 1-4: Jason + 1호/2호 대화
 - Stage 1: 프로젝트 계획 (ADR, 도구 선택)
-- Stage 2: Bootstrap 계획 (환경 설계)
-- Stage 3: Bootstrap 구현 (환경 구축) ⭐
+- Stage 2: DNA 시스템 계획 (환경 설계)
+- Stage 3: DNA 시스템 구현 (환경 구축) ⭐
 - Stage 4: Blueprint 작성 (도메인 설계)
 → 결정, 맥락, 전체 그림 필요
 → SPARK 역할 없음 (인간 판단 영역)
@@ -1743,7 +1743,7 @@ def user_service():
 
 ---
 
-## 6. Bootstrap Gate (통과 필수!)
+## 6. DNA 시스템 Gate (통과 필수!)
 
 ### 철학
 > "살아있지 않으면 진화할 수 없다"
@@ -1785,11 +1785,11 @@ def user_service():
 ✓ 설정 검증 로직
 ```
 
-### Bootstrap Gate 자동 검증
+### DNA 시스템 Gate 자동 검증
 
 ```bash
 #!/bin/bash
-# bootstrap-gate.sh
+# DNA 시스템-gate.sh
 
 # Import Linter 체크
 if [ $(import-linter | grep "violations: 0" | wc -l) -eq 0 ]; then
@@ -1809,7 +1809,7 @@ if ! mypy . --strict; then
     exit 1
 fi
 
-echo "✅ Bootstrap Gate 통과!"
+echo "✅ DNA 시스템 Gate 통과!"
 ```
 
 **원칙**: 통과할 때까지 Stage 4 (청사진 작성) 진행 불가
@@ -1971,7 +1971,7 @@ if "print(" in code:
 if domain_imports_infrastructure:
     BLOCK "❌ 의존성 방향 위반"
 
-# Bootstrap Gate
+# DNA 시스템 Gate
 if not exists("BLUEPRINT.md"):
     STOP "❌ Blueprint 없음"
 
@@ -1987,7 +1987,7 @@ Layer 1: 환경 강제 (작업 전)
 ├─ Blueprint 존재 확인
 ├─ 표준 문서 존재 확인
 ├─ 표준 도구 설치 확인
-└─ Bootstrap Gate 통과 확인
+└─ DNA 시스템 Gate 통과 확인
 → BLOCKING validation
 
 Layer 2: 단위 작업 집중 (작업 중)
@@ -2024,7 +2024,7 @@ Layer 4: 완료 검증 (작업 후)
 
 #### Q1: 이렇게 작업을 하기 위해서는 준비해야 할 것은 무엇인가?
 
-**A1: Bootstrap (환경 구축)**
+**A1: DNA 시스템 (환경 구축)**
 
 ```
 문제:
@@ -2033,12 +2033,12 @@ Layer 4: 완료 검증 (작업 후)
 - 각자 다른 에러 처리
 → 일관성 붕괴!
 
-해결: Bootstrap
+해결: DNA 시스템
 1. DNA 8개 시스템 구축 (골격계, 신경계, 면역계, ...)
 2. Layer 구조 설정 (domain/application/infrastructure)
 3. 표준 도구 설치 (Pydantic, structlog, pytest, FastAPI)
 4. common/ 표준 모듈 (logging, types, errors, api, config, db, security)
-5. Bootstrap Gate 통과 (모든 violations = 0)
+5. DNA 시스템 Gate 통과 (모든 violations = 0)
 
 → 일관성을 "시스템"이 강제!
 → 작업자는 정해진 도구만 사용 가능!
@@ -2105,7 +2105,7 @@ Q4: 청사진에서 누락? → 모든 Task 포함?
 
 Layer 1: 환경 강제 (작업 전)
 ├─ Blueprint 존재 확인 → 없으면 차단
-├─ Bootstrap Gate 통과 확인 → 미통과 시 차단
+├─ DNA 시스템 Gate 통과 확인 → 미통과 시 차단
 ├─ 표준 모듈 존재 확인 → 없으면 차단
 └─ 표준 도구 설치 확인 → 없으면 차단
 → 작업 시작 불가 조건 차단!
@@ -2139,7 +2139,7 @@ Layer 4: 완료 검증 (작업 후)
 ### 3가지 질문의 연결
 
 ```
-Q1: 준비? → Bootstrap (환경 구축)
+Q1: 준비? → DNA 시스템 (환경 구축)
       ↓
    일관성 강제 환경 완성
       ↓
@@ -2197,14 +2197,14 @@ Q3: 유지? → 4-Layer System (시스템 강제)
 - 누락 방지
 ```
 
-#### Bootstrap (환경 구축)
+#### DNA 시스템 (환경 구축)
 ```
 강제 시스템 준비
 - DNA 8개 시스템
 - Layer 구조
 - 표준 도구 설치
 - common/ 표준 모듈
-- Bootstrap Gate 통과 필수
+- DNA 시스템 Gate 통과 필수
 → 일관성을 "시스템"이 강제
 ```
 
@@ -2216,7 +2216,7 @@ Q3: 유지? → 4-Layer System (시스템 강제)
 - 같은 패턴 사용 (structlog, Pydantic, pytest)
 - 같은 도구 사용 (표준 도구만)
 - 같은 구조 사용 (domain/application/infrastructure)
-→ Bootstrap이 강제
+→ DNA 시스템이 강제
 ```
 
 **2️⃣ 누락없음 (No Omissions)**
@@ -2234,12 +2234,12 @@ Q3: 유지? → 4-Layer System (시스템 강제)
 [Human-Driven: Stage 1-4]
 Stage 1: 아키텍처 결정 → ADR
      ↓
-Stage 2: Bootstrap 계획 → 환경 설계 문서
+Stage 2: DNA 시스템 계획 → 환경 설계 문서
      ↓
-Stage 3: Bootstrap 구현 → 환경 구축 (일관성 강제 준비) ⭐
+Stage 3: DNA 시스템 구현 → 환경 구축 (일관성 강제 준비) ⭐
      ↓ 이제 common/ 모듈 다 있음!
 Stage 4: Blueprint 작성 → 모든 레고블럭 명세 (5000줄)
-     ↓ Bootstrap 환경 기반으로 구체적 작성 가능!
+     ↓ DNA 시스템 환경 기반으로 구체적 작성 가능!
 ──────────────────────────────────
      ↓ SPARK 시작
 ──────────────────────────────────
@@ -2250,7 +2250,7 @@ Stage 5: 작업분해 → Blueprint → Tasks (100줄)
 Stage 6: 체크리스트 → Task → 9-Step
      ↓ 자동화
 Stage 7: 도메인 구현 → Checklist 기반
-     ↓ 강제화 (Bootstrap 환경 + Quality Gates)
+     ↓ 강제화 (DNA 시스템 환경 + Quality Gates)
 Stage 8: 최적화 → violations_total = 0
      ↓ 강제화
 완성 → 레고블럭 조립
@@ -2263,7 +2263,7 @@ Stage 8: 최적화 → violations_total = 0
 ```
 Layer 1: 환경 강제 (작업 전)
 ├─ Blueprint 존재 확인
-├─ Bootstrap Gate 통과 확인
+├─ DNA 시스템 Gate 통과 확인
 ├─ 표준 모듈 존재 확인
 └─ 표준 도구 설치 확인
 → 환경 준비 검증
@@ -2294,7 +2294,7 @@ Layer 4: 완료 검증 (작업 후)
 ### 절대 잊으면 안 되는 것
 
 1. **바퀴 재발명 금지**: 표준 도구 선택하고 설정 (만들지 않음!)
-2. **Bootstrap Gate**: 통과 없이 Stage 4 (청사진 작성) 진행 불가 (강제 환경 준비)
+2. **DNA 시스템 Gate**: 통과 없이 Stage 4 (청사진 작성) 진행 불가 (강제 환경 준비)
 3. **Task = 레고블럭**: 라인 수가 아닌 기능 완성도로 판단
 4. **Blueprint 초상세**: 모든 레고블럭 명세 (누락 방지)
 5. **Task Breakdown 필수**: 5000줄 → 100줄 압축 (AI 컨텍스트 절약)
@@ -2307,7 +2307,7 @@ Layer 4: 완료 검증 (작업 후)
 ```
 표준 도구 우선 (바퀴 재발명 금지)
      ↓
-Bootstrap (환경 구축, Gate 통과)
+DNA 시스템 (환경 구축, Gate 통과)
      ↓
 Blueprint (모든 레고블럭 명세, 5000줄)
      ↓

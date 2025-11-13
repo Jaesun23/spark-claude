@@ -113,7 +113,7 @@
 ### 선택 문서
 
 #### 5. **`01C-03_family_matrix.md`** (선택적)
-- 패밀리별 Bootstrap 요소 매트릭스 참고
+- 패밀리별 DNA 시스템 요소 매트릭스 참고
 - `docs/family-tech-matrix/{패밀리}_tech_options.md` 링크
 
 ---

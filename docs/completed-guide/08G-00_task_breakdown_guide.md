@@ -107,7 +107,7 @@ Task = 100줄씩 분해  # AI가 처리 가능한 단위
 ### 두 가지 완성 조건
 
 **일관성 (Consistency)**:
-- 모든 Task가 같은 도구 사용 (Bootstrap 환경 기반)
+- 모든 Task가 같은 도구 사용 (DNA 시스템 환경 기반)
 - 모든 Task가 같은 패턴 따름
 - 모든 Task가 같은 표준 준수
 
@@ -304,14 +304,14 @@ Task T2.3.1: print()  # ❌ 완전히 다름!
 - 모든 설정은 pydantic-settings
 - 모든 테스트는 Given-When-Then
 
-**Bootstrap 환경 기반**:
+**DNA 시스템 환경 기반**:
 ```python
-# ✅ Bootstrap 환경 사용
+# ✅ DNA 시스템 환경 사용
 from common.logging import get_logger
 from common.config import settings
 
 # ❌ 커스텀 구현
-import logging  # Bootstrap에 없음!
+import logging  # DNA 시스템에 없음!
 ```
 
 ---
@@ -422,7 +422,7 @@ import logging  # Bootstrap에 없음!
 
 #### Section 2: 프로젝트 표준 참조
 
-**목적**: Bootstrap 환경의 어떤 부분을 사용하는가
+**목적**: DNA 시스템 환경의 어떤 부분을 사용하는가
 
 **핵심**: 800 lines 전체가 아닌, "이 Task 관련" 부분만 필터링!
 
@@ -521,8 +521,8 @@ Line 참조하기도 쉬움!
 ```
 
 **주의**:
-- Bootstrap에 설치된 도구만 사용
-- 새로운 도구가 필요하면 Bootstrap 재검토
+- DNA 시스템에 설치된 도구만 사용
+- 새로운 도구가 필요하면 DNA 시스템 재검토
 
 ---
 
@@ -777,7 +777,7 @@ def create_token(user_id: str) -> str:
 
 **주의**:
 - ✅ 실행 가능한 수준 (import 정확, 함수 호출 가능)
-- ✅ Bootstrap 환경 사용 (common.*)
+- ✅ DNA 시스템 환경 사용 (common.*)
 - ✅ 핵심 로직만 (40 lines)
 - ❌ 전체 에러 처리 포함 (Agent가 추가)
 - ❌ 모든 엣지 케이스 (Agent가 추가)
@@ -1034,7 +1034,7 @@ def test_create_token_TTL():
 ### Task 품질 검증
 - [ ] 각 Task는 200K 컨텍스트 내인가?
 - [ ] 각 Task는 의미있는 기능 단위인가? (독립 테스트 가능)
-- [ ] 모든 Task가 Bootstrap 환경 기반인가?
+- [ ] 모든 Task가 DNA 시스템 환경 기반인가?
 - [ ] 모든 Task가 9-section을 갖추었는가?
 
 ### 완성도 검증

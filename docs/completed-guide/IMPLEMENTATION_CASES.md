@@ -23,7 +23,7 @@ Stage 2: 구조설계
 └─ 5단계 구현방법
 
 Stage 3: ADR 문서화
-├─ Bootstrap ADR 목록
+├─ DNA 시스템 ADR 목록
 └─ 도메인 ADR 목록
 ```
 
@@ -209,7 +209,7 @@ Deployment:
 
 ### Stage 3: ADR 목록
 
-#### Bootstrap ADR (A-A-A 패밀리)
+#### DNA 시스템 ADR (A-A-A 패밀리)
 ```
 ADR-001: PostgreSQL 사용 (RDBMS 필수)
 ADR-002: ACID 트랜잭션 필수
@@ -333,7 +333,7 @@ Search: Elasticsearch (hybrid search)
 
 ### Stage 3: ADR 목록
 
-#### Bootstrap ADR (C-B-B)
+#### DNA 시스템 ADR (C-B-B)
 ```
 ADR-001: Vector DB 필수
 ADR-002: Embedding Model 필수
@@ -413,7 +413,7 @@ Real-time: y-websocket provider
 
 ### Stage 3: ADR
 
-#### Bootstrap ADR (B-A-A)
+#### DNA 시스템 ADR (B-A-A)
 ```
 ADR-001: CRDT 알고리즘 필수
 ADR-002: WebSocket 필수
@@ -713,7 +713,7 @@ Deployment:
 
 ### Stage 3: ADR 문서화
 
-#### Bootstrap ADR (A-C-A 패밀리)
+#### DNA 시스템 ADR (A-C-A 패밀리)
 
 **패밀리가 강제하는 필수 요소**:
 ```
@@ -867,7 +867,7 @@ A-C-A = 실시간 트랜잭션
 ## 다음 단계
 
 **사례집 완료 후**:
-1. 패밀리별 Bootstrap 요소 목록 정리
+1. 패밀리별 DNA 시스템 요소 목록 정리
 2. 패밀리 6개 → Guide에 반영
 3. Manual에 패밀리별 상세 설명 추가
 

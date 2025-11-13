@@ -39,8 +39,8 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 - **활용**: 구체적 기술 선택
 
 #### 5. **`docs/family-tech-matrix/{패밀리}_tech_options.md`** (참고)
-- 패밀리별 Bootstrap 요소 매트릭스
-- **활용**: Bootstrap vs Domain 구분
+- 패밀리별 DNA 시스템 요소 매트릭스
+- **활용**: DNA 시스템 vs Domain 구분
 
 ---
 
@@ -106,7 +106,7 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 
 #### 3. **`02D-01_tech_stack_decision.md`** - 기술 스택 확정
 **내용**:
-- Bootstrap 기술 스택 (패밀리 강제)
+- DNA 시스템 기술 스택 (패밀리 강제)
 - Domain 기술 스택 (프로젝트 특화)
 - 각 선택의 근거
 
@@ -114,7 +114,7 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 ```markdown
 # 기술 스택 확정
 
-## Bootstrap (A-C-A 패밀리 강제)
+## DNA 시스템 (A-C-A 패밀리 강제)
 - 실시간 통신: **WebSocket**
 - API: **FastAPI** (Python)
 - 캐시: **Redis**
@@ -206,7 +206,7 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 
 #### 7. **`02L-01_adr_list.md`** - ADR 작성 대상 목록
 **내용**:
-- 작성할 ADR 목록 (Bootstrap + Domain)
+- 작성할 ADR 목록 (DNA 시스템 + Domain)
 - 각 ADR의 결정 요약
 - 우선순위
 
@@ -214,7 +214,7 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 ```markdown
 # ADR 작성 대상 목록
 
-## Bootstrap ADR (001-015)
+## DNA 시스템 ADR (001-015)
 - ADR-001: 로깅 전략
 - ADR-002: 에러 처리 표준
 - ADR-003: 인증/인가 방식
@@ -244,7 +244,7 @@ Stage 2를 시작하기 전에 다음 문서를 읽어야 합니다:
 ## 🔄 다음 Stage로 전달되는 것
 
 Stage 2 → Stage 3:
-- ✅ 확정된 기술 스택 (Bootstrap + Domain)
+- ✅ 확정된 기술 스택 (DNA 시스템 + Domain)
 - ✅ 외부 제약 목록
 - ✅ 충돌 패턴 및 해결 방안
 - ✅ ADR 작성 대상 목록 (18-25개)
@@ -254,7 +254,7 @@ Stage 2 → Stage 3:
 
 Stage 3에서는 이를 기반으로:
 - 모든 결정을 ADR로 문서화
-- Bootstrap ADR (10-15개)
+- DNA 시스템 ADR (10-15개)
 - Domain ADR (15-20개)
 
 ---
@@ -267,7 +267,7 @@ Stage 0: 아이디어
 Stage 1: 패밀리 구분 (01_CORE_DEFINITION_GUIDE.md) ✅
 Stage 2: 구조설계 ← 이 가이드 ⭐
 Stage 3: ADR 문서화 (03_ADR_GUIDE.md)
-Stage 4-9: Bootstrap → Blueprint → 분해 → 구현
+Stage 4-9: DNA 시스템 → Blueprint → 분해 → 구현
 ```
 
 ---
@@ -852,7 +852,7 @@ Stage 2에서 결정된 내용:
 Stage 3에서 할 일:
 - 🔄 모든 중요 결정에 대한 ADR 작성
 - 🔄 제약도 ADR이다! (선택지가 1개여도 기록)
-- 🔄 Bootstrap ADR vs 도메인 ADR 구분
+- 🔄 DNA 시스템 ADR vs 도메인 ADR 구분
 
 **다음 문서**: `03_ADR_GUIDE.md`
 

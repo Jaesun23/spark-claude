@@ -3,7 +3,7 @@
 > **목적**: Stage 3 - 모든 아키텍처 결정을 문서화하고 시스템 강제(System Enforcement)로 전환
 >
 > **버전**: v2.0 (2025-11-12)
-> - v2.0: Stage 3 범위 명시 (Bootstrap vs 도메인 ADR 구분)
+> - v2.0: Stage 3 범위 명시 (DNA 시스템 vs 도메인 ADR 구분)
 > - v1.0: ADR 작성 방법론 확립
 
 ---
@@ -20,7 +20,7 @@
 Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
 
 #### 1. **`02D-01_tech_stack_decision.md`** (필수)
-- 확정된 Bootstrap 기술 스택
+- 확정된 DNA 시스템 기술 스택
 - 확정된 Domain 기술 스택
 - **활용**: ADR 작성 대상 파악
 
@@ -51,10 +51,10 @@ Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
 
 ### 필수 문서
 
-#### Bootstrap ADR (001-099)
-**위치**: `docs/adr/bootstrap/`
+#### DNA 시스템 ADR (001-099)
+**위치**: `docs/adr/dna-systems/`
 
-**Bootstrap ADR 목록** (전 프로젝트 공통 요소):
+**DNA 시스템 ADR 목록** (전 프로젝트 공통 요소):
 
 1. **`03A-001_logging_strategy.md`**
    - 로깅 레벨, 포맷, 저장소
@@ -193,7 +193,7 @@ Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
 **상태**: Accepted | Proposed | Deprecated
 **작성일**: YYYY-MM-DD
 **결정자**: {Team/Person}
-**태그**: #{bootstrap|domain}, #{tech-stack|data|api|...}
+**태그**: #{dna-systems|domain}, #{tech-stack|data|api|...}
 
 ---
 
@@ -246,12 +246,12 @@ Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
    - 외부 제약 기반 해결책
 
 3. **Phase 3**: 핵심 기술 스택 ADR (111-115)
-   - Bootstrap + Domain 주요 기술
+   - DNA 시스템 + Domain 주요 기술
 
 4. **Phase 4**: 설계 ADR (116-125)
    - 데이터, API 설계
 
-5. **Phase 5**: Bootstrap ADR (001-015)
+5. **Phase 5**: DNA 시스템 ADR (001-015)
    - 공통 환경 요소
 
 6. **Phase 6**: 품질/보안 ADR (126-130)
@@ -262,12 +262,12 @@ Stage 3를 시작하기 전에 다음 문서를 읽어야 합니다:
 ## 🔄 다음 Stage로 전달되는 것
 
 Stage 3 → Stage 4:
-- ✅ 완성된 Bootstrap ADR (10-15개)
+- ✅ 완성된 DNA 시스템 ADR (10-15개)
 - ✅ 완성된 Domain ADR (15-20개)
 - ✅ 모든 아키텍처 결정의 근거 문서화
 
 Stage 4에서는 이를 기반으로:
-- Bootstrap ADR을 바탕으로 DNA 기본시스템 청사진 작성
+- DNA 시스템 ADR을 바탕으로 DNA 기본시스템 청사진 작성
 - common/ 모듈 설계
 
 ---
@@ -280,7 +280,7 @@ Stage 0: 아이디어
 Stage 1: 패밀리 구분 (01G-00_core_definition_guide.md) ✅
 Stage 2: 구조설계 (02G-00_structure_design_guide.md) ✅
 Stage 3: ADR 문서화 ← 이 가이드 ⭐
-Stage 4-5: Bootstrap 계획 및 실행
+Stage 4-5: DNA 시스템 계획 및 실행
 Stage 6-9: Standards → Blueprint → 분해 → 구현
 ```
 
@@ -295,20 +295,20 @@ Stage 2 완료 후 확정된 것:
 - ✅ **아키텍처** (구조, 통신, 배포)
 
 Stage 3의 목표:
-- 🔄 **Bootstrap ADR 작성** (전 프로젝트 공통)
+- 🔄 **DNA 시스템 ADR 작성** (전 프로젝트 공통)
 - 🔄 **도메인 ADR 작성** (프로젝트 특화)
 - 🔄 **ADR 원칙 적용** (제약도 ADR이다!)
 
 ---
 
-## Bootstrap ADR vs 도메인 ADR ⭐
+## DNA 시스템 ADR vs 도메인 ADR ⭐
 
 > **⚠️ TODO (2025-11-12)**:
 > - 1호가 추가 패밀리 발견 및 명확한 구분 방법 확립
-> - Bootstrap ADR 정의 수정 필요:
+> - DNA 시스템 ADR 정의 수정 필요:
 >   - 현재: common/ 공통 요소 (잘못된 이해)
 >   - 올바름: 패밀리가 정한 시스템 구조에서 나오는 요소
-> - 패밀리별 Bootstrap 요소 목록 추가 예정
+> - 패밀리별 DNA 시스템 요소 목록 추가 예정
 
 ---
 
@@ -319,18 +319,18 @@ Stage 3의 목표:
    ↓
 2. 패밀리 → 시스템 구조 자동 결정
    ↓
-3. 시스템 구조에서 Bootstrap vs 도메인 요소 구분
-   - Bootstrap: 구조가 강제하는 요소
+3. 시스템 구조에서 DNA 시스템 vs 도메인 요소 구분
+   - DNA 시스템: 구조가 강제하는 요소
    - 도메인: 프로젝트 특화 요소
    ↓
-4. 도메인 특성 검토 → 추가 Bootstrap 요소 발견
+4. 도메인 특성 검토 → 추가 DNA 시스템 요소 발견
    ↓
-5. Bootstrap ADR + 도메인 ADR 작성
+5. DNA 시스템 ADR + 도메인 ADR 작성
 ```
 
 ---
 
-### Bootstrap ADR (시스템 구조 기반)
+### DNA 시스템 ADR (시스템 구조 기반)
 
 **정의**: 패밀리가 결정한 시스템 구조에서 자동으로 도출되는 요소
 
@@ -367,7 +367,7 @@ Stage 3의 목표:
 
 **특징**:
 - 프로젝트별 요구사항 반영
-- Bootstrap이 정한 범주 내에서 구체적 선택
+- DNA 시스템이 정한 범주 내에서 구체적 선택
 - 도메인 제약 조건 반영
 
 ---
@@ -375,20 +375,20 @@ Stage 3의 목표:
 ### ADR 번호 체계
 
 ```
-Bootstrap ADR: 001-099
+DNA 시스템 ADR: 001-099
 - 패밀리별 필수 구조 요소
 - 시스템 구조가 강제하는 결정
 
 도메인 ADR: 100+
 - 프로젝트별로 100번대부터 시작
-- Bootstrap 범주 내 구체적 선택
+- DNA 시스템 범주 내 구체적 선택
 ```
 
 ---
 
 ## 목차
 
-0. [Bootstrap vs 도메인 ADR](#bootstrap-adr-vs-도메인-adr-) ⭐
+0. [DNA 시스템 vs 도메인 ADR](#dna-시스템-adr-vs-도메인-adr-) ⭐
 1. [ADR이란 무엇인가](#1-adr이란-무엇인가)
 2. [ADR의 5가지 유형](#2-adr의-5가지-유형)
 3. [ADR 7개 섹션 템플릿](#3-adr-7개-섹션-템플릿)

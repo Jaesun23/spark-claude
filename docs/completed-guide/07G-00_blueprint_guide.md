@@ -14,7 +14,7 @@
 - **활용**: 청사진에 표준 반영
 
 #### 2. **모든 ADR** (참고)
-- Bootstrap ADR, Domain ADR
+- DNA 시스템 ADR, Domain ADR
 - **활용**: 결정의 근거 확인
 
 #### 3. **Stage 2 산출물** (참고)
@@ -752,7 +752,7 @@ def create_token(user_id: str, user_role: str) -> str:
 ### 구현 힌트 검증
 - [ ] Level 3 스켈레톤 (40 lines)
 - [ ] 실행 가능한 수준
-- [ ] Bootstrap 환경 사용 (common.*)
+- [ ] DNA 시스템 환경 사용 (common.*)
 - [ ] 전체 코드 아님 (에러 처리 등 제외)
 
 ### 전체 완성도 검증

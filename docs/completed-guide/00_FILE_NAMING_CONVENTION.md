@@ -177,8 +177,8 @@ ADR-fastapi.md
 
 **프로젝트 산출물** (`docs/adr/`):
 ```
-bootstrap/
-  03A-001_logging.md                      # Bootstrap ADR
+DNA 시스템/
+  03A-001_logging.md                      # DNA 시스템 ADR
   03A-002_error_handling.md
   03A-003_authentication.md
   03A-004_configuration.md
@@ -198,36 +198,36 @@ domain/
    ↓
 작업: 03G-00, 03M-01 참고
    ↓
-출력: 03A-001~015 (Bootstrap), 03A-101~120 (Domain)
+출력: 03A-001~015 (DNA 시스템), 03A-101~120 (Domain)
 ```
 
 **ADR 번호 규칙**:
-- **001~099**: Bootstrap ADR (공통 환경)
+- **001~099**: DNA 시스템 ADR (공통 환경)
 - **100~999**: Domain ADR (프로젝트 특화)
 
 ---
 
-### **Stage 4: Bootstrap 계획**
+### **Stage 4: DNA 시스템 계획**
 
 **가이드 문서**:
 ```
-04G-00_bootstrap_plan_guide.md            # Stage 4 간결 가이드
+04G-00_DNA 시스템_plan_guide.md            # Stage 4 간결 가이드
 04M-01_common_modules_manual.md           # 공통 모듈 해설
 ```
 
 **프로젝트 산출물**:
 ```
 04B-01_dna_system_blueprint.md            # DNA 기본시스템 청사진
-04L-01_bootstrap_checklist.md             # Bootstrap 체크리스트
+04L-01_DNA 시스템_checklist.md             # DNA 시스템 체크리스트
 ```
 
 ---
 
-### **Stage 5: Bootstrap 실행**
+### **Stage 5: DNA 시스템 실행**
 
 **가이드 문서**:
 ```
-05G-00_bootstrap_execution_guide.md       # Stage 5 간결 가이드
+05G-00_DNA 시스템_execution_guide.md       # Stage 5 간결 가이드
 ```
 
 **프로젝트 산출물**:
@@ -368,14 +368,14 @@ docs/
 │   └── ...
 │
 ├── adr/                       # Stage 3 산출물
-│   ├── bootstrap/
+│   ├── DNA 시스템/
 │   │   ├── 03A-001_logging.md
 │   │   └── ...
 │   └── domain/
 │       ├── 03A-101_*.md
 │       └── ...
 │
-├── bootstrap/                 # Stage 4-5 산출물
+├── DNA 시스템/                 # Stage 4-5 산출물
 │   ├── 04B-01_dna_system_blueprint.md
 │   └── ...
 │
@@ -462,7 +462,7 @@ CORE_METHODOLOGY.md
 02L-01_adr_list.md                # 작성할 ADR 18개
 
 # Stage 3: ADR
-03A-001_logging.md                # Bootstrap ADR 시작
+03A-001_logging.md                # DNA 시스템 ADR 시작
 ...
 03A-101_kis_api_selection.md      # Domain ADR 시작
 ...
