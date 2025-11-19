@@ -1,0 +1,23 @@
+{
+  "$schema": "DNA v4.0 Project Initialization",
+  "version": "1.0",
+  "project": {
+    "name": "",
+    "description": "",
+    "created_at": "",
+    "owner": "Jason"
+  },
+  "initial_idea": {
+    "raw_input": "",
+    "clarifications": []
+  },
+  "business_context": {
+    "domain": "",
+    "target_users": "",
+    "scale_expectation": "",
+    "budget_constraint": "",
+    "timeline": ""
+  },
+  "current_stage": 0,
+  "completed_stages": []
+}

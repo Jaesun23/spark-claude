@@ -1,0 +1,62 @@
+{
+  "$schema": "DNA v4.0 Stage 4 Output - Blueprint Design",
+  "version": "1.0",
+  "stage": 4,
+  "timestamp": "",
+  "domain_model": {
+    "bounded_contexts": [
+      {
+        "name": "",
+        "responsibility": "",
+        "entities": [],
+        "value_objects": [],
+        "aggregates": []
+      }
+    ],
+    "context_map": {
+      "relationships": []
+    }
+  },
+  "layer_design": {
+    "domain": {
+      "modules": [],
+      "dependencies": "none"
+    },
+    "application": {
+      "use_cases": [],
+      "dependencies": ["domain"]
+    },
+    "infrastructure": {
+      "implementations": [],
+      "dependencies": ["domain", "application"]
+    },
+    "presentation": {
+      "endpoints": [],
+      "dependencies": ["application"]
+    }
+  },
+  "api_design": {
+    "style": "",
+    "versioning": "",
+    "endpoints": [
+      {
+        "method": "",
+        "path": "",
+        "description": "",
+        "request": {},
+        "response": {}
+      }
+    ]
+  },
+  "bootstrap_mapping": {
+    "database_to_infrastructure": "",
+    "cache_to_infrastructure": "",
+    "messaging_to_infrastructure": ""
+  },
+  "dependency_rules": [
+    "Domain layer has no external dependencies",
+    "Application layer depends only on Domain",
+    "Infrastructure implements Domain interfaces",
+    "Presentation depends only on Application"
+  ]
+}

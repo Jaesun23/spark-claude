@@ -1,0 +1,46 @@
+{
+  "$schema": "DNA v4.0 Stage 1 Output - System Classification",
+  "version": "1.0",
+  "stage": 1,
+  "timestamp": "",
+  "family": {
+    "code": "",
+    "name": "",
+    "description": ""
+  },
+  "layer1_analysis": {
+    "Q1_failure_impact": {
+      "answer": "",
+      "evidence": ""
+    },
+    "Q2_data_format": {
+      "answer": "",
+      "evidence": ""
+    },
+    "Q3_response_time": {
+      "answer": "",
+      "evidence": ""
+    }
+  },
+  "nfr_priority": {
+    "order": [],
+    "rationale": ""
+  },
+  "validation_cases": [
+    {
+      "company": "",
+      "system": "",
+      "metric": "",
+      "source": ""
+    }
+  ],
+  "confidence": {
+    "level": "",
+    "concerns": []
+  },
+  "next_stage_input": {
+    "family_code": "",
+    "nfr_top3": [],
+    "key_constraints": []
+  }
+}

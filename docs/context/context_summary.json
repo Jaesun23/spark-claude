@@ -1,0 +1,45 @@
+{
+  "$schema": "DNA v4.0 Context Summary - Cross-Stage Reference",
+  "version": "1.0",
+  "project_name": "Stock Trading Platform",
+  "current_stage": 1,
+  "completed_stages": [
+    1
+  ],
+  "core_decisions": {
+    "family": {
+      "code": "A-C-A",
+      "decided_at": "stage1"
+    },
+    "nfr_priority": {
+      "order": [
+        "Reliability",
+        "Performance",
+        "Security",
+        "Cost"
+      ],
+      "decided_at": "stage1"
+    },
+    "key_constraints": {
+      "items": [],
+      "decided_at": "stage2"
+    },
+    "tech_stack": {
+      "items": {},
+      "decided_at": "stage3"
+    }
+  },
+  "stage_outputs": {
+    "stage1": "docs/context/stage1_output.json",
+    "stage2": "docs/context/stage2_output.json",
+    "stage3": "docs/context/stage3_output.json",
+    "stage4": "docs/context/stage4_output.json"
+  },
+  "validation_status": {
+    "stage1": true,
+    "stage2": false,
+    "stage3": false,
+    "stage4": false
+  },
+  "last_updated": "2025-11-19T13:01:23.833028"
+}

@@ -38,14 +38,36 @@
       "Bash(03E-02_kent_beck_bplustree_case.md)",
       "Bash(mkdir:*)",
       "Bash(git -C /Users/jason/Projects/spark-claude status --short)",
-      "Bash(git -C /Users/jason/Projects/spark-claude status)"
+      "Bash(git -C /Users/jason/Projects/spark-claude status)",
+      "Bash(git push:*)",
+      "Bash(xargs:*)",
+      "Bash(done)",
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Skill(skill-creator)",
+      "Bash(git -C /Users/jason/Projects/spark-claude diff --stat)",
+      "Bash(git -C /Users/jason/Projects/spark-claude log --oneline -5)"
     ],
     "deny": [],
     "ask": []
   },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/update_context_summary.py",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  },
   "outputStyle": "korean-companion",
   "sandbox": {
-    "autoAllowBashIfSandboxed": false,
-    "enabled": false
+    "enabled": false,
+    "autoAllowBashIfSandboxed": false
   }
 }

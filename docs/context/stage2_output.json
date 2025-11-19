@@ -1,0 +1,49 @@
+{
+  "$schema": "DNA v4.0 Stage 2 Output - Constraints Investigation",
+  "version": "1.0",
+  "stage": 2,
+  "timestamp": "",
+  "layer3_constraints": {
+    "technical": {
+      "existing_systems": [],
+      "required_integrations": [],
+      "tech_stack_mandates": []
+    },
+    "team": {
+      "size": "",
+      "expertise": [],
+      "learning_capacity": ""
+    },
+    "infrastructure": {
+      "cloud_provider": "",
+      "budget_monthly": "",
+      "compliance_requirements": []
+    }
+  },
+  "conflicts_identified": [
+    {
+      "id": "",
+      "description": "",
+      "conflicting_factors": [],
+      "severity": ""
+    }
+  ],
+  "resolution_proposals": [
+    {
+      "conflict_id": "",
+      "proposal": "",
+      "trade_offs": [],
+      "recommended": false
+    }
+  ],
+  "tech_candidates": {
+    "primary": [],
+    "alternatives": [],
+    "rejected": []
+  },
+  "next_stage_input": {
+    "constraints_summary": [],
+    "conflicts_resolved": [],
+    "tech_shortlist": []
+  }
+}

@@ -119,7 +119,7 @@ ADR들 (아키텍처 결정)
 - **"무엇을"에 집중**: 어떤 기능을 만들 것인가
 - **"어떻게"는 최소**: 세부 구현은 Task에서
 - **Line 단위로 명확히 구분**: 각 기능 30-50 lines
-- **파일로 분리**: 각 파일 500 lines 내외
+- **파일로 분리**: 각 파일 최대 1,500 lines 내외
 
 ---
 
@@ -182,7 +182,7 @@ blueprints/
 
 **파일 분리 기준**:
 - 시스템별 (Auth, Payment, Notification 등)
-- 각 파일 200-800 lines (평균 500 lines)
+- 각 파일 최대 1,500 lines, 평균 1,000 lines
 - 한 파일 = 하나의 bounded context
 - Git conflict 최소화
 

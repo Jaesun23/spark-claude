@@ -1,0 +1,50 @@
+{
+  "$schema": "DNA v4.0 Stage 3 Output - Architecture Decisions",
+  "version": "1.0",
+  "stage": 3,
+  "timestamp": "",
+  "adr_list": [
+    {
+      "id": "",
+      "title": "",
+      "category": "",
+      "status": "proposed",
+      "context": "",
+      "decision": "",
+      "options_considered": [
+        {
+          "option": "",
+          "pros": [],
+          "cons": [],
+          "selected": false
+        }
+      ],
+      "consequences": {
+        "positive": [],
+        "negative": [],
+        "risks": []
+      },
+      "nfr_alignment": [],
+      "constraint_compliance": []
+    }
+  ],
+  "bootstrap_elements": {
+    "database": "",
+    "cache": "",
+    "messaging": "",
+    "logging": "",
+    "config": "",
+    "auth": "",
+    "api_gateway": ""
+  },
+  "cross_cutting_concerns": {
+    "error_handling": "",
+    "monitoring": "",
+    "security": ""
+  },
+  "next_stage_input": {
+    "adr_summary": [],
+    "bootstrap_stack": {},
+    "design_constraints": []
+  }
+}
