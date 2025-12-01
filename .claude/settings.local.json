@@ -46,7 +46,14 @@
       "Bash(python3:*)",
       "Skill(skill-creator)",
       "Bash(git -C /Users/jason/Projects/spark-claude diff --stat)",
-      "Bash(git -C /Users/jason/Projects/spark-claude log --oneline -5)"
+      "Bash(git -C /Users/jason/Projects/spark-claude log --oneline -5)",
+      "Bash(git -C /Users/jason/Projects/spark-claude push)",
+      "Bash(git -C /Users/jason/Projects/spark-claude log --oneline --all -20)",
+      "Bash(git -C /Users/jason/Projects/spark-claude log --since=\"2025-10-01\" --oneline)",
+      "Bash(git -C /Users/jason/Projects/spark-claude log --all --format=\"%ai - %s\" -15)",
+      "Bash(git -C /Users/jason/Projects/spark-claude show:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)"
     ],
     "deny": [],
     "ask": []
