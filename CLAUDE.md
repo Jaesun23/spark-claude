@@ -47,7 +47,7 @@ Future domains:
 2025-09-05  v4.3  Current System         → Plugin-based
 ```
 
-**Detailed History**: See [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md)
+**Detailed History**: See [00-SPARK-HISTORY-INDEX.md](./docs/history/00-SPARK-HISTORY-INDEX.md)
 
 ---
 
@@ -403,20 +403,20 @@ project/.claude/plugins/spark/
 
 ### Version History
 
-**Complete History**: [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md)
+**Complete History**: [00-SPARK-HISTORY-INDEX.md](./docs/history/00-SPARK-HISTORY-INDEX.md)
 
 **Individual Versions**:
-- [v1.0 - SuperClaude Analysis](./v1.0-SuperClaude-Analysis.md)
-- [v2.0 - Research Foundation](./v2.0-Research-Foundation.md)
-- [v3.0 - Initial Implementation](./v3.0-Initial-Implementation.md)
-- [v4.0 - Quality Evolution](./v4.0-Quality-Evolution.md)
-- [v4.1 - Final Architecture](./v4.1-Final-Architecture.md)
-- [v4.2-v4.3 - Current](./v4.2-v4.3-Current.md)
+- [v1.0 - SuperClaude Analysis](./docs/history/01-v1.0-SuperClaude-Analysis.md)
+- [v2.0 - Research Foundation](./docs/history/02-v2.0-Research-Foundation.md)
+- [v3.0 - Initial Implementation](./docs/history/03-v3.0-Initial-Implementation.md)
+- [v4.0 - Quality Evolution](./docs/history/04-v4.0-Quality-Evolution.md)
+- [v4.1 - Final Architecture](./docs/history/05-v4.1-Final-Architecture.md)
+- [v4.2-v4.3 - Current](./docs/history/06-v4.2-v4.3-Current.md)
 
 ### Git Histories
 
-- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits (v4.1 이후)
-- [DNA_METHODOLOGY_GIT_HISTORY.txt](./DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits (DNA 방법론)
+- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./docs/history/SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits (v4.1 이후)
+- [DNA_METHODOLOGY_GIT_HISTORY.txt](./docs/history/DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits (DNA 방법론)
 
 ### Key Documents
 

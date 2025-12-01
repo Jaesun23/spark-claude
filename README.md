@@ -61,7 +61,7 @@ From 4 months of development (2025-08-08 to 2025-12-01):
 2025-11-08  ---   DNA Methodology        → AI collaboration framework
 ```
 
-**Complete History**: See [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md) for detailed version-by-version documentation.
+**Complete History**: See [00-SPARK-HISTORY-INDEX.md](./docs/history/00-SPARK-HISTORY-INDEX.md) for detailed version-by-version documentation.
 
 ## Quick Start
 
@@ -145,17 +145,17 @@ SPARK agents work through natural language or slash commands:
 - [SPARK_CONSTITUTION.md](./SPARK_CONSTITUTION.md) - Agent behavior standards v1.2
 
 **Version History** (8 documents):
-- [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md) - Complete history overview
-- [v1.0-SuperClaude-Analysis.md](./v1.0-SuperClaude-Analysis.md) - Problem discovery (Aug 8-10)
-- [v2.0-Research-Foundation.md](./v2.0-Research-Foundation.md) - SPARK concept birth (Aug 11-12)
-- [v3.0-Initial-Implementation.md](./v3.0-Initial-Implementation.md) - First working system (Aug 13-16)
-- [v4.0-Quality-Evolution.md](./v4.0-Quality-Evolution.md) - Quality gates establishment (Aug 17-18)
-- [v4.1-Final-Architecture.md](./v4.1-Final-Architecture.md) - 88.4% achieved (Aug 19-22)
-- [v4.2-v4.3-Current.md](./v4.2-v4.3-Current.md) - Plugin architecture (Aug 23-present)
+- [00-SPARK-HISTORY-INDEX.md](./docs/history/00-SPARK-HISTORY-INDEX.md) - Complete history overview
+- [01-v1.0-SuperClaude-Analysis.md](./docs/history/01-v1.0-SuperClaude-Analysis.md) - Problem discovery (Aug 8-10)
+- [02-v2.0-Research-Foundation.md](./docs/history/02-v2.0-Research-Foundation.md) - SPARK concept birth (Aug 11-12)
+- [03-v3.0-Initial-Implementation.md](./docs/history/03-v3.0-Initial-Implementation.md) - First working system (Aug 13-16)
+- [04-v4.0-Quality-Evolution.md](./docs/history/04-v4.0-Quality-Evolution.md) - Quality gates establishment (Aug 17-18)
+- [05-v4.1-Final-Architecture.md](./docs/history/05-v4.1-Final-Architecture.md) - 88.4% achieved (Aug 19-22)
+- [06-v4.2-v4.3-Current.md](./docs/history/06-v4.2-v4.3-Current.md) - Plugin architecture (Aug 23-present)
 
 **Git Histories**:
-- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits from v4.1 onwards
-- [DNA_METHODOLOGY_GIT_HISTORY.txt](./DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits for AI collaboration methodology
+- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./docs/history/SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits from v4.1 onwards
+- [DNA_METHODOLOGY_GIT_HISTORY.txt](./docs/history/DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits for AI collaboration methodology
 
 ## Architecture
 
@@ -272,14 +272,17 @@ spark-claude/
 ├── docs/                      # Development documentation
 │   ├── constitution/          # SPARK Constitution v1.2
 │   ├── anthropic-engineering/ # Research materials
+│   ├── history/               # Version history documents
+│   │   ├── 00-SPARK-HISTORY-INDEX.md
+│   │   ├── 01-v1.0-SuperClaude-Analysis.md
+│   │   ├── 02-v2.0-Research-Foundation.md
+│   │   ├── 03-v3.0-Initial-Implementation.md
+│   │   ├── 04-v4.0-Quality-Evolution.md
+│   │   ├── 05-v4.1-Final-Architecture.md
+│   │   ├── 06-v4.2-v4.3-Current.md
+│   │   ├── SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt
+│   │   └── DNA_METHODOLOGY_GIT_HISTORY.txt
 │   └── *.md                   # Design documents
-├── v1.0-SuperClaude-Analysis.md      # Version history
-├── v2.0-Research-Foundation.md
-├── v3.0-Initial-Implementation.md
-├── v4.0-Quality-Evolution.md
-├── v4.1-Final-Architecture.md
-├── v4.2-v4.3-Current.md
-├── 00-SPARK-HISTORY-INDEX.md         # Complete history index
 ├── CLAUDE.md                          # For Claude Code
 ├── ARCHITECTURE.md                    # System architecture
 ├── SPARK_CONSTITUTION.md              # Agent standards
@@ -379,9 +382,9 @@ See `docs/constitution/` for complete constitution documents (English + Korean).
 ### Version History
 
 For complete timeline and detailed analysis, see:
-- [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md) - Navigation and overview
-- Individual version documents (v1.0 through v4.3)
-- Git history files (SPARK + DNA methodology)
+- [00-SPARK-HISTORY-INDEX.md](./docs/history/00-SPARK-HISTORY-INDEX.md) - Navigation and overview
+- Individual version documents (01-v1.0 through 06-v4.3 in `docs/history/`)
+- Git history files (SPARK + DNA methodology in `docs/history/`)
 
 ## About This Project
 
