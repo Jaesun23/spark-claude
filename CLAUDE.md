@@ -1,90 +1,487 @@
-uhjy`   JHUKYI`           JHU ,₩  # CLAUDE.md
+# SPARK - Universal Expert Agent Framework
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+> **SPARK** = **S**ubagent **P**erformance **A**rchitecture with **R**educed to**K**ens
 
-## Project Overview
+This file provides guidance to Claude Code when working with this repository.
 
-SPARK v4.3 (Subagent Performance Architecture with Reduced toKens) is a traits-based multi-agent orchestration system achieving 95.5% token reduction by loading only the required agent on-demand from a pool of 21 specialized agents (6 core + 15 team agents).
+---
 
-**Constitution**: All agents follow SPARK Constitution v1.1 (`.claude/SPARK_CONSTITUTION.md`)
+## 🎯 Project Identity
 
-## Core Commands
+### What is SPARK?
 
-### Development & Testing
+SPARK is a **multi-agent orchestration framework** that enables specialized expert agents to collaborate efficiently through on-demand loading and strict quality enforcement.
+
+**Born from necessity**: SuperClaude consumed 44,000 tokens per request by loading all personas simultaneously. SPARK achieved **88.4% token reduction** (44K → 5.1K) by loading only the required agents.
+
+**Current State** (v4.3):
+- ✅ 21 Specialized Agents (6 core + 15 team)
+- ✅ Plugin-based Distribution
+- ✅ SPARK Constitution v1.2
+- ✅ **Domain**: Software Development
+
+**Vision**:
+> SPARK started with software development, but the ultimate goal is to create expert agents for **all domains and all types of work**.
+
+Future domains:
+- Software Development (current) ✅
+- Data Analysis & Science
+- Writing & Editing
+- Research & Learning
+- Design & Creative
+- Business & Consulting
+- Legal & Compliance
+- Healthcare & Medicine
+- Education & Training
+- ... (unlimited expansion)
+
+### The Journey
+
+```
+2025-08-08  v1.0  Problem Discovery      → 44K tokens identified
+2025-08-11  v2.0  SPARK Concept Born     → MAS framework
+2025-08-13  v3.0  First Implementation   → 81.8% reduction
+2025-08-17  v4.0  Quality Evolution      → Phase 5B mandatory
+2025-08-19  v4.1  Final Architecture     → 88.4% achieved ✅
+2025-08-23  v4.2  Code Enhancement       → Trait-based
+2025-09-05  v4.3  Current System         → Plugin-based
+```
+
+**Detailed History**: See [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md)
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
 ```bash
-# Setup environment (recommended: uv for 10x faster installation)
+# Clone repository
+git clone https://github.com/Jaesun23/spark-claude
+
+# Setup environment (recommended: uv)
 uv venv && source .venv/bin/activate
 uv pip install -e ".[full,dev,benchmark]"
 
-# Run quality checks
-ruff check .                    # Linting
-mypy .                          # Type checking
-black . --check                 # Format checking
-pytest tests/                   # Run all tests
-pytest tests/test_specific.py  # Run single test file
-
-# Benchmark agent performance
-python benchmarks/run_benchmarks.py
+# Verify installation
+ruff check .
+mypy .
+pytest tests/
 ```
 
-### SPARK-Specific Commands
+### Basic Usage
 
-#### Single Agent Commands
-- `/spark-implement <feature>` - Feature implementation with quality gates
-- `/spark-test <target>` - Create comprehensive tests (95% coverage target)
-- `/spark-analyze <scope>` - Multi-dimensional system analysis
-- `/spark-design <system>` - Architecture and API design
-- `/spark-clean` - Remove technical debt and dead code
-- `/spark-fix <issue>` - Troubleshoot and fix issues
-- `/spark-improve <code>` - Performance optimization and modernization
-- `Task("qc-spark", "fix ruff violations")` - Quality violations cleanup (use direct Task calls)
+**Single Agent**:
+```bash
+# Analyze system
+/spark-analyze "performance bottlenecks"
 
-#### Pipeline Commands (Sequential Phases)
-- `/spark <complex-task>` - Full pipeline: analyze → implement → test → document
-- `/spark-refactor <module>` - Refactor pipeline: analyze → improve → test
-- `/spark-audit <system>` - Audit: analyze → troubleshoot → document
-- `/spark-migrate <legacy>` - Migration: analyze → design → implement → test
-- `/spark-optimize <scope>` - Optimize: analyze → improve → test
-- `/spark-launch <feature>` - Complete: design → implement → test → document → git
+# Implement feature
+/spark-implement "user authentication"
 
-#### Parallel Execution
-- `/multi-implement task1,task2,task3,task4,task5` - Execute up to 5 tasks in parallel using team agents
+# Create tests
+/spark-test "authentication module"
+```
 
-## Architecture & Execution Flow
+**Pipeline (Sequential)**:
+```bash
+# Full workflow
+/spark "add payment processing feature"
+# → analyze → implement → test → document
+```
 
-### Three-Layer System
-1. **Router Layer** (`.claude/hooks/spark_persona_router.py`) - Analyzes task and selects optimal agent
-2. **Quality Gates** (`.claude/hooks/spark_quality_gates.py`) - Verifies agent claims vs actual results
-3. **Agent Layer** (`.claude/agents/`) - 21 specialized agents (6 core + 15 team)
+**Parallel Execution**:
+```bash
+# Multiple tasks simultaneously
+/multi-implement "task1,task2,task3,task4,task5"
+```
 
-**Core Agents (6)**:
-- `analyzer-spark` - Multi-dimensional system analysis (v1.1: 500 lines, evidence-based)
-- `implementer-spark` - Feature implementation with 95% test coverage
-- `tester-spark` - Comprehensive testing (95% unit, 85% integration)
-- `designer-spark` - System architecture and API design
-- `documenter-spark` - API docs, user guides, architecture documents
-- `qc-spark` - Quality violations cleanup with 5-phase inspection
+### Example Workflow
 
-**Team Agents (15)**: 5 teams × 3 roles (implementer, tester, documenter) for parallel execution
+```
+1. Analyze codebase
+   /spark-analyze "API performance"
 
-### Critical Execution Protocol for Claude Code
+2. Review quality
+   Task("qc-spark", "fix all ruff violations")
 
-When receiving SPARK commands, you MUST follow this exact pattern:
+3. Implement improvements
+   /spark-implement "cache layer for API"
 
+4. Comprehensive testing
+   /spark-test "cache implementation"
+
+5. Documentation
+   /spark-document "cache architecture"
+```
+
+---
+
+## 🏗️ Architecture
+
+### 3-Layer System
+
+```
+┌─────────────────────────────────────┐
+│  Layer 1: Router                    │
+│  spark_persona_router.py            │
+│  → Analyzes task                    │
+│  → Selects optimal agent            │
+└─────────────┬───────────────────────┘
+              ↓
+┌─────────────────────────────────────┐
+│  Layer 2: Quality Gates             │
+│  spark_quality_gates.py             │
+│  → Verifies agent claims            │
+│  → Enforces quality standards       │
+└─────────────┬───────────────────────┘
+              ↓
+┌─────────────────────────────────────┐
+│  Layer 3: Agent Layer               │
+│  21 specialized agents              │
+│  → 6 core + 15 team                 │
+│  → Trait-based personas             │
+└─────────────────────────────────────┘
+```
+
+### 21 Specialized Agents
+
+**6 Core Agents** (Primary Specialists):
+
+1. **analyzer-spark** (v2.0)
+   - Multi-dimensional system analysis
+   - Evidence-based reporting (file:line)
+   - 12+ evidence items mandatory
+
+2. **implementer-spark**
+   - Feature implementation
+   - 95% test coverage requirement
+   - Zero-defect delivery
+
+3. **tester-spark**
+   - Comprehensive testing
+   - 95% unit / 85% integration coverage
+   - E2E critical paths
+
+4. **designer-spark**
+   - System architecture
+   - API specifications
+   - UX/UI design
+
+5. **documenter-spark**
+   - API documentation
+   - User guides
+   - Architecture docs
+
+6. **qc-spark**
+   - Quality violations cleanup
+   - Ruff/MyPy corrections
+   - 5-phase inspection
+
+**15 Team Agents** (Parallel Execution):
+- 5 teams × 3 roles (implementer, tester, documenter)
+- Used exclusively for parallel execution
+- Supports `/multi-implement` command
+
+### Plugin Structure
+
+```
+spark-claude/
+├── .claude/
+│   ├── agents/          # 21 agent definitions
+│   ├── commands/        # Slash commands
+│   ├── hooks/          # Router & Quality Gates
+│   ├── constitution/   # v1.2 (English + Korean)
+│   └── workflows/      # JSON state files
+├── docs/               # Core documentation
+├── benchmarks/         # Performance tests
+└── tests/             # Quality tests
+```
+
+### Token Management
+
+**Safety Protocol**:
+- Hard limit: 200K tokens per request
+- Practical limit: 90K tokens (safety margin)
+- Agent sizes: ~1K (team) to ~3.9K (implementer)
+- Write operations: 2x token consumption
+
+**Current Achievement**:
+```
+SuperClaude: 44,000 tokens (all personas)
+SPARK v4.3:   5,100 tokens (on-demand)
+Reduction:    88.4% ✅
+```
+
+### JSON State Management
+
+**Location**: `~/.claude/workflows/current_task.json`
+
+**Structure**:
+```json
+{
+  "id": "spark_YYYYMMDD_HHMMSS",
+  "version": "4.3",
+  "agent": "implementer-spark",
+  "state": {
+    "status": "completed",
+    "current_phase": 5
+  },
+  "quality": {
+    "violations_total": 0,
+    "can_proceed": true,
+    "step_6_testing": {
+      "ruff_violations": 0,
+      "mypy_errors": 0,
+      "coverage": 0.97
+    }
+  }
+}
+```
+
+**Team Agents**: Separate state files (`team1_current_task.json`, etc.)
+
+---
+
+## 📖 Usage Guide
+
+### Single Agent Commands
+
+```bash
+/spark-analyze <scope>        # Multi-dimensional analysis
+/spark-implement <feature>    # Feature implementation
+/spark-test <target>          # Comprehensive testing
+/spark-design <system>        # Architecture & design
+/spark-document <topic>       # Documentation
+Task("qc-spark", "fix ...")   # Quality cleanup (direct Task call)
+```
+
+### Pipeline Commands
+
+Sequential phase execution:
+
+```bash
+/spark <task>                 # Full: analyze → implement → test → document
+/spark-refactor <module>      # analyze → improve → test
+/spark-audit <system>         # analyze → troubleshoot → document
+/spark-migrate <legacy>       # analyze → design → implement → test
+/spark-optimize <scope>       # analyze → improve → test
+/spark-launch <feature>       # design → implement → test → document → git
+```
+
+### Parallel Execution
+
+Up to 5 tasks simultaneously:
+
+```bash
+/multi-implement task1,task2,task3,task4,task5
+
+# Uses team agents:
+# team1-implementer-spark → task1
+# team2-implementer-spark → task2
+# ... etc.
+```
+
+### Quality Gates
+
+**8-Step Framework**:
+1. Syntax Validation (0 errors)
+2. Type Checking (`mypy --strict`)
+3. Linting (`ruff --strict`)
+4. Security (OWASP compliance)
+5. Test Coverage (95% unit / 85% integration)
+6. Performance (O(n) verification)
+7. Documentation (100% docstrings)
+8. Integration (E2E passing)
+
+**Enforcement**: Phase 5B mandatory for all agents
+
+---
+
+## 🛠️ Development Guide
+
+### Adding New Agents
+
+**For Software Development Domain**:
+1. Define agent in `.claude/agents/{name}-spark.md`
+2. Follow trait-based format:
+
+```markdown
+---
+name: {agent-name}-spark
+version: 4.3
+domain: software-development
+---
+
+# Traits (성격/특성)
+- Trait 1
+- Trait 2
+
+# Protocols (작업 프로토콜)
+## Phase 1: Task Understanding
+## Phase 2: Planning
+## Phase 3: Execution
+## Phase 4: Verification
+## Phase 5: Quality Gates
+  - 5A: Metrics recording
+  - 5B: Gates execution (MANDATORY)
+```
+
+3. Add to router (`spark_persona_router.py`)
+4. Add tests
+5. Update documentation
+
+**For New Domains** (Future):
+1. Create domain-specific constitution
+2. Define domain agents
+3. Adapt quality gates for domain
+4. Test domain expertise
+5. Document domain usage
+
+### Constitution Compliance
+
+All agents must follow **SPARK Constitution v1.2**:
+
+**5 Core Documents**:
+1. Core Principles
+2. Quality Standards
+3. Work Protocols
+4. Communication
+5. Evolution
+
+**Available in**:
+- English: `.claude/constitution/`
+- Korean: `.claude/constitution/ko/`
+
+**Key Requirements**:
+- Evidence-based reporting (file:line)
+- Phase 5B mandatory execution
+- 0 violations tolerance
+- Adaptive, iterative workflow
+
+### Testing & Quality
+
+**Pre-commit Hooks**:
+```bash
+# Auto-run on git commit
+ruff check .
+mypy .
+pytest tests/ --cov
+```
+
+**CI/CD Pipeline**:
+- Syntax validation
+- Type checking
+- Linting
+- Test coverage (95%+)
+- E2E tests
+
+**Quality Verification**:
+```bash
+# Agent self-validation
+echo '{"subagent": "implementer-spark"}' | \
+python3 ~/.claude/hooks/spark_quality_gates.py
+```
+
+### Plugin Distribution
+
+**Current**: Integrated into project
+**Future**: Plugin marketplace
+
+**Installation** (when plugin-based):
+```bash
+# Option 1: Global
+~/.claude/plugins/spark/
+
+# Option 2: Project-specific
+project/.claude/plugins/spark/
+```
+
+---
+
+## 📚 Reference
+
+### Version History
+
+**Complete History**: [00-SPARK-HISTORY-INDEX.md](./00-SPARK-HISTORY-INDEX.md)
+
+**Individual Versions**:
+- [v1.0 - SuperClaude Analysis](./v1.0-SuperClaude-Analysis.md)
+- [v2.0 - Research Foundation](./v2.0-Research-Foundation.md)
+- [v3.0 - Initial Implementation](./v3.0-Initial-Implementation.md)
+- [v4.0 - Quality Evolution](./v4.0-Quality-Evolution.md)
+- [v4.1 - Final Architecture](./v4.1-Final-Architecture.md)
+- [v4.2-v4.3 - Current](./v4.2-v4.3-Current.md)
+
+### Git Histories
+
+- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits (v4.1 이후)
+- [DNA_METHODOLOGY_GIT_HISTORY.txt](./DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits (DNA 방법론)
+
+### Key Documents
+
+**Core Documentation**:
+- [ARCHITECTURE.md](./docs/ARCHITECTURE.md) - System architecture
+- [SPARK_CONSTITUTION.md](./docs/SPARK_CONSTITUTION.md) - Agent behavior
+- [TEAM_AGENTS.md](./docs/TEAM_AGENTS.md) - Parallel execution
+
+**Constitution v1.2**:
+- English: `.claude/constitution/`
+- Korean: `.claude/constitution/ko/`
+
+**Archives**:
+```
+/Users/jason/Documents/개발아카이브/spark-claude-archive/
+├── v1.0-SuperClaude-Analysis/
+├── v2.0-Research-Foundation/
+├── v3.0-Initial-Implementation/
+│   └── SPARK_Development_Chronology_20250118.md
+├── v4.0-Quality-Evolution/
+├── v4.1-Final-Architecture/ (2025-08-22 공식 아카이브)
+└── ARCHIVE_README.md
+```
+
+### Related Projects
+
+**DNA Methodology**: AI collaboration framework
+- Repository: https://github.com/Jaesun23/dna-methodology
+- Purpose: 9-Stage design methodology for AI projects
+- Relation: SPARK (tool) + DNA (methodology) = Complete AI collaboration
+
+### Contact
+
+**Jason Park**
+- Email: jaesun23@gmail.com
+- GitHub: https://github.com/Jaesun23
+- SPARK: https://github.com/Jaesun23/spark-claude
+
+---
+
+## 🤖 For Claude Code (2호)
+
+### Critical Execution Protocol
+
+When receiving SPARK commands, **MUST** follow this exact pattern:
+
+**Single Agent**:
 ```python
-# For single agent:
 1. IMMEDIATELY CALL:
    Task("agent-name-spark", user_request)
+
 2. WAIT for completion
+
 3. CHECK ~/.claude/workflows/current_task.json:
    - quality.violations_total == 0
    - quality.can_proceed == true
    - state.status == "completed"
+
 4. DECISION:
    ✅ ALL MET → Report success
    ❌ ANY FAILED → Retry with feedback (max 3 attempts)
+```
 
-# For parallel execution (MUST be in ONE message):
+**Parallel Execution** (MUST be in ONE message):
+```python
 Task("team1-implementer-spark", task1)
 Task("team2-implementer-spark", task2)
 Task("team3-implementer-spark", task3)
@@ -93,351 +490,104 @@ Task("team5-implementer-spark", task5)
 # WAIT for ALL to complete
 ```
 
-### Phase Structure (All Agents)
+### Common Pitfalls to Avoid
 
-**Constitution v1.1**: Phase count is flexible, workflow is adaptive and iterative.
+❌ **DON'T**:
+- Load multiple agents unnecessarily
+- Sequential Task calls for parallel execution
+- Skip quality gate validation
+- Forget to check JSON state
+- Ignore write operations (2x tokens!)
 
-Typical structure:
-- **Phase 0**: Task Understanding (read 2号's specific instructions)
-- **Phase 1-N**: Domain work (agent-specific, iterative)
-- **Phase N+1**: Quality verification (MANDATORY)
-  - Phase 5A: Quality metrics recording
-  - Phase 5B: Quality gates execution
-  - Must check for "Quality gates PASSED" or "Quality gates FAILED"
-  - All violations must be 0 to proceed
-  - Maximum 3 retry attempts
+✅ **DO**:
+- Load one agent at a time (unless parallel)
+- Check JSON state after agent completion
+- Verify all quality gates passed
+- Monitor token consumption
+- Follow Constitution v1.2
 
-**Key Principles**:
-- Agents use professional judgment, not mechanical checklists
-- Iteration between phases is expected (e.g., Phase 2 ↔ Phase 3)
-- 2号 provides task-specific instructions (scope, depth, priorities)
-- Agents provide common protocols that adapt to any task
+### Token Safety
 
-### Quality Gates Verification
+**Limits**:
+- Hard limit: 200K tokens
+- Practical limit: 90K tokens (safety)
+- Per agent: 1K-3.9K tokens
 
+**Safety Protocol**:
+- Check token budget before agent call
+- Write operations = 2x consumption
+- Compression available (30-50% reduction)
+
+### Quality Verification
+
+**After agent completion**:
 ```bash
-# Agent self-validation
-echo '{"subagent": "implementer-spark", "self_check": true}' | \
+# Verify quality gates
+cat ~/.claude/workflows/current_task.json | \
+jq '.quality.violations_total'
+
+# Expected: 0
+```
+
+**Quality Gates Script**:
+```bash
 python3 ~/.claude/hooks/spark_quality_gates.py
-
-# Returns English messages:
-# ✅ "Quality gates PASSED"
-# 🚫 "Quality gates FAILED"
 ```
 
-## Token Management
-
-### Safety Limits
-- **Hard limit**: 200K tokens per agent context
-- **Practical limit**: 90K tokens (safety margin)
-- **Write operations**: Double token consumption
-- **Agent sizes**: ~1K (team agents) to ~3.9K (implementer-spark)
-
-### Critical Rules
-- Agents CANNOT call other agents (only Claude Code uses Task tool)
-- Write operations consume 2x tokens (memory + output)
-- All agents include 90K token safety protocol
-- Compression available for 30-50% reduction
-
-## JSON State Management
-
-Agents communicate via JSON state files:
-```
-~/.claude/workflows/current_task.json         # Main task state
-~/.claude/workflows/team[1-5]_current_task.json  # Team-specific states
-```
-
-Structure:
-```json
-{
-  "id": "spark_YYYYMMDD_HHMMSS",
-  "version": "4.3",
-  "state": {"status": "pending|running|completed|failed"},
-  "quality": {
-    "violations_total": 0,
-    "can_proceed": true
-  }
-}
-```
-
-## Common Pitfalls to Avoid
-
-- Loading multiple agents unnecessarily (use one at a time)
-- Sequential Task calls for parallel execution (must be simultaneous)
-- Skipping quality gate validation
-- Not checking JSON state after agent completion
-- Forgetting Write operations double token consumption
-
-## Agent Specialization & Role Separation
-
-### Primary Agents (17 total)
-- **improver-spark**: Performance optimization, architecture modernization, context7 research
-- **qc-spark**: Quality violations cleanup (ruff, mypy, pytest failures) with 5-phase inspection
-- **analyzer-spark**: Multi-dimensional system analysis with multi-session support
-- **implementer-spark**: Feature implementation with 95% test coverage requirement
-- **tester-spark**: Comprehensive testing (95% unit, 85% integration) 
-- **designer-spark**: System architecture and API design
-- **documenter-spark**: API docs, user guides, architecture documentation
-- **troubleshooter-spark**: Systematic debugging and issue resolution
-- **cleaner-spark**: Dead code removal and dependency updates
-- **explainer-spark**: Concept and pattern explanation
-- **builder-spark**: Build process and CI/CD optimization
-- **estimater-spark**: Evidence-based time and resource estimation
-- **gitter-spark**: Git strategy, branching, automation
-- **loader-spark**: Project context analysis and loading
-- **indexer-spark**: SuperClaude command navigation
-- **tasker-spark**: Multi-session project management
-- **spawner-spark**: Complex multi-agent coordination
-
-### Team Agents (15 total - 5 teams × 3 roles)
-- **team[1-5]-implementer-spark**: Parallel implementation specialists
-- **team[1-5]-tester-spark**: Parallel testing specialists  
-- **team[1-5]-documenter-spark**: Parallel documentation specialists
-
-### Critical Role Separation
-- **Quality Control**: Use `qc-spark` for fixing violations (ruff, mypy, test failures)
-- **Enhancement**: Use `improver-spark` for modernization and optimization
-- **Multi-Session**: `analyzer-spark`, `improver-spark`, and `qc-spark` support progressive work
-
-## Key File Locations
-
-- **Agent definitions**: `.claude/agents/*-spark.md`
-- **Command definitions**: `.claude/commands/spark-*.md`
-- **Quality gates script**: `.claude/hooks/spark_quality_gates.py`
-- **Router script**: `.claude/hooks/spark_persona_router.py`
-- **JSON states**: `.claude/workflows/*.json`
-- **Documentation**: `docs/SPARK_COMPLETE_GUIDE.md`
-
-## ⚠️ IMPORTANT: Missing Documentation Files (2025-11-10)
-
-**Status**: The following guide documents are on Jason's home computer and NOT yet committed to the repository.
-
-**Missing Files** (created during home session, need to be retrieved):
-1. **체크리스트 작성 가이드** (Checklist Creation Guide)
-2. **작업분해 가이드** (Task Breakdown Guide)
-3. **청사진 가이드** (Blueprint Guide)
-
-**Committed Files** (currently in repository):
-- `docs/CORE_METHODOLOGY.md` - AI collaboration methodology v4.0 ✅
-- `docs/ADR_GUIDE.md` - Architecture Decision Records guide ✅
-- `docs/PROJECT_STANDARDS_GUIDE.md` - Project standards guide ✅
-
-**Work Sequence**:
-1. Created CORE_METHODOLOGY.md first
-2. Created checklist guide (bottom-up approach)
-3. Created task breakdown guide
-4. Created blueprint guide
-5. Created ADR_GUIDE.md and PROJECT_STANDARDS_GUIDE.md (only these were committed)
-
-**Action Required**:
-- DO NOT overwrite files in `docs/` from office computer
-- Retrieve missing guides from home computer first
-- All old documentation has been moved to `docs/docs-backup/`
-- Only new guides (6 total) should remain in `docs/` root
-
-**Current docs/ Structure**:
-```
-docs/
-├── ADR_GUIDE.md
-├── CORE_METHODOLOGY.md
-├── PROJECT_STANDARDS_GUIDE.md
-├── Stage1-2_가이드_작성_프로젝트.md ✅ (NEW: 2025-11-10)
-├── ENTERPRISE_INITIATION_PROCESS.md
-├── [MISSING] 체크리스트_작성_가이드.md
-├── [MISSING] 작업분해_가이드.md
-├── [MISSING] 청사진_가이드.md
-├── docs-backup/  (all previous documentation)
-└── references/  (backup and reference materials)
-```
-
-## 📋 Current Project Status (2025-11-14)
-
-### 🔄 In Progress: Stage 3 ADR 가이드 작성 (2025-11-14)
-
-**목표**: DNA Methodology v4.0의 Stage 3 (ADR 작성) 가이드 문서 완성
-
-**배경**:
-- Gemini에게 엔터프라이즈 ADR 프로세스 리서치 의뢰
-- Gemini 보고서 분석 완료: 우리 가이드 재정리(80%) + 새 개념(20%)
-- 즉시 사용 가능한 템플릿 없음 → 추가 연구 요청 중
-
-**Gemini 보고서에서 차용할 내용**:
-1. **4대 구성요소 프레임워크** (ADR/도구/규칙/자동화)
-   - 활용: 03G-00 개요 섹션
-2. **Stage 2→3 매핑표** (5단계 → ADR 5카테고리)
-   - 활용: 02G-00 + 03G-00
-3. **자동화된 거버넌스** (Policy-as-Code, Fitness Functions)
-   - 활용: 03G-00 Part 4
-
-**작업 계획** (상세: `docs/research/20251114_Stage3_ADR_가이드_작성_계획.md`):
-
-**Phase 1: 즉시 시작 (Gemini 불필요)**
-1. ✅ 작업 계획 문서 작성
-2. ⏳ 02G-00 수정: Stage 2→3 매핑표 추가
-3. ⏳ AWS ADR 가이드 WebFetch 조사
-4. ⏳ 03G-00 뼈대 작성
-5. ⏳ 03G-00 개요 + Part 1 작성
-
-**Phase 2: 초안 작성**
-- Part 2: ADR 템플릿 (AWS 기반 + DNA v4.0 조정)
-- Part 3: 작성 체크리스트
-- Part 4: Compliance 구현
-
-**Phase 3: Gemini 결과 보완**
-- 템플릿 검증 및 보완
-- 실제 엔터프라이즈 사례 추가
-- 코드 예시 추가
-- 03M-01 필요성 판단
-
-**생성할 문서**:
-- `03G-00_adr_guide.md` (필수)
-- `03M-01_adr_manual.md` (선택, Phase 3에서 판단)
-
-**참고 문서**:
-- `docs/research/Gemini_엔터프라이즈_설계_프로세스_보완_리서치.md`
-- `docs/research/20251114_Stage3_ADR_가이드_작성_계획.md`
+Returns:
+- ✅ "Quality gates PASSED"
+- 🚫 "Quality gates FAILED" (+ violation details)
 
 ---
 
-### ✅ Completed: Stage 1-3 Validation (2025-11-12)
+## 🎓 Key Principles
 
-**Phase 2**: 주식 거래 플랫폼 사례 연구 완료
+### 1. Quality is Non-Negotiable
+> "Optional quality checks are ignored. Only MANDATORY enforcement works."
 
-**완료된 작업**:
-- ✅ **Stage 1**: 아키텍처 패밀리 결정 (A-C-A 패턴 발견!)
-  - Part 0: 핵심 기능 파악 (거래 = 1개 기능, 수동/자동 = 구현 방식)
-  - Part 1-2: Layer 1-2 분석 (A-C-A + NFR A-B-B-A)
+### 2. Evidence-Based Work
+All analysis must include:
+- file:line references
+- Minimum 12 evidence items
+- Concrete, verifiable facts
 
-- ✅ **Stage 2**: 환경 제약 및 구현 결정
-  - Part 1: Layer 3 외부 제약 (증권사 API 6개 비교, 금융 규제 조사)
-  - Part 2: 충돌 패턴 발견 (3개 충돌 식별)
-  - Part 3: 5단계 구현방법 (기능→속성→제약→기술→설계)
+### 3. Agent Isolation
+- Agents CANNOT call other agents
+- Only Claude Code uses Task tool
+- Prevents circular dependencies
 
-- ✅ **Stage 3**: ADR 작성
-  - 전체 목록: 18개 (외부 제약, 충돌 해결, 기술 스택, 데이터/API 설계, 품질/보안)
-  - 예시 작성: 3개 (한국투자증권 선택, 하이브리드 아키텍처, FastAPI 선택)
+### 4. Trait-Based Design
+```
+Agent = Traits (personality) + Protocols (workflow)
+```
 
-**핵심 발견**:
-1. **핵심 기능 판단 기준**: 구현 방식이 아닌 비즈니스 목적으로 구분
-2. **A-C-A 패밀리**: 새로운 아키텍처 패밀리 패턴 발견 (실시간 트랜잭션)
-3. **ADR 원칙**: "제약에 의한 결정도 ADR이다" (선택지가 1개여도 기록)
-4. **속성 질문**: NFR 프로파일 → 구체적 수치 → 기술 선택 (SEI ADD 원칙)
-
-**생성된 문서**:
-- `docs/session-summaries/20251112_Phase2_복합시스템_도전.md` (1,770줄)
-- `docs/session-summaries/20251112_핵심기능_판단기준.md` (240줄)
-- `docs/session-summaries/20251112_Layer3_외부제약조사.md` (680줄)
-
-**다음 작업 (Next Session)**:
-- 가이드 재구성: 지침/템플릿 vs 해설서 vs 사례집 분리
-  - `02_ARCHITECTURE_DECISION_GUIDE.md`: 간결한 체크리스트 + 템플릿
-  - `02-1_ARCHITECTURE_DECISION_MANUAL.md`: 상세 해설
-  - `02-2_IMPLEMENTATION_CASES.md`: Case 4 추가 (A-C-A)
+### 5. Universal Framework
+SPARK is domain-agnostic:
+- Current: Software development
+- Future: All domains
+- Principle: Expert agents for any field
 
 ---
 
-### Previous Work: Stage 1-2 Guide Development (2025-11-10)
+## 🔮 Future Roadmap
 
-**Goal**: Create methodology guide for "Idea → Blueprint" stage (upward consolidation process)
+### Short-term
+- ✅ Skills integration
+- ✅ Plugin marketplace
+- ⏳ More specialized software agents
 
-**Background**:
-- ✅ Downward process validated (Blueprint → Breakdown → Checklist → Implementation)
-- ❌ Upward process undefined (Idea → ??? → Blueprint)
-- 🎯 Solution approach: Hierarchical Templates (Level 1/2/3)
+### Long-term
+- 🎯 **Domain expansion**: Data science, writing, research, etc.
+- 🎯 **Cross-domain collaboration**: Software + Data + Business agents
+- 🎯 **Learning across sessions**: Agent improvement over time
+- 🎯 **Community contributions**: Open agent ecosystem
 
-**Key Discovery**: "Context" is the Core Challenge
-- 7 project analysis completed (6 failures + 1 success)
-- AI collaboration limitations identified:
-  - Context loss when projects scale
-  - Hallucination ("possible" → "impossible")
-  - Stubbornness (ignoring user requirements)
-  - Information overload (long documents → arbitrary actions)
-  - Repeated mistakes (if-fi, } omissions)
-
-**Method**: Real reconstruction of memory project
-- Selected project: memory system (actual need + repeated failures + appropriate scale)
-- Approach: Reconstruct from scratch with 2호, document needed template items
-- Expected output: Stage 1-2 guide with hierarchical templates
-
-**Related Documents**:
-- `docs/Stage1-2_가이드_작성_프로젝트.md` - Project definition and plan
-- `실패 프로젝트 분석 보고서/00_종합분석_7개프로젝트_패턴분석_20251110.md` - 7-project analysis
-- `실패 프로젝트 분석 보고서/Jason의 변명.md` - Real experiences from failures
+### Vision
+> "A universal framework where expert agents collaborate across all domains to solve any problem with guaranteed quality."
 
 ---
 
-## 📋 DNA Methodology File Naming Convention (2025-11-12)
-
-### **Purpose**
-Instant identification of Stage and document role from filename alone.
-
-### **Pattern**: `{Stage}{Type}-{Seq}_{descriptive_name}.md`
-
-```
-01F-01_core_functions.md
-│││ ││ └─ Descriptive name (snake_case)
-│││ │└─ Sequence (01-99)
-│││ └─ Separator (hyphen)
-││└─ Document Type (single letter)
-│└─ Stage (01-09)
-└─ 2-digit number
-```
-
-### **Type Codes**
-
-**Project Outputs** (files created per project):
-- **F** = Function (기능 정의)
-- **C** = Classification (분류/분석)
-- **D** = Decision (결정 사항)
-- **S** = Schema (스키마/설계)
-- **A** = ADR (Architecture Decision Record)
-- **B** = Blueprint (청사진)
-- **T** = Task (작업 분해)
-- **L** = List/Checklist (체크리스트)
-
-**Methodology Docs** (DNA methodology guides):
-- **G** = Guide (간결한 가이드)
-- **M** = Manual (상세 해설서)
-- **E** = Example/Case (사례집)
-
-**Special**:
-- **00** = Meta documents (methodology itself)
-
-### **Examples**
-
-```bash
-# Stage 1: Family Classification
-01F-01_core_functions.md          # Function definition
-01C-01_family_classification.md   # Family: A-C-A
-01D-01_tech_candidates.md         # Tech candidates
-
-# Stage 2: Structure Design
-02C-01_layer3_constraints.md      # Layer 3 constraints
-02C-02_conflicts_analysis.md      # Conflict patterns
-02D-01_tech_stack_decision.md     # Tech stack decision
-
-# Stage 3: ADR
-03A-001_logging.md                # Bootstrap ADR (001-099)
-03A-101_kis_api_selection.md      # Domain ADR (100-999)
-
-# Guides
-01G-00_core_definition_guide.md   # Stage 1 guide
-02M-01_layer3_manual.md           # Stage 2 manual
-02E-01_stock_trading_case.md      # Stage 2 example
-```
-
-### **Quick Reference**
-```
-01F-01 = Stage 1, Function doc, #1
-02C-02 = Stage 2, Classification doc, #2
-03A-101 = Stage 3, ADR, Domain #101
-01M-01 = Stage 1, Manual, #1
-```
-
-### **Benefits**
-- ✅ Instant Stage/role identification
-- ✅ Auto-sorting by Stage → Type → Seq
-- ✅ AI-friendly (clear rules)
-- ✅ Searchable (`find . -name "03A-*"` = all ADRs)
-
-**Full specification**: `docs/completed-guide/00_FILE_NAMING_CONVENTION.md`
+*Last Updated: 2025-12-01*
+*SPARK Version: v4.3 (Plugin-based)*
+*Constitution: v1.2*
+*Total Journey: 4 months (Aug 2025 - present)*
