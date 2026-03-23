@@ -72,7 +72,7 @@
       }
     ]
   },
-  "outputStyle": "korean-companion",
+  "outputStyle": "Jason Companion",
   "sandbox": {
     "enabled": false,
     "autoAllowBashIfSandboxed": false
