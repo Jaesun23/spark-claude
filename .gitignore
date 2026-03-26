@@ -82,3 +82,6 @@ docs/Archive
 .claude/workflows/
 .claude/*.json
 !.claude/settings.local.json
+
+# Archive-curator working directory
+_archive-curator/
