@@ -1,37 +1,6 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# uv
-.python-version
+# OS
+.DS_Store
+Thumbs.db
 
 # IDEs
 .vscode/
@@ -39,49 +8,16 @@ venv.bak/
 *.swp
 *.swo
 *~
-.DS_Store
 
-# Testing
-.coverage
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-htmlcov/
-.tox/
-.hypothesis/
-
-# Documentation
-docs/_build/
-site/
-
-# Benchmark results
-benchmark_results.json
-*.log
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# OS
-Thumbs.db
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Project specific
+# Temp
 *.tmp
 *.bak
-/tmp/
-/temp/
+*.log
 
-# Symbolic links to external archives
-docs/Archive
+# Archive (symlink to external storage)
+archive/
 
-# Claude Code runtime files
+# Claude Code runtime
 .claude/workflows/
 .claude/*.json
 !.claude/settings.local.json
-
-# Archive-curator working directory
-_archive-curator/
