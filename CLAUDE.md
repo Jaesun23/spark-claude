@@ -35,7 +35,11 @@ spark-claude/
 │   ├── history/                    # SPARK 발전사 (v1.0 ~ v5.0)
 │   ├── TRAITS_RESEARCH.md          # TRAITS 연구 요약
 │   └── ANTHROPIC_PERSONA_RESEARCH.md  # Anthropic 페르소나 연구 6편 요약
-└── archive/                        # 이전 버전 보관 (spark-plugin, methodology 등)
+├── archive/                        # 이전 버전 보관 (spark-plugin, methodology 등)
+├── tests/                          # 테스트 (레거시, 별도 논의 필요)
+├── benchmarks/                     # 벤치마크 (레거시, 별도 논의 필요)
+├── pyproject.toml                  # Python 패키지 설정 (레거시)
+└── uv.lock
 ```
 
 ## Reference Agents
@@ -74,3 +78,8 @@ The standard is grounded in three independent, converging sources:
 - **Anthropic Research** (scientific): 6 papers on persona mechanics in neural networks
 
 See `docs/ANTHROPIC_PERSONA_RESEARCH.md` and `docs/TRAITS_RESEARCH.md` for details.
+
+## Notes
+
+- `archive/` is a symlink → `~/Documents/99_Archive/spark-claude-archive/`
+- `tests/`, `benchmarks/`, `pyproject.toml` are legacy artifacts from the plugin era — retained for reference
