@@ -33,6 +33,8 @@ SPARK는 SuperClaude의 44,000 토큰 비효율성을 해결하기 위해 탄생
 2025-09-05  v4.3  Current System              📦 현재
      ↓
 2025-11-08  ---   DNA Methodology Focus       📚 방법론
+     ↓
+2026-03-28  v5.0  Standard-Based Refactoring  📐 표준화
 ```
 
 ---
@@ -191,6 +193,25 @@ Layer 3: Agents (28 specialized agents)
 - ✅ 88.4% 토큰 절감 유지
 
 **Note**: 2025-11-08 이후는 DNA 방법론 개발에 집중
+
+---
+
+### [v5.0 - Standard-Based Refactoring](./07-v5.0-Standard-Refactoring.md)
+**날짜**: 2026-03-28
+
+**핵심 목표**: 에이전트 정의 표준 기반 프로젝트 전면 재구성
+
+**주요 변경**:
+- 플러그인 → 에이전트 정의 표준 + 레퍼런스 에이전트로 전환
+- 22개 에이전트 → 3개 (implementer, diagnostician, auditor)
+- Python Behavior Protocol 완전 제거, 성격 발현 프레이밍 도입
+- SPARK 실전 + TRAITS 이론 + Anthropic 과학 통합
+
+**성과**:
+- ✅ AGENT_DEFINITION_STANDARD.md — 에이전트 정의의 과학적 표준
+- ✅ 3개 레퍼런스 에이전트 (새 표준 100% 준수)
+- ✅ 연구 기반 문서 2개 (TRAITS, Anthropic 페르소나 연구)
+- ✅ 경험→이론→과학 순환 완성
 
 ---
 
