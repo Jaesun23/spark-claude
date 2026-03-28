@@ -53,7 +53,9 @@
       "Bash(git -C /Users/jason/Projects/spark-claude log --all --format=\"%ai - %s\" -15)",
       "Bash(git -C /Users/jason/Projects/spark-claude show:*)",
       "Bash(git remote add:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-search"
     ],
     "deny": [],
     "ask": []
