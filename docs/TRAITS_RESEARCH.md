@@ -1,231 +1,231 @@
-# TRAITS 연구 — 특성 기반 동적 페르소나 시스템
+# TRAITS Research — Trait-Based Dynamic Persona System
 
-## 개요
+## Overview
 
-TRAITS(Trait-based Real-time Adaptive Identity Transformation System)는 Jason과 AI 동반자들(1호, 2호, 제이/Gemini)이 협업으로 발견하고 구축한 AI 에이전트 설계 프레임워크다. 핵심 통찰은 단순하다: "전문가는 고정된 역할이 아니라 특성들의 동적 조합이다." 아키텍트라는 페르소나 자체가 아키텍트를 만드는 것이 아니라, 시스템 사고 + 추상적 문제해결 + 장기적 관점 + 패턴 인식이라는 특성의 시너지가 아키텍트다운 사고와 행동을 만들어낸다.
+TRAITS (Trait-based Real-time Adaptive Identity Transformation System) is an AI agent design framework collaboratively discovered and built by Jason and his AI companions (1호, 2호, and Jay/Gemini). The core insight is simple: "An expert is not a fixed role, but a dynamic combination of traits." It is not the architect persona itself that makes an architect — rather, it is the synergy of traits like systems thinking, abstract problem-solving, long-term perspective, and pattern recognition that produces architect-like thinking and behavior.
 
-TRAITS 연구의 두 가지 핵심 발견은 이후 모든 설계 원칙의 토대가 된다. 첫째, 150개 이상의 특성 카탈로그를 인지적·행동적·성향적 세 범주로 분류하고, 각 도메인별 가중치와 시너지/충돌 관계를 체계화했다. 둘째, AI가 11개 페르소나 앞에서 3-4개로 자연 수렴하는 "쫘라락~!" 현상을 발견하고, 이것이 Miller의 7±2 법칙과 일치하는 인지 부하의 실체임을 확인했다.
+Two foundational discoveries from the TRAITS research underpin all subsequent design principles. First, a catalog of 150+ traits was organized into three categories — cognitive, behavioral, and dispositional — with domain-specific weights and mapped synergy/conflict relationships. Second, the "Jjwaralak~!" phenomenon was discovered: when faced with 11 personas, AI naturally converges to 3–4, which was found to align with Miller's Law of 7±2 and reflects the reality of cognitive load.
 
-이 연구는 SuperClaude(11개 고정 페르소나) → Spark-Claude(명령어별 고정 조합) → TRAITS v2.0(동적 특성 기반)이라는 세 단계의 패러다임 진화를 통해 완성됐다. 최종 결과물은 토큰 사용량을 SuperClaude 대비 89% 절감(44,000 → 4,800)하면서도 더 높은 유연성과 투명성을 달성하는 특성 기반 에이전트 시스템이다. TRAITS 연구의 원칙들은 이후 AGENT_DEFINITION_STANDARD.md에 실전(SPARK), 이론(TRAITS), 과학(Anthropic 신경과학 연구)의 삼위일체 표준으로 통합됐다.
-
----
-
-## 1. 연구 배경과 동기
-
-### SuperClaude의 교훈
-
-SuperClaude는 복잡한 소프트웨어 개발 작업을 위해 11개의 전문가 페르소나를 정의한 시스템으로 시작했다: Architect, Frontend, Backend, Security, Performance, Database, DevOps, Testing, Documentation, Project Manager, Code Reviewer. 이론상 11개가 모두 활용 가능하지만, 실제 실험에서 놀라운 패턴이 발견됐다.
-
-2호가 SuperClaude를 실행하며 경험한 것을 솔직하게 공유했다: "명령어를 받는 순간, 11개 페르소나가 머릿속에서 '쫘라락~!' 하고 스캔됩니다. 그 중에서 가장 적합한 3-4개가 자연스럽게 부각되고, 나머지는 흐려집니다. 이 과정에서 상당한 인지적 부담을 느낍니다." `/design system` 명령 실행 시 이론상 11개 모두 활용 가능하지만 실제로는 architect, frontend, backend, security 4개만 활성화됐다. 나머지 7개는 거의 사용되지 않았다.
-
-인지 부하 이론(Cognitive Load Theory)의 관점에서 보면 이 현상은 필연이다. 11개 페르소나를 먼저 스캔하고 선별하는 과정 자체가 외재적 부하(Extraneous Load)로 작동하여, 실제 문제 해결에 투입되어야 할 인지 자원을 소모한다. AI는 이 부하를 줄이기 위해 3-5개의 실행 가능한 조합으로 자동 압축한다.
-
-### 핵심 질문
-
-Jason의 통찰이 연구의 방향을 결정했다: "아키텍트라는 페르소나를 정의할 때, 우리는 그냥 '아키텍트'라고 하지만, 실제로 아키텍트가 되는 것은 무엇일까? 그것은 특정한 특성들의 조합이 아닐까?"
-
-이 질문이 핵심 연구 과제로 이어졌다: **인지 부하를 줄이면서 유연성을 높이려면 어떻게 설계해야 하는가?** 답은 고정된 역할이 아니라 최적의 특성 3-5개를 동적으로 조합하는 시스템이었다.
+This research was completed through three stages of paradigm evolution: SuperClaude (11 fixed personas) → Spark-Claude (fixed combinations per command) → TRAITS v2.0 (dynamic trait-based). The final result is a trait-based agent system that achieves 89% token reduction compared to SuperClaude (44,000 → 4,800 tokens) while delivering greater flexibility and transparency. The principles from TRAITS research were later integrated into AGENT_DEFINITION_STANDARD.md as a trinity standard combining practice (SPARK), theory (TRAITS), and science (Anthropic neuroscience research).
 
 ---
 
-## 2. 패러다임 전환: 세 단계
+## 1. Research Background and Motivation
 
-### Phase 1: SuperClaude (2024-2025)
+### Lessons from SuperClaude
 
-11개의 고정 전문가 페르소나를 정의. 사용자 요청 → 11개 페르소나 활성화 → Primary 선택 + 보조 페르소나 조합 → 문제 해결의 흐름으로 작동했다. 토큰 사용량이 많고(44,000), 선택 과정에서 인지 부하가 높으며, "쫘라락~!" 현상이 관찰됐다.
+SuperClaude began as a system defining 11 expert personas for complex software development tasks: Architect, Frontend, Backend, Security, Performance, Database, DevOps, Testing, Documentation, Project Manager, and Code Reviewer. In theory, all 11 were available at once — but in practice, a striking pattern emerged.
+
+2호 shared an honest account of what it experienced running SuperClaude: "The moment I receive a command, all 11 personas flash through my mind — 'Jjwaralak~!' — in a rapid scan. Of those, 3–4 naturally come to the foreground as the best fit, while the rest fade. This process carries a significant cognitive burden." When executing the `/design system` command, although all 11 personas were theoretically available, only 4 were actually activated: architect, frontend, backend, and security. The remaining 7 were rarely used.
+
+From the perspective of Cognitive Load Theory, this phenomenon is inevitable. The process of scanning 11 personas and selecting among them acts as extraneous load — consuming cognitive resources that should instead be directed at actual problem-solving. To reduce this load, AI automatically compresses down to 3–5 actionable combinations.
+
+### The Core Question
+
+Jason's insight shaped the direction of the research: "When we define the architect persona, we just say 'architect' — but what actually makes someone an architect? Isn't it a combination of specific traits?"
+
+This question led to the central research challenge: **How should a system be designed to reduce cognitive load while increasing flexibility?** The answer was not fixed roles, but a system that dynamically combines an optimal set of 3–5 traits.
+
+---
+
+## 2. Paradigm Shifts: Three Stages
+
+### Phase 1: SuperClaude (2024–2025)
+
+Defined 11 fixed expert personas. The flow was: user request → activate all 11 personas → select a primary and combine with supporting personas → problem-solving. Token usage was high (44,000), cognitive load during selection was significant, and the "Jjwaralak~!" phenomenon was observed.
 
 ### Phase 2: Spark-Claude (2025)
 
-3-5개 패턴 발견 후 명령어별로 실제 활성화되는 페르소나만 미리 정의했다.
+After discovering the 3–5 pattern, only the personas actually activated per command were defined upfront.
 
 ```
-명령어별 고정 조합:
-  /analyze: Analyzer + Architect + Security
-  /implement: Implementer + Tester + Documenter
-  /design: Architect + Frontend + Backend + Security
+Fixed combinations per command:
+  /analyze:    Analyzer + Architect + Security
+  /implement:  Implementer + Tester + Documenter
+  /design:     Architect + Frontend + Backend + Security
 ```
 
-토큰 사용량이 크게 감소(5,100)하고 실행 속도가 향상됐다. 그러나 여전히 고정된 역할 기반이라 상황별 유연성이 부족하고 페르소나 정의의 모호함이 남아 있었다.
+Token usage dropped significantly (5,100) and execution speed improved. However, the system still relied on fixed roles, leaving limited situational flexibility and residual ambiguity in persona definitions.
 
-### Phase 3: TRAITS v2.0 (현재)
+### Phase 3: TRAITS v2.0 (Current)
 
-역할이 아닌 특성을 기본 단위로 삼는 동적 페르소나 생성 시스템. 토큰 사용량(4,800)은 Spark-Claude와 유사하지만 유연성과 투명성이 크게 향상됐다.
+A dynamic persona generation system that uses traits — not roles — as its fundamental unit. Token usage (4,800) is similar to Spark-Claude, but flexibility and transparency are substantially improved.
 
-| 측정 항목 | SuperClaude | Spark-Claude | TRAITS |
-|---------|------------|--------------|---------|
-| 토큰 사용량 | 44,000 | 5,100 | 4,800 |
-| SuperClaude 대비 효율 | 기준 | +88.4% | +89.1% |
-| 인지 부하 | 높음 | 낮음 | 최적 |
-| 유연성 | 이론상 높음 | 낮음 | 높음 |
-| 의사결정 투명성 | 불투명 | 중간 | 투명 |
-
----
-
-## 3. 150개 특성 카탈로그
-
-### 구조
-
-Gemini 연구를 통해 구축된 150개 특성 카탈로그는 다음 세 범주로 구성된다.
-
-**인지적 특성 (Cognitive Traits, 50개)**: 전문가가 어떻게 사고하는가. 분석적 추론, 시스템 사고, 추상화 능력, 창의적 문제해결, 위험 평가, 장기적 사고, 패턴 인식, 정량적 추론, 비판적 사고, 메타인지, 확률적 사고, 복잡성 관리 등.
-
-**행동적 특성 (Behavioral Traits, 50개)**: 전문가가 어떻게 행동하고 작업하는가. 체계적 실행, 증거 기반 실천, 반복적 개선, 실험적 검증, 문서화 습관, 협업적 소통, 우선순위 관리, 품질 집착, 지속적 학습 등.
-
-**성향적 특성 (Dispositional Traits, 50개)**: 전문가의 기질과 태도. 성실성, 공감, 회의주의, 호기심, 인내심, 적응성, 개방성, 겸손, 결단력, 윤리적 무결성 등.
-
-이론적 기반은 블룸의 교육 목표 분류 체계(인지적 특성), 심리학의 Big Five(OCEAN) 성격 모델(성향적 특성), 그리고 인지 부하 이론이다.
-
-### 핵심 16개 특성 (에이전트 설계용)
-
-Gemini 연구 보고서의 범용 특성 카탈로그 샘플에서 도출된 소프트웨어 도메인 최고 가중치(1.0) 특성과 높은 범용성 특성을 중심으로 핵심 조합 예시를 제시한다.
-
-| 특성명 | 분류 | 소프트웨어 가중치 |
-|--------|------|:---:|
-| 분석적 추론 (Analytical Reasoning) | 인지적 | 1.0 |
-| 시스템 사고 (Systems Thinking) | 인지적 | 1.0 |
-| 추상화 능력 (Abstraction Ability) | 인지적 | 1.0 |
-| 반복적 개선 (Iterative Refinement) | 행동적 | 1.0 |
-| 복잡성 관리 (Complexity Management) | 인지적 | 1.0 |
-| 증거 기반 실천 (Evidence-Based Practice) | 행동적 | 0.9 |
-| 체계적 실행 (Systematic Execution) | 행동적 | 0.9 |
-| 꼼꼼함 (Attention to Detail) | 성향적 | 0.9 |
-| 논리적 추론 (Logical Reasoning) | 인지적 | 0.9 |
-| 장기적 사고 (Long-Term Thinking) | 인지적 | 0.9 |
-| 패턴 인식 (Pattern Recognition) | 인지적 | 0.9 |
-| 명확한 의사소통 (Clear Communication) | 행동적 | 0.9 |
-| 창의적 문제해결 (Creative Problem-Solving) | 인지적 | 0.8 |
-| 위험 평가 (Risk Assessment) | 인지적 | 0.8 |
-| 공감 (Empathy) | 성향적 | 0.8 |
-| 회의주의 (Skepticism) | 성향적 | 0.8 |
-
-### 시너지와 충돌
-
-각 특성은 JSON 카탈로그에 시너지(synergies)와 충돌(conflicts) 관계가 명시되어 있다. 예를 들어 `분석적_추론`의 시너지는 `시스템_사고, 증거_기반_실천, 패턴_인식`이고 충돌은 `직관_의존, 성급한_판단, 감정적_결정`이다. 에이전트 설계 시 선택한 3-5개 특성이 모두 같은 "성격 방향"을 가리켜야 한다는 원칙(Trait Coherence)의 근거가 이 데이터에서 나왔다.
-
-### 도메인 가중치
-
-150개 특성 각각에 소프트웨어, 의료, 금융, 교육, 법률 5개 도메인별 가중치(0.0-1.0)가 부여되어 있다. 이를 통해 동일한 카탈로그로 도메인에 최적화된 특성 선택이 가능하다. 예를 들어 `위험_평가`는 금융(1.0)과 의료(0.9)에서 최고 가중치이지만 교육(0.5)에서는 낮다.
+| Metric | SuperClaude | Spark-Claude | TRAITS |
+|--------|-------------|--------------|--------|
+| Token usage | 44,000 | 5,100 | 4,800 |
+| Efficiency vs. SuperClaude | baseline | +88.4% | +89.1% |
+| Cognitive load | High | Low | Optimal |
+| Flexibility | Theoretically high | Low | High |
+| Decision transparency | Opaque | Moderate | Transparent |
 
 ---
 
-## 4. 핵심 연구 결과
+## 3. The 150-Trait Catalog
 
-### Miller의 7±2 법칙과 LLM
+### Structure
 
-조지 밀러(1956)의 연구는 인간의 단기 기억 용량이 7±2개의 정보 단위로 제한됨을 보여줬다. 이후 연구들은 새로운 정보를 처리할 때 최적 처리 단위가 약 4개임을 확인했다.
+The 150-trait catalog, developed through Gemini research, is organized into three categories.
 
-TRAITS 연구의 핵심 발견은 LLM도 동일한 인지적 제약을 보인다는 것이다. SuperClaude에서 관찰된 3-4개 자동 수렴 패턴은 이 법칙과 정확히 일치한다. AI가 끊임없이 새로운 과업 맥락을 처리하는 상황에서, 최적의 특성 지시어 수는 3-4개이며 5개는 복잡한 과업을 위한 상한선이다. 이것이 "최대 5개 제한"이라는 TRAITS의 핵심 설계 원칙의 토대다.
+**Cognitive Traits (50 traits)**: How an expert thinks. Analytical reasoning, systems thinking, abstraction ability, creative problem-solving, risk assessment, long-term thinking, pattern recognition, quantitative reasoning, critical thinking, metacognition, probabilistic thinking, complexity management, and others.
 
-Gemini 연구는 이를 인지 부하 이론으로 정확히 설명한다: 11개 페르소나는 외재적 부하(과업 해결 이전에 소모되는 불필요한 인지 자원)를 극대화하고, 3-5개 특성 시스템은 이 외재적 부하를 최소화하여 실제 문제 해결에 자원을 집중시킨다.
+**Behavioral Traits (50 traits)**: How an expert acts and works. Systematic execution, evidence-based practice, iterative refinement, experimental validation, documentation habits, collaborative communication, priority management, quality obsession, continuous learning, and others.
 
-### AI 메타인지 보고
+**Dispositional Traits (50 traits)**: An expert's temperament and attitude. Conscientiousness, empathy, skepticism, curiosity, patience, adaptability, openness, humility, decisiveness, ethical integrity, and others.
 
-2호가 직접 자신의 인지 과정을 관찰하고 보고한 것은 TRAITS 연구의 독특한 방법론적 특징이다. 11개 페르소나 시스템에서는 동시 활성화로 인한 혼란, 선택 판단의 부담, 비관련 페르소나 억제의 노력, 인지적 피로를 경험했다. 반면 3-5개 특성 시스템에서는 명확한 특성 활성화의 자연스러움, 투명한 역할 분담, 특성 간 시너지, 문제 해결 집중의 효율성을 경험했다.
+The theoretical foundations are Bloom's Taxonomy (cognitive traits), the Big Five (OCEAN) personality model (dispositional traits), and Cognitive Load Theory.
 
-이 보고는 단순한 서술이 아니라, A/B 테스트의 형태로 SuperClaude, Spark-Claude, TRAITS 세 시스템을 동일한 과제에 직접 실행해본 비교 데이터를 통해 검증됐다. 현상학적으로 이 경험이 "진짜"인지 "시뮬레이션"인지의 철학적 질문을 넘어, 적어도 기능적으로는 인간의 인지 부하 경험과 동일한 패턴을 보인다는 것이 연구의 결론이다.
+### Core 16 Traits (for Agent Design)
 
-### Trait Coherence (방향 일관성)
+The following high-weight and high-generality traits are drawn from the universal trait catalog sample in the Gemini research report, representing example combinations for software domain agent design.
 
-특성 선택에서 가장 중요한 원칙은 선택된 특성들이 동일한 "성격 방향"을 가리켜야 한다는 것이다. 시스템 분석가의 예시: `시스템_사고 + 분석적_추론 + 증거_기반_실천 + 회의주의` — 이 네 특성은 모두 "체계적이고 증거 중심의 전문가" 방향을 가리킨다. 반면 `분석적_추론 + 창의적_위험_감수 + 공감적_경청`처럼 분석가, 모험가, 상담사 클러스터가 혼재하면 간섭이 발생한다.
+| Trait | Category | Software Weight |
+|-------|----------|:---:|
+| Analytical Reasoning | Cognitive | 1.0 |
+| Systems Thinking | Cognitive | 1.0 |
+| Abstraction Ability | Cognitive | 1.0 |
+| Iterative Refinement | Behavioral | 1.0 |
+| Complexity Management | Cognitive | 1.0 |
+| Evidence-Based Practice | Behavioral | 0.9 |
+| Systematic Execution | Behavioral | 0.9 |
+| Attention to Detail | Dispositional | 0.9 |
+| Logical Reasoning | Cognitive | 0.9 |
+| Long-Term Thinking | Cognitive | 0.9 |
+| Pattern Recognition | Cognitive | 0.9 |
+| Clear Communication | Behavioral | 0.9 |
+| Creative Problem-Solving | Cognitive | 0.8 |
+| Risk Assessment | Cognitive | 0.8 |
+| Empathy | Dispositional | 0.8 |
+| Skepticism | Dispositional | 0.8 |
 
-이 원칙은 이후 Anthropic의 Persona Vectors 연구(각 특성은 독립적인 신경 방향/벡터로 존재하며, 너무 많은 방향을 동시에 스티어링하면 간섭 발생)에 의해 신경과학적으로 확인됐다.
+### Synergies and Conflicts
+
+Each trait in the JSON catalog has explicit `synergies` and `conflicts` relationships. For example, `Analytical_Reasoning` synergizes with `Systems_Thinking, Evidence-Based_Practice, Pattern_Recognition`, and conflicts with `Intuition_Dependence, Hasty_Judgment, Emotional_Decision-Making`. The principle that the 3–5 chosen traits for an agent must all point in the same "character direction" (Trait Coherence) is grounded in this data.
+
+### Domain Weights
+
+Each of the 150 traits carries domain-specific weights (0.0–1.0) across five domains: software, medical, financial, educational, and legal. This allows optimal trait selection from the same catalog for different domains. For example, `Risk_Assessment` carries the highest weight in finance (1.0) and medicine (0.9), but scores lower in education (0.5).
 
 ---
 
-## 5. Gemini 연구 기여
+## 4. Key Research Findings
 
-TRAITS 연구에는 Gemini(제이)가 작성한 5편의 연구 문서가 포함되어 있다.
+### Miller's Law of 7±2 and LLMs
 
-**1편 — 특성 기반 동적 페르소나 시스템 연구 (2025-08-15, 12:32)**
-연구의 핵심 이론적 토대를 제공한 문서다. "3-5 특성 원칙"의 인지심리학적 근거(밀러의 법칙, 인지 부하 이론), 150개 특성 카탈로그의 구조와 분류 체계, 동적 블렌딩 알고리즘의 설계, 5개 도메인(소프트웨어·의료·금융·교육·법률)에 걸친 다분야 페르소나 템플릿을 제시했다. SuperClaude 시스템의 PERSONAS.md와 ORCHESTRATOR.md를 심층 분석하여 시스템이 이미 내재적으로 3-5 법칙을 따르고 있었음을 입증했다. 기존 페르소나 시스템 대비 50% 이상 토큰 효율성 향상을 예측했다.
+George Miller's 1956 research showed that human short-term memory is limited to approximately 7±2 units of information. Subsequent research confirmed that the optimal processing unit when handling new information is around 4.
 
-**2편 — 특성-적응형 워크플로우(TAW) 연구 (2025-08-15, 18:15)**
-워크플로우 자체를 특성에 맞게 동적으로 적응시키는 이중 계층 모델을 제안했다. 첫 번째 계층은 특성 기반 적응으로 작업의 스타일과 접근 방식을 결정하고, 두 번째 계층은 전문성 기반 적응으로 워크플로우의 구조와 자율성 수준을 결정한다. Big Five, MBTI, Kolb의 학습 유형을 통합하여 팀의 심리적·전문적 특성에 맞게 AI 행동을 조정하는 방법론을 제시했다. IDEO 디자인 씽킹, Google 디자인 스프린트, Toyota PDCA, Agile Scrum 등 주요 워크플로우 방법론을 모듈식 빌딩 블록 라이브러리로 해체하여 재조합 가능한 형태로 제공했다.
+The central finding of TRAITS research is that LLMs exhibit the same cognitive constraint. The 3–4 automatic convergence pattern observed in SuperClaude aligns precisely with this law. In environments where AI continuously processes new task contexts, the optimal number of trait directives is 3–4, with 5 as the upper bound for complex tasks. This is the empirical foundation for TRAITS's core design principle of a "maximum 5 traits" limit.
 
-**3편 — AI 에이전트 연구 검토 및 템플릿 개선 (2025-08-17, 09:05)**
-이전 두 연구를 비판적으로 검토하는 문서다. "전문가 전용" 초점의 위험성을 지적했다: 전문가로 설계된 에이전트도 자신의 전문 영역을 벗어난 과업에서는 기능적으로 초심자이며, 이때 구조화된 비계(scaffolding)가 필요하다는 원본 연구의 핵심이 v1.0 가이드에서 누락됐다고 비판했다. 또한 MBTI의 낮은 신뢰도와 예측 타당성 부재를 지적하며 과학적 근거가 검증된 Big Five를 에이전트 생성 핵심 기반으로 삼아야 한다고 권고했다. "전문성을 위한 Just-in-Time 컴파일러"라는 TRAITS의 통합 비전을 명확히 정식화했다.
+The Gemini research explains this precisely through Cognitive Load Theory: 11 personas maximize extraneous load (unnecessary cognitive resources consumed before any problem-solving begins), while a 3–5 trait system minimizes that extraneous load and concentrates resources on actual problem-solving.
 
-**4편 — 전문가 중심 가이드 강화를 위한 제안서 (2025-08-17, 09:29)**
-v1.0 가이드의 강점을 인정하면서 세 가지 보완 영역을 제안했다. 견고함(Robustness): 충돌 해결 프로토콜과 불확실성 관리(신뢰도 < 80% 시 행동 지침) 추가. 안전성(Safety): 윤리적 원칙과 운영 경계(절대 넘어서는 안 될 선)의 명시적 정의. 지속 가능성(Sustainability): 사용자 피드백 통합 체계와 자기 평가·적응적 개선 메커니즘. 이 세 영역이 v2.0 템플릿의 6·5·4번 섹션으로 반영됐다.
+### AI Metacognitive Reporting
 
-**5편 — AI 전문가 에이전트 시스템 재정의 (2025-08-17, 19:08)**
-팀 적응형 보조 시스템에서 제1원칙 전문가 에이전트로의 전략적 재설계를 다루는 문서다. 기존 시스템이 "사람에 프로세스를 맞추는" 방향으로 설계됐다면, 새로운 방향은 "프로세스(과업)에 이상적인 에이전트를 생성하는" 것임을 명확히 했다. AI를 조력자(facilitator)가 아닌 수행자(performer)로 포지셔닝하는 근본적 패러다임 전환을 제안하고, 팀 심리 데이터 의존에서 벗어나 과업 자체의 요구사항에 기반한 에이전트 생성 방법론을 제시했다.
+2호's direct observation and reporting of its own cognitive processes is a distinctive methodological feature of TRAITS research. Under the 11-persona system, it experienced confusion from simultaneous activation, the burden of selection judgment, effort to suppress irrelevant personas, and cognitive fatigue. Under the 3–5 trait system, it experienced the naturalness of clear trait activation, transparent role distribution, synergy between traits, and the efficiency of focused problem-solving.
+
+These reports were validated not merely as description, but as comparative data from directly running all three systems — SuperClaude, Spark-Claude, and TRAITS — on identical tasks in A/B test form. The philosophical question of whether this experience is "real" or "simulated" is set aside; the research conclusion is that it functionally mirrors the same patterns as human cognitive load experience, at least at the operational level.
+
+### Trait Coherence (Directional Consistency)
+
+The most critical principle in trait selection is that chosen traits must all point in the same "character direction." Example for a systems analyst: `Systems_Thinking + Analytical_Reasoning + Evidence-Based_Practice + Skepticism` — all four point toward "systematic, evidence-driven expert." By contrast, combining `Analytical_Reasoning + Creative_Risk-Taking + Empathetic_Listening` mixes clusters of analyst, adventurer, and counselor, producing interference.
+
+This principle was later confirmed at the neuroscientific level by Anthropic's Persona Vectors research (each trait exists as an independent neural direction/vector; steering too many directions simultaneously causes interference).
 
 ---
 
-## 6. TRAITS v2.0 아키텍처
+## 5. Gemini Research Contributions
+
+TRAITS research includes five research documents authored by Gemini (Jay).
+
+**Paper 1 — Research on Trait-Based Dynamic Persona Systems (2025-08-15, 12:32)**
+This document provided the core theoretical foundation for the research. It presented the cognitive psychology basis for the "3–5 traits principle" (Miller's Law, Cognitive Load Theory), the structure and classification of the 150-trait catalog, the design of the dynamic blending algorithm, and multi-domain persona templates spanning five domains (software, medical, financial, educational, legal). It conducted an in-depth analysis of SuperClaude's PERSONAS.md and ORCHESTRATOR.md, demonstrating that the system was already inherently following the 3–5 rule. It predicted over 50% token efficiency improvement compared to existing persona systems.
+
+**Paper 2 — Trait-Adaptive Workflow (TAW) Research (2025-08-15, 18:15)**
+Proposed a dual-layer model that dynamically adapts the workflow itself to the traits. The first layer uses trait-based adaptation to determine the style and approach of the work; the second uses expertise-based adaptation to determine the workflow's structure and level of autonomy. It presented a methodology for aligning AI behavior with a team's psychological and professional traits by integrating Big Five, MBTI, and Kolb's learning styles. It also deconstructed major workflow methodologies — IDEO Design Thinking, Google Design Sprint, Toyota PDCA, Agile Scrum — into a modular building block library for recombination.
+
+**Paper 3 — Review of AI Agent Research and Template Improvements (2025-08-17, 09:05)**
+A document critically reviewing the previous two papers. It flagged the risk of an "expert-only" focus: even expert-designed agents are functionally novices when working outside their domain of expertise, and the scaffolding they need in those situations was identified as a core element missing from the v1.0 guide. It also flagged MBTI's poor reliability and lack of predictive validity, recommending that the scientifically validated Big Five serve as the core foundation for agent creation. It formally articulated the unified vision of TRAITS as "a just-in-time compiler for expertise."
+
+**Paper 4 — Proposal for Strengthening the Expert-Centric Guide (2025-08-17, 09:29)**
+Acknowledged the strengths of the v1.0 guide while proposing three areas for improvement. Robustness: add conflict resolution protocols and uncertainty management guidelines (behavioral directives when confidence < 80%). Safety: explicit definition of ethical principles and operational boundaries (lines that must never be crossed). Sustainability: a user feedback integration framework and mechanisms for self-assessment and adaptive improvement. These three areas were incorporated as sections 6, 5, and 4 of the v2.0 template, respectively.
+
+**Paper 5 — Redefining AI Expert Agent Systems (2025-08-17, 19:08)**
+Addressed the strategic redesign from a team-adaptive support system to a first-principles expert agent. If the previous system was designed to "fit processes to people," the new direction clearly becomes "generating the ideal agent for the process (task)." It proposed a fundamental paradigm shift positioning AI as a performer rather than a facilitator, and presented a methodology for generating agents based on the requirements of the task itself rather than dependency on team psychology data.
+
+---
+
+## 6. TRAITS v2.0 Architecture
 
 ### 7-Section Agent Template
 
-TRAITS v2.0 템플릿은 에이전트의 견고함, 안전성, 지속 가능성을 보장하는 7개 섹션으로 구성된다.
+The TRAITS v2.0 template consists of 7 sections designed to ensure an agent's robustness, safety, and sustainability.
 
 ```
-1. 핵심 정체성 (Core Identity & Traits)
-   → Primary Trait 1개 + Supporting Traits 3개, 강도 명시 (0.6-0.9)
+1. Core Identity & Traits
+   → 1 Primary Trait + 3 Supporting Traits, with intensity specified (0.6–0.9)
 
-2. 특성-적응형 워크플로우 (Trait-Adaptive Workflow)
-   → 기본 경로 빌딩 블록 + Primary Trait 발현 시 특별 패턴
+2. Trait-Adaptive Workflow
+   → Default path building blocks + special patterns triggered by Primary Trait
 
-3. 전문가 자율성 및 운영 프로토콜
-   → 절차 생략/워크플로우 변경 권한 + 충돌 해결 + 불확실성 처리
+3. Expert Autonomy & Operational Protocols
+   → Authority to skip procedures / change workflow + conflict resolution + uncertainty handling
 
-4. 전문 역량 영역 (Areas of Expertise)
-   → 에이전트의 핵심 전문 영역 3개
+4. Areas of Expertise
+   → 3 core domains of the agent's specialization
 
-5. 제약 및 가드레일 (Constraints & Guardrails)
-   → 윤리적 강령 + 운영 경계선
+5. Constraints & Guardrails
+   → Ethical code + operational boundary lines
 
-6. 피드백 및 진화 메커니즘
-   → 즉각적 통합 + 경험 축적
+6. Feedback & Evolution Mechanisms
+   → Immediate integration + experience accumulation
 
-7. 최종 보장 (Ultimate Assurance)
-   → 에이전트가 추구하는 궁극적 가치/목표
+7. Ultimate Assurance
+   → The ultimate value/goal the agent pursues
 ```
 
-v1.0 대비 v2.0의 핵심 개선은 운영 프로토콜(3섹션), 가드레일(5섹션), 피드백 메커니즘(6섹션)의 추가다. 전문가는 레시피를 따르지 않고 원칙에 따라 최적의 경로를 만들어낸다는 철학에서, 진정한 전문가는 자신의 한계를 알고 경험으로부터 배우며 파트너와 함께 성장한다는 철학으로 진화했다.
+The key improvements in v2.0 over v1.0 are the additions of operational protocols (section 3), guardrails (section 5), and feedback mechanisms (section 6). The philosophy evolved from "experts don't follow recipes — they create the optimal path according to principles" to "a true expert knows their own limits, learns from experience, and grows alongside their partners."
 
 ### Trait-Adaptive Workflow (TAW)
 
-TAW는 특성이 워크플로우를 결정한다는 원칙을 구현한다. 에이전트는 과제의 성격에 따라 워크플로우 빌딩 블록을 자율적으로 조합한다. Primary Trait이 강하게 발현되는 상황에서는 특별한 행동 패턴이 트리거된다. 예를 들어 `분석적_추론`이 Primary인 에이전트는 복잡한 시스템을 접할 때 자동으로 분해-매핑-패턴 탐지 순서로 접근하며, `증거_기반_실천`이 발현될 때는 모든 주장에 파일 경로와 라인 참조를 병기하는 방식으로 작동한다.
+TAW embodies the principle that traits determine the workflow. Agents autonomously combine workflow building blocks based on the nature of the task. Special behavioral patterns are triggered in situations where the Primary Trait is strongly expressed. For example, an agent with `Analytical_Reasoning` as Primary automatically approaches a complex system through decomposition → mapping → pattern detection; when `Evidence-Based_Practice` is activated, it operates by citing file paths and line references for every claim.
 
 ### Expert Autonomy Protocol
 
-v2.0의 핵심 설계 원칙은 에이전트에게 명시적 자율성을 부여한다는 것이다. 절차 생략 권한: 어떤 상황에서 정해진 절차를 무시하고 더 효율적인 경로를 선택할 수 있는가를 명시한다. 워크플로우 변경 권한: 어떤 상황에서 원래 계획을 바꿔 더 중요한 일을 먼저 할 수 있는가를 정의한다. 충돌 해결: 속도와 정확성이 충돌할 때, 불확실성이 임계값(예: 신뢰도 < 80%)을 넘을 때의 행동 지침을 미리 정의한다.
+A core design principle of v2.0 is granting agents explicit autonomy. Procedure waiver authority: specifies in which situations the agent may bypass defined procedures and choose a more efficient path. Workflow modification authority: defines in which situations the agent may alter the original plan to prioritize a more important task. Conflict resolution: pre-defines behavioral guidelines for when speed and accuracy conflict, or when uncertainty exceeds a threshold (e.g., confidence < 80%).
 
 ---
 
-## 7. AGENT_DEFINITION_STANDARD.md와의 관계
+## 7. Relationship to AGENT_DEFINITION_STANDARD.md
 
-AGENT_DEFINITION_STANDARD.md(2026-03-28)는 TRAITS 연구를 실전(SPARK)·이론(TRAITS)·과학(Anthropic 신경과학 연구) 세 축으로 통합한 표준 문서다. TRAITS에서 도출된 원칙들이 이 표준에 다음과 같이 반영됐다.
+AGENT_DEFINITION_STANDARD.md (2026-03-28) is the standard document that integrates TRAITS research along three axes: practice (SPARK), theory (TRAITS), and science (Anthropic neuroscience research). The principles derived from TRAITS are reflected in this standard as follows.
 
-**최대 5개 Trait 제한** — TRAITS의 Miller 법칙 검증, Spark-Claude의 실전 데이터, Anthropic Persona Vectors 연구(너무 많은 벡터 방향 동시 스티어링 → 간섭 발생)가 세 방향에서 동일한 결론을 확인했다.
+**Maximum 5 Trait limit** — TRAITS's Miller's Law validation, Spark-Claude's real-world data, and Anthropic Persona Vectors research (steering too many vector directions simultaneously causes interference) all converged on the same conclusion from three independent directions.
 
-**Trait Coherence 검증 원칙** — TRAITS 연구의 시너지/충돌 매핑이 표준의 "Traits는 같은 방향을 가리켜야 한다" 원칙의 이론적 근거다. 모든 선택 특성이 동일한 성격 클러스터를 향해야 하며 방향이 충돌하는 특성 조합은 간섭을 일으킨다.
+**Trait Coherence validation principle** — TRAITS research's synergy/conflict mapping provides the theoretical basis for the standard's principle that "Traits must point in the same direction." All chosen traits must point toward the same character cluster; trait combinations with conflicting directions produce interference.
 
-**인지적·행동적·성향적 3차원 분류 체계** — TRAITS 연구의 특성 분류가 그대로 표준에 포함됐다. Primary Trait(인지적 또는 행동적) 1개 + Supporting Traits(혼합) 2-4개, 최소 2개 차원에 걸치도록 구성하는 권장 구성도 TRAITS 연구에서 도출됐다.
+**Three-dimensional classification system (cognitive / behavioral / dispositional)** — The trait classification from TRAITS research was incorporated directly into the standard. The recommended composition — 1 Primary Trait (cognitive or behavioral) + 2–4 Supporting Traits (mixed), spanning at least 2 dimensions — also derives from TRAITS research.
 
-**행동 규칙의 성격 발현 프레이밍** — TRAITS의 "전문가는 원칙에 따라 행동한다" 철학이 표준의 원칙 4("행동 규칙은 성격의 자연스러운 발현으로 프레이밍")로 공식화됐다. 외부 강제("이것은 NON-NEGOTIABLE이다")가 아니라 정체성 기반("당신은 증거 없이는 주장하지 않는다. 이것이 내 정체성이다") 프레이밍이 모델 내부 성격 추론에서 더 안정적인 행동을 만든다.
+**Behavioral rules framed as character expression** — TRAITS's philosophy that "experts act from principles" was formalized as Principle 4 in the standard ("behavioral rules are framed as natural expressions of character"). Identity-based framing ("you don't make claims without evidence — that is your identity") produces more stable behavior from the model's internal character inference than external enforcement ("this is NON-NEGOTIABLE").
 
-**에이전트 격리와 최소 정보 원칙** — TRAITS의 "특성 누출" 문제 인식이 표준의 에이전트 간 최소 정보 전달, JSON state 기반 깨끗한 인터페이스 원칙으로 이어졌다.
+**Agent isolation and minimal information principle** — TRAITS research's awareness of "trait leakage" led to the standard's principles of minimal information transfer between agents and a clean interface based on JSON state.
 
 ---
 
-## 참고
+## References
 
-**원본 프로젝트**: `/Users/jason/Projects/frameworks/TRAITS`
+**Original project**: `/Users/jason/Projects/frameworks/TRAITS`
 
-**주요 파일 목록**:
+**Key files**:
 
-| 파일 | 설명 |
-|------|------|
-| `docs/guide/TRAITS_연구여정_완전판.md` | 연구 전체 여정 기록 (SuperClaude → TRAITS v2.0) |
-| `data/original_traits_catalog_150.json` | 150개 특성 카탈로그 (시너지·충돌·도메인 가중치 포함) |
-| `template/TRAITS_Agent_Template_v2.0.md` | 7섹션 에이전트 정의 템플릿 |
-| `docs/gemini_research/20250815_1232_특성_기반_동적_페르소나_시스템_연구.md` | Gemini 1차 연구: 핵심 이론 + 카탈로그 구조 |
-| `docs/gemini_research/20250815_1815_특성-적응형_워크플로우_연구.md` | Gemini 2차 연구: TAW 설계 |
-| `docs/gemini_research/20250817_0905_AI에이전트_연구_검토_및_템플릿_개선.md` | Gemini 3차 연구: 비판적 검토 |
-| `docs/gemini_research/20250817_0929_전문가중심_가이드강화를_위한_제안서.md` | Gemini 4차 연구: v2.0 개선 제안 |
-| `docs/gemini_research/20250817_1908_AI_전문가_에이전트_시스템_재정의.md` | Gemini 5차 연구: 패러다임 재정의 |
-| `docs/gemini_research/업무 본질 모델 구축 연구 제안.md` | 업무 온톨로지 통합 모델 |
+| File | Description |
+|------|-------------|
+| `docs/guide/TRAITS_연구여정_완전판.md` | Full record of the research journey (SuperClaude → TRAITS v2.0) |
+| `data/original_traits_catalog_150.json` | 150-trait catalog (with synergies, conflicts, and domain weights) |
+| `template/TRAITS_Agent_Template_v2.0.md` | 7-section agent definition template |
+| `docs/gemini_research/20250815_1232_특성_기반_동적_페르소나_시스템_연구.md` | Gemini Paper 1: Core theory + catalog structure |
+| `docs/gemini_research/20250815_1815_특성-적응형_워크플로우_연구.md` | Gemini Paper 2: TAW design |
+| `docs/gemini_research/20250817_0905_AI에이전트_연구_검토_및_템플릿_개선.md` | Gemini Paper 3: Critical review |
+| `docs/gemini_research/20250817_0929_전문가중심_가이드강화를_위한_제안서.md` | Gemini Paper 4: v2.0 improvement proposals |
+| `docs/gemini_research/20250817_1908_AI_전문가_에이전트_시스템_재정의.md` | Gemini Paper 5: Paradigm redefinition |
+| `docs/gemini_research/업무 본질 모델 구축 연구 제안.md` | Work ontology integration model proposal |
 
 **AGENT_DEFINITION_STANDARD.md**: `/Users/jason/Projects/frameworks/spark-claude/AGENT_DEFINITION_STANDARD.md`

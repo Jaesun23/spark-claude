@@ -18,33 +18,33 @@ follow the standard documented here.
 
 | Asset | File | Purpose |
 |-------|------|---------|
-| **Agent Definition Standard** | `AGENT_DEFINITION_STANDARD.md` | 에이전트 정의의 표준 규격 — 실전(SPARK) + 이론(TRAITS) + 과학(Anthropic) 통합 |
-| **Reference Agents** | `agents/*.md` | 표준을 적용한 소프트웨어 개발용 레퍼런스 에이전트 |
-| **Research Docs** | `docs/*.md` | 표준의 과학적/이론적 기반 문서 |
+| **Agent Definition Standard** | `AGENT_DEFINITION_STANDARD.md` | Standard specification for agent definitions — integrating practice (SPARK) + theory (TRAITS) + science (Anthropic) |
+| **Reference Agents** | `agents/*.md` | Reference agent implementations for software development |
+| **Research Docs** | `docs/*.md` | Scientific and theoretical foundation documents |
 
 ## Project Structure
 
 ```
 spark-claude/
-├── AGENT_DEFINITION_STANDARD.md    # 핵심 — 에이전트 정의 표준
-├── agents/                          # 레퍼런스 에이전트
-│   ├── implementer.md              # 구현 전문가
-│   ├── diagnostician.md            # 시스템 진단 전문가
-│   └── auditor.md                  # 품질 감사 전문가
+├── AGENT_DEFINITION_STANDARD.md    # Core — Agent Definition Standard
+├── agents/                          # Reference agents
+│   ├── implementer.md              # Implementation specialist
+│   ├── diagnostician.md            # System diagnostician
+│   └── auditor.md                  # Quality auditor
 ├── docs/
-│   ├── history/                    # SPARK 발전사 (v1.0 ~ v5.0)
-│   ├── TRAITS_RESEARCH.md          # TRAITS 연구 요약
-│   └── ANTHROPIC_PERSONA_RESEARCH.md  # Anthropic 페르소나 연구 6편 요약
-└── archive/                        # 이전 버전 보관 (spark-plugin, methodology 등)
+│   ├── history/                    # SPARK evolution history (v1.0 ~ v5.0)
+│   ├── TRAITS_RESEARCH.md          # TRAITS research summary
+│   └── ANTHROPIC_PERSONA_RESEARCH.md  # Anthropic persona research (6 papers)
+└── archive/                        # Previous versions (spark-plugin, methodology, etc.)
 ```
 
 ## Reference Agents
 
 | Agent | Role | When to Use |
 |-------|------|-------------|
-| **implementer** | 구현 전문가 | Feature implementation, bug fixes, test creation |
-| **diagnostician** | 시스템 진단 전문가 | System analysis, debugging, root cause investigation |
-| **auditor** | 품질 감사 전문가 | Code review, compliance audit, quality gate evaluation |
+| **implementer** | Implementation Specialist | Feature implementation, bug fixes, test creation |
+| **diagnostician** | System Diagnostician | System analysis, debugging, root cause investigation |
+| **auditor** | Quality Auditor | Code review, compliance audit, quality gate evaluation |
 
 All agents follow the `AGENT_DEFINITION_STANDARD.md` template:
 - 5-section structure (Identity & Traits → Methodology → Decisions → Self-Verification → Identity Statement)

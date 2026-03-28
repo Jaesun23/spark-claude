@@ -4,37 +4,37 @@
 
 ## 🎯 Executive Summary
 
-SPARK는 SuperClaude의 44,000 토큰 비효율성을 해결하기 위해 탄생한 multi-agent orchestration 시스템입니다. 2025년 8월 8일부터 약 4개월간의 발전을 거쳐, **88.4% 토큰 절감** (44K → 5.1K)을 달성하며 production-ready 시스템으로 완성되었습니다.
+SPARK is a multi-agent orchestration system born to solve SuperClaude's 44,000-token inefficiency. Over roughly four months of development starting August 8, 2025, it achieved an **88.4% token reduction** (44K → 5.1K), evolving into a production-ready system.
 
-### 핵심 성과
-- ✅ **88.4% 토큰 절감** (44,000 → 5,100 tokens)
+### Key Achievements
+- ✅ **88.4% token reduction** (44,000 → 5,100 tokens)
 - ✅ **21 Specialized Agents** (6 core + 15 team)
 - ✅ **Mandatory Quality Gates** (Phase 5B enforcement)
-- ✅ **Plugin Architecture** (재사용 가능한 배포 구조)
-- ✅ **SPARK Constitution v1.2** (영문 + 한글)
+- ✅ **Plugin Architecture** (reusable, distributable structure)
+- ✅ **SPARK Constitution v1.2** (English + Korean)
 
 ---
 
 ## 📅 Version Timeline
 
 ```
-2025-08-08  v1.0  SuperClaude Analysis        🔍 문제 발견
+2025-08-08  v1.0  SuperClaude Analysis        🔍 Problem discovery
      ↓
-2025-08-11  v2.0  Research Foundation         🔬 이론 수립
+2025-08-11  v2.0  Research Foundation         🔬 Theory established
      ↓
-2025-08-13  v3.0  Initial Implementation      🚀 첫 구현
+2025-08-13  v3.0  Initial Implementation      🚀 First implementation
      ↓
-2025-08-17  v4.0  Quality Evolution           ⚖️ 품질 확립
+2025-08-17  v4.0  Quality Evolution           ⚖️ Quality established
      ↓
-2025-08-19  v4.1  Final Architecture          ✅ 완성
+2025-08-19  v4.1  Final Architecture          ✅ Completion
      ↓
-2025-08-23  v4.2  Code Enhancement            🔧 개선
+2025-08-23  v4.2  Code Enhancement            🔧 Improvement
      ↓
-2025-09-05  v4.3  Current System              📦 현재
+2025-09-05  v4.3  Current System              📦 Current
      ↓
-2025-11-08  ---   DNA Methodology Focus       📚 방법론
+2025-11-08  ---   DNA Methodology Focus       📚 Methodology
      ↓
-2026-03-28  v5.0  Standard-Based Refactoring  📐 표준화
+2026-03-28  v5.0  Standard-Based Refactoring  📐 Standardization
 ```
 
 ---
@@ -42,102 +42,102 @@ SPARK는 SuperClaude의 44,000 토큰 비효율성을 해결하기 위해 탄생
 ## 📖 Version Documents
 
 ### [v1.0 - SuperClaude Analysis](./v1.0-SuperClaude-Analysis.md)
-**기간**: 2025-08-08 ~ 08-10 (3일)
+**Period**: 2025-08-08 ~ 08-10 (3 days)
 
-**핵심 목표**: SuperClaude 아키텍처 분석 및 토큰 문제 발견
+**Core Goal**: SuperClaude architecture analysis and discovery of the token problem
 
-**주요 발견**:
-- 44,000 tokens per request (너무 많음!)
-- 11 personas 모두 동시 로딩 (비효율)
-- 실제로는 2-3 personas만 사용 (78% 협업 패턴)
-- 개선 여지: 88% 토큰 절감 가능
+**Key Findings**:
+- 44,000 tokens per request (far too many!)
+- All 11 personas loaded simultaneously (inefficient)
+- Only 2-3 personas actually used in practice (78% collaboration pattern)
+- Improvement potential: 88% token reduction possible
 
-**성과**:
-- ✅ 문제 정량화
-- ✅ 개선 방향 도출
-- ✅ 사용 패턴 데이터 수집
+**Achievements**:
+- ✅ Problem quantified
+- ✅ Improvement direction identified
+- ✅ Usage pattern data collected
 
 ---
 
 ### [v2.0 - Research Foundation](./v2.0-Research-Foundation.md)
-**기간**: 2025-08-11 ~ 08-12 (2일)
+**Period**: 2025-08-11 ~ 08-12 (2 days)
 
-**핵심 목표**: 이론적 프레임워크 개발 및 SPARK 개념 탄생
+**Core Goal**: Development of a theoretical framework and birth of the SPARK concept
 
-**주요 연구**:
-- Multi-Agent System (MAS) 형식화
-- Persona Definition Language (PDL) 개발
-- Dynamic Weight System 설계
-- **SPARK 약자 탄생**: Subagent Performance Architecture with Reduced toKens
+**Key Research**:
+- Multi-Agent System (MAS) formalization
+- Persona Definition Language (PDL) development
+- Dynamic Weight System design
+- **SPARK acronym coined**: Subagent Performance Architecture with Reduced toKens
 
-**성과**:
-- ✅ 이론적 기반 확립
-- ✅ Agent isolation 개념
-- ✅ On-demand loading 설계
-- ✅ Token allocation 모델
+**Achievements**:
+- ✅ Theoretical foundation established
+- ✅ Agent isolation concept
+- ✅ On-demand loading design
+- ✅ Token allocation model
 
 ---
 
 ### [v3.0 - Initial Implementation](./v3.0-Initial-Implementation.md)
-**기간**: 2025-08-13 ~ 08-16 (4일)
+**Period**: 2025-08-13 ~ 08-16 (4 days)
 
-**핵심 목표**: 첫 번째 동작하는 SPARK 시스템 구현
+**Core Goal**: First working SPARK system implementation
 
-**주요 변경**:
-- SuperClaude → SPARK 전환
-- `analyzer-super.md` → `analyzer-spark.md` 리네이밍
-- 11 personas → 20 agents 확장
-- JSON state management 도입
-- User → 2호 → Task → Agent 흐름 확립
+**Key Changes**:
+- SuperClaude → SPARK transition
+- `analyzer-super.md` → `analyzer-spark.md` renaming
+- 11 personas → 20 agents expansion
+- JSON state management introduced
+- User → 2호 → Task → Agent flow established
 
-**성과**:
-- ✅ **81.8% 토큰 절감** (44K → 8K)
-- ✅ 첫 동작하는 시스템
-- ✅ Agent isolation 구현
-- ⚠️ 품질 하락 (70% pass rate) - v4.0에서 해결
+**Achievements**:
+- ✅ **81.8% token reduction** (44K → 8K)
+- ✅ First working system
+- ✅ Agent isolation implemented
+- ⚠️ Quality degraded (70% pass rate) — resolved in v4.0
 
-**토큰 효율**:
+**Token Efficiency**:
 ```
 Aug 8:  44,000 tokens (SuperClaude)
-Aug 13: 15,000 tokens (65.9% 절감)
-Aug 16:  8,000 tokens (81.8% 절감)
+Aug 13: 15,000 tokens (65.9% reduction)
+Aug 16:  8,000 tokens (81.8% reduction)
 ```
 
 ---
 
 ### [v4.0 - Quality Evolution](./v4.0-Quality-Evolution.md)
-**기간**: 2025-08-17 ~ 08-18 (2일)
+**Period**: 2025-08-17 ~ 08-18 (2 days)
 
-**핵심 목표**: Quality gates 표준화 및 강제 집행
+**Core Goal**: Quality gates standardization and mandatory enforcement
 
-**문제 인식**:
-- v3.0에서 quality gates를 "RECOMMENDED"로 약화
+**Problem Identified**:
+- v3.0 weakened quality gates to "RECOMMENDED"
 - Violations: <50 → 400+ (crisis!)
-- Pass rate: 95% → 70% (하락)
+- Pass rate: 95% → 70% (dropped)
 
-**해결책**:
-- **8-Step Quality Gates Framework** 확립
+**Solution**:
+- **8-Step Quality Gates Framework** established
 - **Phase 5B Mandatory** enforcement
-- spark_quality_gates.py 자동화
+- spark_quality_gates.py automation
 
-**성과**:
-- ✅ 품질 시스템 복원
+**Achievements**:
+- ✅ Quality system restored
 - ✅ MANDATORY enforcement
 - ✅ Target: 0 violations, 100% pass rate
-- ✅ 자동화 (pre-commit hooks, CI/CD)
+- ✅ Automation (pre-commit hooks, CI/CD)
 
-**핵심 교훈**:
-> "Optional quality checks는 무시된다. MANDATORY만이 답이다."
+**Core Lesson**:
+> "Optional quality checks get ignored. MANDATORY is the only answer."
 
 ---
 
 ### [v4.1 - Final Architecture](./v4.1-Final-Architecture.md)
-**기간**: 2025-08-19 ~ 08-22 (4일)
+**Period**: 2025-08-19 ~ 08-22 (4 days)
 
-**핵심 목표**: Production-ready 최종 아키텍처 완성
+**Core Goal**: Production-ready final architecture completion
 
-**주요 달성**:
-- ✅ **88.4% 토큰 절감** (44K → 5.1K) - 목표 달성!
+**Key Achievements**:
+- ✅ **88.4% token reduction** (44K → 5.1K) — goal met!
 - ✅ **28 Agents** (16 primary + 12 team)
 - ✅ **3-Layer Architecture** (Router + Quality Gates + Agents)
 - ✅ **Mandatory Reporting** (200-800 lines per report)
@@ -156,62 +156,62 @@ Layer 3: Agents (28 specialized agents)
 - Pipeline: `/spark` (analyze → implement → test → document)
 - Parallel: `/multi-implement task1,task2,task3`
 
-**성과**:
-- ✅ 모든 목표 달성
-- ✅ 프로덕션 준비 완료
-- ✅ 문서화 완벽
-- ✅ 마지막 공식 아카이브 버전 (2025-08-22)
+**Achievements**:
+- ✅ All goals met
+- ✅ Production ready
+- ✅ Fully documented
+- ✅ Last official archived version (2025-08-22)
 
 ---
 
 ### [v4.2 - v4.3 (Current)](./v4.2-v4.3-Current.md)
-**기간**: 2025-08-23 ~ 현재 (진행 중)
+**Period**: 2025-08-23 ~ present (ongoing)
 
-**핵심 목표**: Trait-based 시스템, Plugin 아키텍처, DNA 방법론 통합
+**Core Goal**: Trait-based system, Plugin architecture, DNA methodology integration
 
 **v4.2 - Code Enhancement** (Aug 23 ~ Sep 5):
-- Trait-based Persona format 도입
+- Trait-based Persona format introduced
 - Code-based behavior protocols (Dual-layer enforcement)
 - Hybrid command format (YAML frontmatter)
 
 **v4.3 - System Transformation** (Sep 5):
-- QC 분리: improver-spark / qc-spark
+- QC separation: improver-spark / qc-spark
 - Agent count: 28 → 21 (6 core + 15 team)
 - Multi-session capabilities
 - SPARK Constitution v1.1
 
-**v4.3 이후 - Plugin & DNA** (Sep ~ Nov):
-- DNA Methodology v4.0 통합 (Sep 8)
+**Post-v4.3 — Plugin & DNA** (Sep ~ Nov):
+- DNA Methodology v4.0 integration (Sep 8)
 - SPARK Constitution v1.2 (Oct 28)
 - Korean translations (Oct 30)
-- **Plugin Architecture** (Nov 7) - 마지막 SPARK 커밋!
+- **Plugin Architecture** (Nov 7) — last SPARK commit!
 
-**현재 상태**:
+**Current Status**:
 - ✅ 21 Agents (6 core + 15 team)
 - ✅ Plugin-based distribution
-- ✅ Constitution v1.2 (영문 + 한글)
-- ✅ 88.4% 토큰 절감 유지
+- ✅ Constitution v1.2 (English + Korean)
+- ✅ 88.4% token reduction maintained
 
-**Note**: 2025-11-08 이후는 DNA 방법론 개발에 집중
+**Note**: After 2025-11-08, focus shifted to DNA methodology development
 
 ---
 
 ### [v5.0 - Standard-Based Refactoring](./07-v5.0-Standard-Refactoring.md)
-**날짜**: 2026-03-28
+**Date**: 2026-03-28
 
-**핵심 목표**: 에이전트 정의 표준 기반 프로젝트 전면 재구성
+**Core Goal**: Full project restructuring around an agent definition standard
 
-**주요 변경**:
-- 플러그인 → 에이전트 정의 표준 + 레퍼런스 에이전트로 전환
-- 22개 에이전트 → 3개 (implementer, diagnostician, auditor)
-- Python Behavior Protocol 완전 제거, 성격 발현 프레이밍 도입
-- SPARK 실전 + TRAITS 이론 + Anthropic 과학 통합
+**Key Changes**:
+- Plugin → agent definition standard + reference agents
+- 22 agents → 3 (implementer, diagnostician, auditor)
+- Python Behavior Protocol fully removed; personality expression framing introduced
+- SPARK practice + TRAITS theory + Anthropic science integrated
 
-**성과**:
-- ✅ AGENT_DEFINITION_STANDARD.md — 에이전트 정의의 과학적 표준
-- ✅ 3개 레퍼런스 에이전트 (새 표준 100% 준수)
-- ✅ 연구 기반 문서 2개 (TRAITS, Anthropic 페르소나 연구)
-- ✅ 경험→이론→과학 순환 완성
+**Achievements**:
+- ✅ AGENT_DEFINITION_STANDARD.md — scientific standard for agent definition
+- ✅ 3 reference agents (100% compliant with new standard)
+- ✅ 2 research-based documents (TRAITS, Anthropic persona research)
+- ✅ Experience → Theory → Science cycle completed
 
 ---
 
@@ -257,36 +257,36 @@ v4.3       21      6          15      Focused core
 ## 🎯 Major Milestones
 
 ### 🔍 Discovery (v1.0)
-- **2025-08-08**: SuperClaude 분석 시작
-- **2025-08-10**: 44K 토큰 문제 정량화
-- **Key**: 78% 협업 패턴 발견
+- **2025-08-08**: SuperClaude analysis begins
+- **2025-08-10**: 44K token problem quantified
+- **Key**: 78% collaboration pattern discovered
 
 ### 🔬 Foundation (v2.0)
-- **2025-08-11**: MAS 형식화
-- **2025-08-12**: SPARK 개념 탄생
+- **2025-08-11**: MAS formalized
+- **2025-08-12**: SPARK concept born
 - **Key**: PDL (Persona Definition Language)
 
 ### 🚀 Implementation (v3.0)
-- **2025-08-13**: 첫 SPARK 시스템 구동
-- **2025-08-16**: 81.8% 토큰 절감 달성
+- **2025-08-13**: First SPARK system running
+- **2025-08-16**: 81.8% token reduction achieved
 - **Key**: Agent isolation, JSON state
 
 ### ⚖️ Quality (v4.0)
-- **2025-08-17**: 품질 위기 인식
+- **2025-08-17**: Quality crisis recognized
 - **2025-08-18**: Phase 5B MANDATORY
 - **Key**: 8-Step Quality Gates
 
 ### ✅ Completion (v4.1)
-- **2025-08-22**: 88.4% 목표 달성
-- **2025-08-22**: 프로덕션 준비 완료
+- **2025-08-22**: 88.4% goal achieved
+- **2025-08-22**: Production ready
 - **Key**: 3-Layer Architecture
 
 ### 🔧 Enhancement (v4.2-v4.3)
 - **2025-09-04**: Trait-based format
-- **2025-09-05**: SPARK v4.3 (QC 분리)
+- **2025-09-05**: SPARK v4.3 (QC separation)
 - **2025-10-28**: Constitution v1.1
 - **2025-11-07**: Plugin architecture
-- **Key**: 재사용 가능한 배포 구조
+- **Key**: Reusable distributable structure
 
 ---
 
@@ -295,7 +295,7 @@ v4.3       21      6          15      Focused core
 ### Current Project
 ```
 /Users/jason/Projects/spark-claude/
-├── 00-SPARK-HISTORY-INDEX.md (이 파일)
+├── 00-SPARK-HISTORY-INDEX.md (this file)
 ├── v1.0-SuperClaude-Analysis.md
 ├── v2.0-Research-Foundation.md
 ├── v3.0-Initial-Implementation.md
@@ -322,8 +322,8 @@ v4.3       21      6          15      Focused core
 ├── v3.0-Initial-Implementation/
 │   └── SPARK_Development_Chronology_20250118.md
 ├── v4.0-Quality-Evolution/
-├── v4.1-Final-Architecture/ (2025-08-22 아카이브)
-├── v4.2-Code-Enhancement/ (부분 아카이빙)
+├── v4.1-Final-Architecture/ (archived 2025-08-22)
+├── v4.2-Code-Enhancement/ (partial archive)
 └── ARCHIVE_README.md
 ```
 
@@ -331,43 +331,43 @@ v4.3       21      6          15      Focused core
 
 ## 🎓 Key Lessons Learned
 
-### 1. 모놀리식은 비효율적
-SuperClaude: 44K tokens (모두 로딩)
-→ SPARK: 5.1K tokens (필요한 것만)
+### 1. Monolithic is inefficient
+SuperClaude: 44K tokens (everything loaded)
+→ SPARK: 5.1K tokens (only what's needed)
 
-### 2. 데이터 기반 설계
-78% 협업 패턴 발견이 전체 아키텍처 결정
+### 2. Data-driven design
+Discovering the 78% collaboration pattern determined the entire architecture
 
-### 3. Quality는 타협 불가
-RECOMMENDED → 무시됨
-MANDATORY → 준수됨
+### 3. Quality is non-negotiable
+RECOMMENDED → ignored
+MANDATORY → followed
 
-### 4. 자동화가 핵심
+### 4. Automation is essential
 Manual checks fail, automation succeeds
 
-### 5. 점진적 개선
-v1.0 (분석) → v2.0 (설계) → v3.0 (구현) → v4.0 (품질) → v4.1 (완성)
+### 5. Incremental improvement
+v1.0 (analysis) → v2.0 (design) → v3.0 (implementation) → v4.0 (quality) → v4.1 (completion)
 
-### 6. Trait-based의 가치
-Agent = Traits (성격) + Protocols (작업 방식)
+### 6. The value of Trait-based design
+Agent = Traits (personality) + Protocols (how to work)
 
-### 7. Constitution의 필요성
-공통 규범이 일관성을 보장
+### 7. The need for a Constitution
+Shared norms ensure consistency
 
 ---
 
 ## 🔮 Future Direction
 
-### Skills 도입 예정
-- Claude Code의 Skill 시스템 활용
-- 더 유연한 확장성
+### Skills to be introduced
+- Leveraging Claude Code's Skill system
+- More flexible extensibility
 
 ### Plugin Ecosystem
-- 재사용 가능한 배포
-- 버전 관리
-- 커뮤니티 공유?
+- Reusable distribution
+- Version management
+- Community sharing?
 
-### v5.0 가능성
+### v5.0 possibilities
 - Cross-session learning
 - Dynamic agent creation
 - ML-based optimization
@@ -377,13 +377,13 @@ Agent = Traits (성격) + Protocols (작업 방식)
 ## 📚 Related Documents
 
 ### Core Documentation
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - 시스템 아키텍처
-- [SPARK_CONSTITUTION.md](./SPARK_CONSTITUTION.md) - Agent 행동 규범
-- [CLAUDE.md](./CLAUDE.md) - 프로젝트 가이드
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - System architecture
+- [SPARK_CONSTITUTION.md](./SPARK_CONSTITUTION.md) - Agent behavior standards
+- [CLAUDE.md](./CLAUDE.md) - Project guide
 
 ### Git Histories
-- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - v4.1 이후 73개 커밋
-- [DNA_METHODOLOGY_GIT_HISTORY.txt](./DNA_METHODOLOGY_GIT_HISTORY.txt) - DNA 방법론 51개 커밋
+- [SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt](./SPARK_CLAUDE_GIT_HISTORY_v4.1_AFTER.txt) - 73 commits after v4.1
+- [DNA_METHODOLOGY_GIT_HISTORY.txt](./DNA_METHODOLOGY_GIT_HISTORY.txt) - 51 commits for DNA methodology
 
 ### Archive Reference
 - `/Users/jason/Documents/개발아카이브/spark-claude-archive/ARCHIVE_README.md`
@@ -402,15 +402,15 @@ Agent = Traits (성격) + Protocols (작업 방식)
 
 ## 🙏 Acknowledgments
 
-이 시스템은 Jason과 2호(Claude Code)의 4개월간 협업으로 탄생했습니다.
+This system was born from four months of collaboration between Jason and 2호 (Claude Code).
 
-> "한계극복!!! 그 방법은 '환경'을 만드는 것!" - Jason
+> "Overcome the limits!!! The way is to build the 'environment'!" - Jason
 
-SuperClaude에서 SPARK로, 그리고 DNA 방법론으로 이어지는 여정은 AI 협업의 가능성을 보여주었습니다.
+The journey from SuperClaude to SPARK, and onward to the DNA methodology, has demonstrated the possibilities of human-AI collaboration.
 
 ---
 
-*문서 작성: 2025-12-01*
-*총 문서 수: 8개 (인덱스 + 버전별 7개)*
-*총 커밋 분석: 124개 (v4.1 이후 73 + DNA 51)*
-*SPARK 버전: v4.3 (Plugin-based)*
+*Document written: 2025-12-01*
+*Total documents: 8 (index + 7 version files)*
+*Total commits analyzed: 124 (73 post-v4.1 + 51 DNA)*
+*SPARK version: v4.3 (Plugin-based)*
