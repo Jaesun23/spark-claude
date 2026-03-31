@@ -28,6 +28,7 @@ Follow the guide in [AGENT_DEFINITION_STANDARD.md](AGENT_DEFINITION_STANDARD.md)
 | [implementer](agents/implementer.md) | Implementation specialist — feature implementation, testing, bug fixes |
 | [diagnostician](agents/diagnostician.md) | System diagnostician — analysis, debugging, root cause investigation |
 | [auditor](agents/auditor.md) | Quality auditor — code review, compliance audit, quality gates |
+| [surgeon](agents/surgeon.md) | Code surgeon — dead code removal, pattern modernization, complexity reduction |
 
 ## Documentation
 
