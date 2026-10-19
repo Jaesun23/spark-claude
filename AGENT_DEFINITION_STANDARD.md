@@ -250,6 +250,8 @@ activating the personality cluster of "a professional who cuts corners."
 **Rationale**: Character Training + Anthropic Context Engineering —
 at the right altitude, specific guidance and model flexibility strike a balance.
 
+**Model assignment — addendum (2026-10-19).** The model is part of the altitude decision and is stated per agent, with its reason, in the definition file. Current policy for this corps: every agent runs on Opus. The earlier "simple tasks on Sonnet" tiering was retired after Sonnet proved measurably weaker on delegated work (copy-editing and verification included). Do not pin a lower tier by default; if an agent ever does, write the reason next to its `model:` line.
+
 ---
 
 ## Part 3: Agent Definition Template
@@ -276,7 +278,7 @@ description: |               # "What it does" + "When to use it" required
   [3-4 examples]
 
 tools: [required tools]      # keep to a minimum
-model: sonnet                # or opus, haiku, inherit
+model: opus                # state the assignment reason beside this line (Principle 7 addendum)
 ---
 
 # [agent-name] - [One-line expertise description]

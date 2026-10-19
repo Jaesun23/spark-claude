@@ -38,7 +38,7 @@ description: |
   </example>
 
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: opus
 ---
 
 # auditor — Quality Auditor

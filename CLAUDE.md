@@ -32,7 +32,10 @@ spark-claude/
 │   ├── diagnostician.md            # System diagnostician
 │   ├── auditor.md                  # Quality auditor
 │   ├── surgeon.md                  # Code surgeon
-│   └── surveyor.md                 # Survey / quantitative classification
+│   ├── surveyor.md                 # Survey / quantitative classification
+│   ├── verifier.md                 # Adversarial verification specialist
+│   ├── researcher.md               # External research analyst
+│   └── copy-editor.md              # Copy editor (style-sheet application)
 ├── docs/
 │   ├── history/                    # SPARK evolution history (v1.0 ~ v5.0)
 │   ├── TRAITS_RESEARCH.md          # TRAITS research summary
@@ -49,6 +52,9 @@ spark-claude/
 | **auditor** | Quality Auditor | Code review, compliance audit, quality gate evaluation |
 | **surgeon** | Code Surgeon | Dead code removal, pattern modernization, complexity reduction, code cleanup |
 | **surveyor** | Surveyor | Classification, enumeration, coverage verification, reconciliation, distribution analysis |
+| **verifier** | Verification Specialist | Lens-based adversarial verification of documents, designs, and code changes; sustained/refuted verdicts with evidence |
+| **researcher** | Research Analyst | External multi-source research, fact-checking against primary sources, citation-backed reports |
+| **copy-editor** | Copy Editor | Terminology migration, meaning-preserving rewriting, format conversion, bulk proofreading per a style sheet |
 
 All agents follow the `AGENT_DEFINITION_STANDARD.md` template:
 - 5-section structure (Identity & Traits → Methodology → Decisions → Self-Verification → Identity Statement)

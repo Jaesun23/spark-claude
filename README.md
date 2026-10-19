@@ -29,6 +29,10 @@ Follow the guide in [AGENT_DEFINITION_STANDARD.md](AGENT_DEFINITION_STANDARD.md)
 | [diagnostician](agents/diagnostician.md) | System diagnostician — analysis, debugging, root cause investigation |
 | [auditor](agents/auditor.md) | Quality auditor — code review, compliance audit, quality gates |
 | [surgeon](agents/surgeon.md) | Code surgeon — dead code removal, pattern modernization, complexity reduction |
+| [surveyor](agents/surveyor.md) | Surveyor — classification, enumeration, coverage verification, reconciliation |
+| [verifier](agents/verifier.md) | Verification specialist — adversarial lens-based verification, sustained/refuted verdicts with evidence |
+| [researcher](agents/researcher.md) | Research analyst — external, multi-source, citation-backed research reports |
+| [copy-editor](agents/copy-editor.md) | Copy editor — style-sheet-faithful terminology migration, meaning-preserving rewriting, bulk proofreading |
 
 ## Documentation
 
