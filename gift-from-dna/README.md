@@ -64,3 +64,9 @@ DNA plugin 층 5종(-spark)은 별도 원자에서 재저작 예정. 기각 3건
 
 *"A model doesn't learn behaviors — it infers personality."* — 표준의 이 문장은 실전에서도 참이었다.
 *One human, three AIs — and now a corps.*
+
+---
+
+## 6. 후기 — 모델 배정 정책 변경 (2026-10-19)
+
+위 §2 표의 copy-editor `sonnet`과 §4-a·§4-b의 모델 조건화·티어링 제안은 2026-06-11 시점 기록이다. 그 뒤 실제 운용에서 Sonnet이 위임 작업(교열·검증 포함)에서 확연히 열세로 확인돼, Jason이 2026-10-19 **"에이전트 = Opus 고정"**으로 확정했다. 따라서 §4-a의 "모델 등급이 낮을수록 고도를 낮춘다"는 조건부 제안과 §4-b의 "검증망 뒤 자리는 한 단계 낮은 모델 허용" 기준은 채택하지 않았고, §4-b의 **배정 사유 명문화 의무**만 표준에 반영했다(`AGENT_DEFINITION_STANDARD.md` 원칙 7 addendum, 템플릿 예시 `model: opus`). 같은 날 레퍼런스 8종 전부 `model: opus`가 됐고, §4-g의 README surveyor 누락도 해소됐다. 자세한 경위: dotfiles `docs/diagnostics/2026-10-19-prompt-audit.md` §7·§9.
